@@ -44,12 +44,14 @@
   --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
   --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
   --sp-9: 96px; --sp-10: 128px;
-  --ed-section-y-d: 96px;
-  --ed-section-y-m: 56px;
+  --ed-section-y-d: 56px;
+  --ed-section-y-m: 32px;
 
-  /* Container */
-  --ed-container: 1280px;
-  --ed-container-wide: 1440px;
+  /* Container — Alibaba-style full-bleed with small gutters */
+  --ed-container: 1600px;
+  --ed-container-wide: 1800px;
+  --ed-gutter-d: 24px;
+  --ed-gutter-m: 12px;
 
   /* Font stacks — fall back to theme picker, then system */
   --font-ed-display: 'Poppins', var(--font-heading-family), -apple-system, system-ui, sans-serif;
@@ -102,15 +104,19 @@ h4, .h4 { font-size: var(--t-title);     letter-spacing: -0.02em; font-weight: 6
 .ed-surface-indigo{ background: var(--ed-indigo);color: var(--ed-paper); }
 .ed-surface-electric { background: var(--ed-electric); color: var(--ed-paper); }
 
-/* Container */
+/* Container — wide with small gutters (Alibaba-style edge-to-edge) */
 .ed-container {
   max-width: var(--ed-container);
   margin: 0 auto;
-  padding: 0 var(--sp-5);
+  padding: 0 var(--ed-gutter-d);
 }
 @media (max-width: 749px) {
-  .ed-container { padding: 0 var(--sp-4); }
+  .ed-container { padding: 0 var(--ed-gutter-m); }
 }
+
+/* Tighter inter-section rhythm */
+.ed-section + .ed-section { padding-top: var(--sp-5); }
+@media (max-width: 749px) { .ed-section + .ed-section { padding-top: var(--sp-4); } }
 
 /* Section frame */
 .ed-section {

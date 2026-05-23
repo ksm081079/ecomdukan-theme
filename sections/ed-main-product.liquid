@@ -44,7 +44,7 @@
               <div style="border: 1.5px solid var(--ed-ink); border-radius: 2px; overflow: hidden; background: var(--ed-paper); aspect-ratio: 1/1;">
                 {%- case media.media_type -%}
                   {%- when 'image' -%}
-                    {{ media | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1600', alt: media.alt | default: product.title, style: 'width:100%;height:100%;object-fit:cover;' }}
+                    {{ media | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1600', alt: media.alt | default: product.title, style: 'width:100%;height:100%;object-fit:contain;padding:24px;box-sizing:border-box;' }}
                   {%- when 'video', 'external_video' -%}
                     {{ media | media_tag: image_size: '1600x', autoplay: false, loop: false, controls: true, preload: 'metadata' }}
                   {%- else -%}
