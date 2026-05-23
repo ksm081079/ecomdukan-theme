@@ -1,81 +1,429 @@
 {%- comment -%}
-  Ecomdukan product card — spec-led, square image, mono SKU, tier hint.
-  Args:
-    product (required) — Product object
-    show_vendor (bool, optional) — show vendor under title
+  Ecomdukan product card — conversion-focused, fully controllable.
+  Args (all optional, defaults sensible):
+    product            — Product object (required)
+    show_sale_badge    — bool, default true  (top-right % off badge)
+    show_new_badge     — bool, default true  (top-left "New" badge if tagged 'new')
+    show_stock_badge   — bool, default true
+    show_sku           — bool, default true
+    show_spec          — bool, default true  (GSM/pack line)
+    show_compare       — bool, default true  (strikethrough + Save ₹X)
+    show_tier_teaser   — bool, default true
+    show_quick_add     — bool, default true
+    show_qty_stepper   — bool, default true
+    show_hover_image   — bool, default true
+    add_to_cart_label  — string, default "Add to cart"
+    choose_options_label — string, default "Choose options"
+    sold_out_label     — string, default "Notify when restocked"
 {%- endcomment -%}
 
 {%- liquid
+  assign show_sale_badge = show_sale_badge | default: true
+  assign show_new_badge = show_new_badge | default: true
+  assign show_stock_badge = show_stock_badge | default: true
+  assign show_sku = show_sku | default: true
+  assign show_spec = show_spec | default: true
+  assign show_compare = show_compare | default: true
+  assign show_tier_teaser = show_tier_teaser | default: true
+  assign show_quick_add = show_quick_add | default: true
+  assign show_qty_stepper = show_qty_stepper | default: true
+  assign show_hover_image = show_hover_image | default: true
+  assign add_to_cart_label = add_to_cart_label | default: 'Add to cart'
+  assign choose_options_label = choose_options_label | default: 'Choose options'
+  assign sold_out_label = sold_out_label | default: 'Notify when restocked'
+
   assign first_variant = product.selected_or_first_available_variant
   assign sku = first_variant.sku | default: product.sku
   assign gsm = product.metafields.specs.gsm.value
   assign pack = product.metafields.specs.pack_qty.value
-  assign tier_text = product.metafields.pricing.tiers.value
+  assign tier_label = product.metafields.specs.tiers_label.value
+  assign price = first_variant.price
+  assign compare_at = first_variant.compare_at_price
+  assign on_sale = false
+  assign discount_amount = 0
+  assign discount_pct = 0
+  if compare_at != blank and compare_at > price
+    assign on_sale = true
+    assign discount_amount = compare_at | minus: price
+    assign discount_pct = discount_amount | times: 100 | divided_by: compare_at
+  endif
   assign is_low = false
   if first_variant.inventory_management == 'shopify' and first_variant.inventory_quantity > 0 and first_variant.inventory_quantity < 20
     assign is_low = true
   endif
 -%}
 
-<a href="{{ product.url }}" class="ed-product-card" style="display: block; background: var(--ed-snow); border: 1.5px solid var(--ed-ink); border-radius: 2px; text-decoration: none; color: var(--ed-ink); transition: border-width 120ms; overflow: hidden;">
-  <div style="position: relative; aspect-ratio: 1/1; background: var(--ed-paper); overflow: hidden; border-bottom: 1.5px solid var(--ed-ink);">
-    {%- if product.featured_media -%}
-      {{ product.featured_media | image_url: width: 800 | image_tag:
-        loading: 'lazy',
-        widths: '300, 500, 800',
-        sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw',
-        alt: product.featured_media.alt | default: product.title,
-        style: 'width:100%;height:100%;object-fit:cover;display:block;'
-      }}
-    {%- else -%}
-      <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-        <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" style="width: 60px; opacity: .25;">
-      </div>
-    {%- endif -%}
-
-    {%- comment -%} Stock badge bottom-left {%- endcomment -%}
-    <div style="position: absolute; bottom: 12px; left: 12px;">
-      {%- if product.available -%}
-        {%- if is_low -%}
-          <span class="ed-badge ed-badge--low" style="background: var(--ed-paper);">Low stock</span>
-        {%- else -%}
-          <span class="ed-badge ed-badge--instock" style="background: var(--ed-paper);">In stock</span>
+<div class="ed-product-card" data-product-id="{{ product.id }}">
+  <a href="{{ product.url }}" class="ed-product-card__media-link">
+    <div class="ed-product-card__media">
+      {%- if product.featured_media -%}
+        {{ product.featured_media | image_url: width: 800 | image_tag:
+          loading: 'lazy',
+          widths: '300, 500, 800',
+          sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw',
+          alt: product.featured_media.alt | default: product.title,
+          class: 'ed-product-card__img'
+        }}
+        {%- if show_hover_image and product.media[1] -%}
+          {{ product.media[1] | image_url: width: 800 | image_tag:
+            loading: 'lazy',
+            widths: '300, 500, 800',
+            sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw',
+            alt: product.media[1].alt | default: product.title,
+            class: 'ed-product-card__img ed-product-card__img--hover'
+          }}
         {%- endif -%}
       {%- else -%}
-        <span class="ed-badge ed-badge--oos" style="background: var(--ed-paper);">Sold out</span>
+        <div class="ed-product-card__placeholder">
+          <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" width="60">
+        </div>
+      {%- endif -%}
+
+      {%- if show_sale_badge and on_sale -%}
+        <span class="ed-product-card__sale-badge">−{{ discount_pct }}%</span>
+      {%- elsif show_new_badge and product.tags contains 'new' -%}
+        <span class="ed-product-card__new-badge">New</span>
+      {%- endif -%}
+
+      {%- if show_stock_badge -%}
+        <div class="ed-product-card__stock">
+          {%- if product.available -%}
+            {%- if is_low -%}
+              <span class="ed-badge ed-badge--low">Only {{ first_variant.inventory_quantity }} left</span>
+            {%- else -%}
+              <span class="ed-badge ed-badge--instock">In stock</span>
+            {%- endif -%}
+          {%- else -%}
+            <span class="ed-badge ed-badge--oos">Sold out</span>
+          {%- endif -%}
+        </div>
       {%- endif -%}
     </div>
+  </a>
 
-    {%- if product.tags contains 'new' -%}
-      <div style="position: absolute; top: 12px; left: 12px;">
-        <span class="ed-badge ed-badge--new" style="background: var(--ed-paper);">New</span>
-      </div>
+  <div class="ed-product-card__body">
+    {%- if show_sku and sku != blank -%}
+      <p class="ed-sku ed-product-card__sku">{{ sku }}</p>
     {%- endif -%}
-  </div>
 
-  <div style="padding: 16px;">
-    {%- if sku != blank -%}
-      <p class="ed-sku" style="margin: 0 0 6px;">{{ sku }}</p>
-    {%- endif -%}
-    <h3 class="ed-title" style="margin: 0 0 8px; font-size: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ product.title }}</h3>
+    <h3 class="ed-product-card__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
 
-    {%- if gsm or pack -%}
-      <p class="ed-mono" style="color: var(--ed-text-mute); margin: 0 0 12px; font-size: 12px;">
+    {%- if show_spec and gsm or show_spec and pack -%}
+      <p class="ed-mono ed-product-card__spec">
         {%- if gsm %}{{ gsm }} GSM{%- endif -%}
         {%- if gsm and pack %} · {%- endif -%}
         {%- if pack %}{{ pack }}/pack{%- endif -%}
       </p>
     {%- endif -%}
 
-    <div style="display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap;">
+    <div class="ed-product-card__price-row">
       {%- if product.price_varies -%}
-        <span class="ed-mono" style="font-size: 11px; color: var(--ed-text-mute); text-transform: uppercase; letter-spacing: .06em;">From</span>
+        <span class="ed-product-card__price-prefix">From</span>
       {%- endif -%}
-      <span class="ed-mono" style="font-size: 17px; font-weight: 600; color: var(--ed-ink);">{{ product.price_min | money }}</span>
+      <span class="ed-product-card__price">{{ price | money }}</span>
+      {%- if show_compare and on_sale -%}
+        <s class="ed-product-card__compare">{{ compare_at | money }}</s>
+        <span class="ed-product-card__save">Save {{ discount_amount | money }}</span>
+      {%- endif -%}
     </div>
+
+    {%- if show_tier_teaser -%}
+      {%- if tier_label != blank -%}
+        <p class="ed-product-card__tier">▼ {{ tier_label }}</p>
+      {%- elsif product.metafields.pricing.tiers.value != blank -%}
+        <p class="ed-product-card__tier">▼ Bulk tiers available</p>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if show_quick_add -%}
+      {%- if product.available and product.variants.size == 1 -%}
+        <form method="post" action="{{ routes.cart_add_url }}" class="ed-product-card__form{% unless show_qty_stepper %} ed-product-card__form--no-qty{% endunless %}" data-type="add-to-cart-form">
+          <input type="hidden" name="id" value="{{ first_variant.id }}">
+          {%- if show_qty_stepper -%}
+            <div class="ed-product-card__qty">
+              <button type="button" class="ed-qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
+              <input type="number" name="quantity" value="1" min="1" class="ed-qty-input" aria-label="Quantity">
+              <button type="button" class="ed-qty-btn" data-action="inc" aria-label="Increase quantity">+</button>
+            </div>
+          {%- else -%}
+            <input type="hidden" name="quantity" value="1">
+          {%- endif -%}
+          <button type="submit" class="ed-btn ed-btn--primary ed-product-card__add" aria-label="{{ add_to_cart_label | escape }}">
+            {{ add_to_cart_label }}
+          </button>
+        </form>
+      {%- elsif product.available -%}
+        <a href="{{ product.url }}" class="ed-btn ed-btn--primary ed-product-card__add">{{ choose_options_label }}</a>
+      {%- else -%}
+        <a href="{{ product.url }}" class="ed-btn ed-btn--ghost ed-product-card__add">{{ sold_out_label }}</a>
+      {%- endif -%}
+    {%- endif -%}
   </div>
-</a>
+</div>
 
 <style>
-  .ed-product-card:hover { border-width: 2.5px !important; }
+  .ed-product-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--ed-snow, #FBFAF6);
+    border: 1.5px solid var(--ed-ink, #0A0B0E);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: border-width 120ms ease;
+    color: var(--ed-ink, #0A0B0E);
+    height: 100%;
+  }
+  .ed-product-card:hover { border-width: 2.5px; }
+  .ed-product-card__media-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .ed-product-card__media {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--ed-paper, #F4F0E8);
+    overflow: hidden;
+    border-bottom: 1.5px solid var(--ed-ink, #0A0B0E);
+  }
+  .ed-product-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 200ms ease, transform 400ms ease;
+  }
+  .ed-product-card__img--hover {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .ed-product-card:hover .ed-product-card__img--hover { opacity: 1; }
+  .ed-product-card:hover .ed-product-card__img:not(.ed-product-card__img--hover) { transform: scale(1.04); }
+  .ed-product-card__placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.25;
+  }
+  .ed-product-card__sale-badge {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--ed-electric, #1E5FFF);
+    color: var(--ed-paper, #F4F0E8);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px; font-weight: 700;
+    padding: 6px 10px;
+    letter-spacing: 0.02em;
+  }
+  .ed-product-card__new-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--ed-paper, #F4F0E8);
+    color: var(--ed-electric, #1E5FFF);
+    border: 1px solid var(--ed-electric, #1E5FFF);
+    font-family: "Inter", sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 10px;
+  }
+  .ed-product-card__stock {
+    position: absolute; bottom: 12px; left: 12px;
+  }
+  .ed-product-card__stock .ed-badge { background: var(--ed-paper, #F4F0E8); }
+  .ed-product-card__body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 8px;
+  }
+  .ed-product-card__sku {
+    margin: 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--ed-text-mute, #5C6068);
+    letter-spacing: 0.02em;
+  }
+  .ed-product-card__title {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ed-product-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .ed-product-card__title a:hover { text-decoration: underline; }
+  .ed-product-card__spec {
+    margin: 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--ed-text-mute, #5C6068);
+  }
+  .ed-product-card__price-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 4px;
+  }
+  .ed-product-card__price-prefix {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    color: var(--ed-text-mute, #5C6068);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .ed-product-card__price {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-product-card__compare {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--ed-text-mute, #5C6068);
+    text-decoration: line-through;
+  }
+  .ed-product-card__save {
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ed-success, #1E6B3A);
+    background: rgba(30, 107, 58, 0.08);
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .ed-product-card__tier {
+    margin: 4px 0 0;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ed-electric, #1E5FFF);
+  }
+  .ed-product-card__form {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .ed-product-card__form--no-qty { grid-template-columns: 1fr; }
+  .ed-product-card__qty {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1.5px solid var(--ed-ink, #0A0B0E);
+    border-radius: 2px;
+    overflow: hidden;
+    height: 40px;
+  }
+  .ed-qty-btn {
+    width: 30px;
+    background: transparent;
+    border: 0;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-qty-btn:hover { background: var(--ed-ink, #0A0B0E); color: var(--ed-paper, #F4F0E8); }
+  .ed-qty-input {
+    width: 36px;
+    border: 0;
+    border-left: 1px solid var(--ed-border, #E0DBCF);
+    border-right: 1px solid var(--ed-border, #E0DBCF);
+    background: transparent;
+    text-align: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    font-weight: 600;
+    -moz-appearance: textfield;
+  }
+  .ed-qty-input::-webkit-outer-spin-button,
+  .ed-qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .ed-product-card__add {
+    height: 40px;
+    padding: 0 16px;
+    font-size: 13px;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  @media (max-width: 599px) {
+    .ed-product-card__body { padding: 12px; gap: 6px; }
+    .ed-product-card__title { font-size: 14px; }
+    .ed-product-card__price { font-size: 16px; }
+    .ed-product-card__form { grid-template-columns: 1fr; gap: 6px; }
+    .ed-product-card__qty { width: 100%; justify-content: space-between; }
+    .ed-qty-input { flex: 1; }
+    .ed-product-card__add { font-size: 12px; padding: 0 10px; }
+  }
 </style>
+
+<script>
+  (function() {
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('.ed-qty-btn');
+      if (!btn) return;
+      e.preventDefault();
+      const input = btn.parentElement.querySelector('.ed-qty-input');
+      if (!input) return;
+      const current = parseInt(input.value, 10) || 1;
+      const min = parseInt(input.min, 10) || 1;
+      const next = btn.dataset.action === 'inc' ? current + 1 : Math.max(min, current - 1);
+      input.value = next;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    document.addEventListener('submit', function(e) {
+      const form = e.target.closest('.ed-product-card__form');
+      if (!form) return;
+      e.preventDefault();
+      const btn = form.querySelector('.ed-product-card__add');
+      const original = btn.textContent;
+      btn.textContent = 'Adding…';
+      btn.disabled = true;
+      const data = new FormData(form);
+      fetch(window.routes && window.routes.cart_add_url || '/cart/add.js', {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/javascript' }
+      })
+        .then(function(r) { return r.ok ? r.json() : Promise.reject(r); })
+        .then(function() {
+          btn.textContent = '✓ Added';
+          if (typeof PUB_SUB_EVENTS !== 'undefined' && window.publish) {
+            window.publish(PUB_SUB_EVENTS.cartUpdate, {});
+          } else {
+            // Refresh cart bubble
+            fetch('/cart.js').then(function(r){return r.json();}).then(function(cart){
+              const bubble = document.querySelector('#cart-icon-bubble .cart-count-bubble span[aria-hidden]');
+              if (bubble) bubble.textContent = cart.item_count;
+              const drawer = document.querySelector('cart-drawer');
+              if (drawer && drawer.renderContents) {
+                fetch('/?sections=cart-drawer').then(function(r){return r.json();}).then(function(s){
+                  drawer.renderContents({ sections: s });
+                  if (drawer.open) drawer.open();
+                });
+              }
+            });
+          }
+          setTimeout(function() { btn.textContent = original; btn.disabled = false; }, 1600);
+        })
+        .catch(function() {
+          btn.textContent = 'Error — try again';
+          setTimeout(function() { btn.textContent = original; btn.disabled = false; }, 2000);
+        });
+    });
+  })();
+</script>

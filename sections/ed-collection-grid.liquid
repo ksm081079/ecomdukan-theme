@@ -1,6 +1,8 @@
 {%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-1'
   assign per_page = section.settings.products_per_page | default: 24
+  assign cols_desktop = section.settings.columns_desktop | default: 3
+  assign cols_mobile = section.settings.columns_mobile | default: 2
 -%}
 {%- paginate collection.products by per_page -%}
 <div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background)); padding-block: var(--sp-6) var(--sp-8);">
@@ -69,7 +71,7 @@
         </div>
 
         {%- if collection.products.size > 0 -%}
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-5);" class="ed-coll-grid">
+          <div style="display: grid; grid-template-columns: repeat({{ cols_desktop }}, 1fr); gap: var(--sp-5);" class="ed-coll-grid" data-cols-mobile="{{ cols_mobile }}">
             {%- for product in collection.products -%}
               {%- render 'ed-product-card', product: product -%}
             {%- endfor -%}
@@ -102,9 +104,11 @@
   @media (max-width: 989px) {
     .ed-coll-layout { grid-template-columns: 1fr !important; }
     .ed-filters { position: static !important; }
-    .ed-coll-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .ed-coll-grid { grid-template-columns: repeat({{ cols_mobile }}, 1fr) !important; gap: var(--sp-3) !important; }
   }
-  @media (max-width: 599px) { .ed-coll-grid { grid-template-columns: 1fr !important; } }
+  @media (max-width: 599px) {
+    .ed-coll-grid { grid-template-columns: repeat({{ cols_mobile }}, 1fr) !important; gap: 12px !important; }
+  }
   details[open] summary span:last-child { transform: rotate(45deg); transition: transform 120ms; }
   summary::-webkit-details-marker { display: none; }
 </style>
@@ -116,6 +120,14 @@
   "settings": [
     { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
     { "type": "checkbox", "id": "in_stock_default", "label": "Default 'In stock only' toggle on", "default": true },
+    { "type": "range", "id": "columns_desktop", "label": "Desktop columns", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "select", "id": "columns_mobile", "label": "Mobile columns", "default": "2",
+      "options": [
+        { "value": "1", "label": "1 per row" },
+        { "value": "2", "label": "2 per row" },
+        { "value": "3", "label": "3 per row" }
+      ]
+    },
     { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
       "options": [
         { "value": "scheme-1", "label": "Paper" },
