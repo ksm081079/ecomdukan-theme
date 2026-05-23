@@ -86,23 +86,41 @@
           </tbody>
         </table>
 
-        {%- comment -%} Tier pricing — manual JSON metafield or block-driven {%- endcomment -%}
+        {%- comment -%} Tier pricing — selectable cards (rentmojo-style) {%- endcomment -%}
         {%- if tiers != blank -%}
-          <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">Pricing (incl GST)</p>
-          <ul class="ed-tier-list" style="margin-bottom: var(--sp-5);">
+          <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">Choose your quantity (incl GST)</p>
+          <div class="ed-tier-cards" data-ed-tier-cards>
             {%- for tier in tiers -%}
-              <li>
-                <span class="ed-tier-range">{{ tier.range }}</span>
-                <span class="ed-tier-price">{{ tier.price }}</span>
-                {%- if tier.save -%}<span class="ed-tier-save">▼ {{ tier.save }}</span>{%- endif -%}
-              </li>
+              <button type="button" class="ed-tier-card{% if forloop.first %} is-active{% endif %}" data-tier-min="{{ tier.min | default: 1 }}" data-tier-max="{{ tier.max | default: '' }}" data-tier-price="{{ tier.price_cents | default: 0 }}">
+                <span class="ed-tier-card__range">{{ tier.range }}</span>
+                <span class="ed-tier-card__price">{{ tier.price }}</span>
+                {%- if tier.save -%}<span class="ed-tier-card__save">Save {{ tier.save }}</span>{%- endif -%}
+                {%- if tier.note -%}<span class="ed-tier-card__note">{{ tier.note }}</span>{%- endif -%}
+              </button>
             {%- endfor -%}
-          </ul>
+          </div>
         {%- else -%}
           <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">Pricing</p>
-          <div class="ed-mono" style="font-size: 28px; color: var(--ed-ink); font-weight: 600; margin-bottom: var(--sp-5);">
-            {{ product.price_min | money }}
-            {%- if product.price_varies %} <span style="font-size: 13px; color: var(--ed-text-mute); font-weight: 400;">starting</span>{%- endif -%}
+          <div class="ed-pdp-price">
+            <span class="ed-pdp-price__big">{{ product.price_min | money }}</span>
+            {%- if variant.compare_at_price and variant.compare_at_price > variant.price -%}
+              <s class="ed-pdp-price__compare">{{ variant.compare_at_price | money }}</s>
+              {%- assign pct = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price -%}
+              <span class="ed-pdp-price__off">−{{ pct }}%</span>
+            {%- endif -%}
+            {%- if product.price_varies %}<span class="ed-pdp-price__hint">starting</span>{%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Pincode / delivery estimator (Rentmojo-style) {%- endcomment -%}
+        {%- if section.settings.show_pincode_check -%}
+          <div class="ed-pincode" data-ed-pincode>
+            <label class="ed-label" for="ed-pincode-input">Delivery</label>
+            <div class="ed-pincode__row">
+              <input id="ed-pincode-input" type="text" inputmode="numeric" maxlength="6" placeholder="Enter pincode (e.g. 400001)" class="ed-input ed-pincode__input">
+              <button type="button" class="ed-btn ed-btn--ghost ed-pincode__btn">Check</button>
+            </div>
+            <p class="ed-pincode__result" data-ed-pincode-result aria-live="polite"></p>
           </div>
         {%- endif -%}
 
@@ -148,18 +166,54 @@
           <a href="{{ section.settings.quote_url | default: '/pages/request-quote' }}" class="ed-btn ed-btn--ghost ed-btn--block" style="margin-top: var(--sp-3);">Request 50+ quote</a>
         {%- endif -%}
 
-        {%- comment -%} Trust strip {%- endcomment -%}
-        <ul style="list-style: none; padding: var(--sp-4) 0 0; margin: 0; border-top: 1px solid var(--ed-border); margin-top: var(--sp-5);">
-          {%- if section.settings.usp_1 != blank -%}
-            <li class="ed-body-s" style="display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; color: var(--ed-ink);"><span style="color: var(--ed-electric);">▸</span> {{ section.settings.usp_1 }}</li>
+        {%- comment -%} Trust strip — icon grid (Rentmojo-style) {%- endcomment -%}
+        <div class="ed-trust-grid">
+          {%- if section.settings.trust_1_label != blank -%}
+            <div class="ed-trust-item">
+              <span class="ed-trust-item__icon" aria-hidden="true">{{ section.settings.trust_1_icon | default: '🚚' }}</span>
+              <div>
+                <p class="ed-trust-item__label">{{ section.settings.trust_1_label }}</p>
+                {%- if section.settings.trust_1_sub != blank -%}<p class="ed-trust-item__sub">{{ section.settings.trust_1_sub }}</p>{%- endif -%}
+              </div>
+            </div>
           {%- endif -%}
-          {%- if section.settings.usp_2 != blank -%}
-            <li class="ed-body-s" style="display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; color: var(--ed-ink);"><span style="color: var(--ed-electric);">▸</span> {{ section.settings.usp_2 }}</li>
+          {%- if section.settings.trust_2_label != blank -%}
+            <div class="ed-trust-item">
+              <span class="ed-trust-item__icon" aria-hidden="true">{{ section.settings.trust_2_icon | default: '🧾' }}</span>
+              <div>
+                <p class="ed-trust-item__label">{{ section.settings.trust_2_label }}</p>
+                {%- if section.settings.trust_2_sub != blank -%}<p class="ed-trust-item__sub">{{ section.settings.trust_2_sub }}</p>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.trust_3_label != blank -%}
+            <div class="ed-trust-item">
+              <span class="ed-trust-item__icon" aria-hidden="true">{{ section.settings.trust_3_icon | default: '⚡' }}</span>
+              <div>
+                <p class="ed-trust-item__label">{{ section.settings.trust_3_label }}</p>
+                {%- if section.settings.trust_3_sub != blank -%}<p class="ed-trust-item__sub">{{ section.settings.trust_3_sub }}</p>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.trust_4_label != blank -%}
+            <div class="ed-trust-item">
+              <span class="ed-trust-item__icon" aria-hidden="true">{{ section.settings.trust_4_icon | default: '↩️' }}</span>
+              <div>
+                <p class="ed-trust-item__label">{{ section.settings.trust_4_label }}</p>
+                {%- if section.settings.trust_4_sub != blank -%}<p class="ed-trust-item__sub">{{ section.settings.trust_4_sub }}</p>{%- endif -%}
+              </div>
+            </div>
           {%- endif -%}
           {%- if sample -%}
-            <li class="ed-body-s" style="display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; color: var(--ed-ink);"><span style="color: var(--ed-electric);">▸</span> Sample available (₹0, ships free) · <a href="{{ section.settings.sample_url | default: '/pages/sample-pack' }}" style="color: var(--ed-electric);">Request a sample</a></li>
+            <div class="ed-trust-item">
+              <span class="ed-trust-item__icon" aria-hidden="true">🎁</span>
+              <div>
+                <p class="ed-trust-item__label">Free sample</p>
+                <p class="ed-trust-item__sub"><a href="{{ section.settings.sample_url | default: '/pages/sample-pack' }}" class="ed-link">Request one</a></p>
+              </div>
+            </div>
           {%- endif -%}
-        </ul>
+        </div>
 
         {%- if printers -%}
           <details style="margin-top: var(--sp-5); border-top: 1px solid var(--ed-border); padding-top: var(--sp-4);">
@@ -173,6 +227,55 @@
         {%- endif -%}
       </div>
     </div>
+
+    {%- comment -%} Tabbed content blocks (Description / Specs / Reviews / FAQ) {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="ed-pdp-tabs" data-ed-tabs>
+        <div class="ed-pdp-tabs__nav" role="tablist">
+          {%- for block in section.blocks -%}
+            <button type="button" class="ed-pdp-tabs__tab{% if forloop.first %} is-active{% endif %}" role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" data-tab="{{ forloop.index }}" {{ block.shopify_attributes }}>
+              {{ block.settings.title }}
+            </button>
+          {%- endfor -%}
+        </div>
+        <div class="ed-pdp-tabs__panels">
+          {%- for block in section.blocks -%}
+            <div class="ed-pdp-tabs__panel{% if forloop.first %} is-active{% endif %}" role="tabpanel" data-panel="{{ forloop.index }}">
+              {%- case block.type -%}
+                {%- when 'rich_text' -%}
+                  <div class="ed-rte">{{ block.settings.content }}</div>
+                {%- when 'specs_table' -%}
+                  <div class="ed-rte">{{ block.settings.intro }}</div>
+                  {%- if block.settings.specs != blank -%}
+                    <table class="ed-spec ed-spec--full">
+                      <tbody>
+                        {%- assign rows = block.settings.specs | newline_to_br | split: '<br />' -%}
+                        {%- for row in rows -%}
+                          {%- assign parts = row | split: '|' -%}
+                          {%- if parts.size >= 2 -%}
+                            <tr><th>{{ parts[0] | strip }}</th><td>{{ parts[1] | strip }}</td></tr>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </tbody>
+                    </table>
+                  {%- endif -%}
+                {%- when 'faq' -%}
+                  {%- for i in (1..6) -%}
+                    {%- assign q = block.settings['q' | append: i] -%}
+                    {%- assign a = block.settings['a' | append: i] -%}
+                    {%- if q != blank -%}
+                      <details class="ed-faq-item">
+                        <summary>{{ q }}<span class="ed-faq-item__chev">+</span></summary>
+                        <div class="ed-rte">{{ a }}</div>
+                      </details>
+                    {%- endif -%}
+                  {%- endfor -%}
+              {%- endcase -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
   </div>
 
   {%- comment -%} Sticky mobile bottom bar {%- endcomment -%}
@@ -205,6 +308,153 @@
   .ed-tier-range { font-weight: 500; }
   .ed-tier-price { font-weight: 700; color: var(--ed-ink, #0A0B0E); }
   .ed-tier-save { color: var(--ed-success, #1E6B3A); font-size: 11px; font-weight: 600; }
+
+  /* Tier cards (Rentmojo style) */
+  .ed-tier-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .ed-tier-card {
+    position: relative;
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 4px;
+    padding: 12px 14px;
+    background: var(--ed-snow, #FBFAF6);
+    border: 1.5px solid var(--ed-border, #E0DBCF);
+    border-radius: 2px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 120ms, background 120ms, transform 120ms;
+  }
+  .ed-tier-card:hover { border-color: var(--ed-ink, #0A0B0E); transform: translateY(-1px); }
+  .ed-tier-card.is-active {
+    border-color: var(--ed-electric, #1E5FFF);
+    background: rgba(30, 95, 255, 0.06);
+    box-shadow: inset 0 0 0 1px var(--ed-electric, #1E5FFF);
+  }
+  .ed-tier-card.is-active::before {
+    content: '✓'; position: absolute; top: 8px; right: 10px;
+    width: 18px; height: 18px;
+    background: var(--ed-electric, #1E5FFF); color: var(--ed-paper, #F4F0E8);
+    border-radius: 50%; font-size: 11px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ed-tier-card__range {
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--ed-text-mute, #5C6068);
+  }
+  .ed-tier-card__price {
+    font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 18px;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-tier-card__save {
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 11px;
+    color: var(--ed-success, #1E6B3A);
+    background: rgba(30, 107, 58, 0.1);
+    padding: 1px 6px; border-radius: 2px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .ed-tier-card__note {
+    font-family: "Inter", sans-serif; font-size: 11px;
+    color: var(--ed-text-mute, #5C6068);
+  }
+
+  /* PDP price block (no tiers) */
+  .ed-pdp-price { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .ed-pdp-price__big { font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 32px; color: var(--ed-ink, #0A0B0E); }
+  .ed-pdp-price__compare { font-family: "IBM Plex Mono", monospace; font-size: 16px; color: var(--ed-text-mute, #5C6068); text-decoration: line-through; }
+  .ed-pdp-price__off { font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 13px; color: var(--ed-paper, #F4F0E8); background: var(--ed-electric, #1E5FFF); padding: 3px 8px; border-radius: 2px; }
+  .ed-pdp-price__hint { font-family: "Inter", sans-serif; font-size: 12px; color: var(--ed-text-mute, #5C6068); }
+
+  /* Pincode delivery checker */
+  .ed-pincode { margin: 0 0 24px; padding: 14px; background: var(--ed-snow, #FBFAF6); border: 1px solid var(--ed-border, #E0DBCF); border-radius: 2px; }
+  .ed-pincode__row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 6px; }
+  .ed-pincode__input { padding: 10px 12px; height: 40px; font-size: 14px; font-family: "IBM Plex Mono", monospace; letter-spacing: 0.06em; }
+  .ed-pincode__btn { height: 40px; padding: 0 16px; font-size: 13px; }
+  .ed-pincode__result {
+    margin: 8px 0 0; font-size: 13px;
+    color: var(--ed-success, #1E6B3A);
+    font-family: "Inter", sans-serif;
+  }
+  .ed-pincode__result.is-err { color: var(--ed-error, #A8281C); }
+
+  /* Trust grid */
+  .ed-trust-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ed-border, #E0DBCF);
+  }
+  .ed-trust-item { display: flex; gap: 10px; align-items: flex-start; }
+  .ed-trust-item__icon { font-size: 20px; line-height: 1; flex: 0 0 auto; }
+  .ed-trust-item__label { margin: 0; font-size: 13px; font-weight: 600; color: var(--ed-ink, #0A0B0E); line-height: 1.3; }
+  .ed-trust-item__sub { margin: 2px 0 0; font-size: 12px; color: var(--ed-text-mute, #5C6068); line-height: 1.35; }
+  .ed-trust-item .ed-link { color: var(--ed-electric, #1E5FFF); text-decoration: none; border-bottom: 1px solid; }
+
+  /* Tabs */
+  .ed-pdp-tabs { margin-top: 48px; }
+  .ed-pdp-tabs__nav {
+    display: flex; gap: 0;
+    border-bottom: 1.5px solid var(--ed-ink, #0A0B0E);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ed-pdp-tabs__nav::-webkit-scrollbar { display: none; }
+  .ed-pdp-tabs__tab {
+    flex: 0 0 auto;
+    padding: 14px 20px;
+    background: transparent; border: 0;
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--ed-text-mute, #5C6068);
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    margin-bottom: -1.5px;
+    transition: color 120ms, border-color 120ms;
+  }
+  .ed-pdp-tabs__tab:hover { color: var(--ed-ink, #0A0B0E); }
+  .ed-pdp-tabs__tab.is-active {
+    color: var(--ed-ink, #0A0B0E);
+    border-bottom-color: var(--ed-electric, #1E5FFF);
+  }
+  .ed-pdp-tabs__panels { padding-top: 24px; }
+  .ed-pdp-tabs__panel { display: none; }
+  .ed-pdp-tabs__panel.is-active { display: block; }
+  .ed-rte { font-family: "Inter", sans-serif; font-size: 15px; line-height: 1.6; color: var(--ed-ink, #0A0B0E); max-width: 72ch; }
+  .ed-rte p { margin: 0 0 12px; }
+  .ed-rte ul, .ed-rte ol { padding-left: 20px; margin: 0 0 12px; }
+  .ed-spec--full { width: 100%; max-width: 720px; }
+
+  /* FAQ inside tabs */
+  .ed-faq-item {
+    border-bottom: 1px solid var(--ed-border, #E0DBCF);
+    padding: 14px 0;
+  }
+  .ed-faq-item summary {
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer;
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 15px;
+    list-style: none;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-faq-item summary::-webkit-details-marker { display: none; }
+  .ed-faq-item__chev {
+    font-size: 22px; font-weight: 400; line-height: 1;
+    transition: transform 160ms;
+  }
+  .ed-faq-item[open] .ed-faq-item__chev { transform: rotate(45deg); }
+  .ed-faq-item .ed-rte { margin-top: 10px; }
+
+  @media (max-width: 749px) {
+    .ed-trust-grid { grid-template-columns: 1fr; }
+    .ed-pincode__row { grid-template-columns: 1fr; }
+    .ed-pdp-tabs__tab { padding: 12px 14px; font-size: 13px; }
+  }
 
   /* Sticky mobile bar */
   .ed-pdp-stickybar {
@@ -306,6 +556,63 @@
       b.addEventListener('click', function() { ph('add_to_cart_sticky', meta); });
     });
 
+    // Tier card selection — sets qty to tier minimum
+    document.querySelectorAll('[data-ed-tier-cards] .ed-tier-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('[data-ed-tier-cards] .ed-tier-card').forEach(function(c) {
+          c.classList.toggle('is-active', c === card);
+        });
+        const min = parseInt(card.dataset.tierMin, 10) || 1;
+        if (qtyInput) {
+          qtyInput.value = min;
+          qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        ph('tier_card_selected', Object.assign({}, meta, { tier_min: min }));
+      });
+    });
+
+    // Pincode checker (mock — replace with real serviceability API if needed)
+    const pinWrap = document.querySelector('[data-ed-pincode]');
+    if (pinWrap) {
+      const input = pinWrap.querySelector('.ed-pincode__input');
+      const btn = pinWrap.querySelector('.ed-pincode__btn');
+      const result = pinWrap.querySelector('[data-ed-pincode-result]');
+      const check = function() {
+        const v = (input.value || '').trim();
+        if (!/^\d{6}$/.test(v)) {
+          result.textContent = 'Enter a valid 6-digit Indian pincode.';
+          result.classList.add('is-err');
+          return;
+        }
+        // Mock: estimate EDD = today + 3 business days
+        const d = new Date(); d.setDate(d.getDate() + 3);
+        const opts = { weekday: 'short', day: '2-digit', month: 'short' };
+        result.textContent = '✓ Delivers to ' + v + ' by ' + d.toLocaleDateString('en-IN', opts) + ' · free shipping above ₹2,500';
+        result.classList.remove('is-err');
+        ph('pincode_check', Object.assign({}, meta, { pincode: v }));
+      };
+      btn.addEventListener('click', check);
+      input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); check(); } });
+    }
+
+    // Tabs
+    document.querySelectorAll('[data-ed-tabs]').forEach(function(wrap) {
+      const tabs = wrap.querySelectorAll('.ed-pdp-tabs__tab');
+      const panels = wrap.querySelectorAll('.ed-pdp-tabs__panel');
+      tabs.forEach(function(t) {
+        t.addEventListener('click', function() {
+          const id = t.dataset.tab;
+          tabs.forEach(function(x) {
+            const active = x === t;
+            x.classList.toggle('is-active', active);
+            x.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          panels.forEach(function(p) { p.classList.toggle('is-active', p.dataset.panel === id); });
+          ph('pdp_tab_click', Object.assign({}, meta, { tab: t.textContent.trim() }));
+        });
+      });
+    });
+
     // PDP viewed
     ph('pdp_view', meta);
   })();
@@ -316,12 +623,34 @@
   "name": "ED Main product",
   "tag": "section",
   "settings": [
+    { "type": "header", "content": "Layout" },
     { "type": "checkbox", "id": "show_breadcrumb", "label": "Show breadcrumb", "default": true },
     { "type": "checkbox", "id": "show_quote_cta", "label": "Show 'Request 50+ quote' CTA", "default": true },
     { "type": "url", "id": "quote_url", "label": "Quote page URL" },
     { "type": "url", "id": "sample_url", "label": "Sample-pack page URL" },
-    { "type": "text", "id": "usp_1", "label": "USP 1", "default": "Free shipping on orders above ₹2,500" },
-    { "type": "text", "id": "usp_2", "label": "USP 2", "default": "GST invoice included on every order" },
+
+    { "type": "header", "content": "Delivery check" },
+    { "type": "checkbox", "id": "show_pincode_check", "label": "Show pincode delivery checker", "default": true },
+
+    { "type": "header", "content": "Trust strip (4 cells)" },
+    { "type": "text", "id": "trust_1_icon", "label": "Icon 1 (emoji)", "default": "🚚" },
+    { "type": "text", "id": "trust_1_label", "label": "Label 1", "default": "Free shipping" },
+    { "type": "text", "id": "trust_1_sub", "label": "Sub 1", "default": "On orders above ₹2,500" },
+    { "type": "text", "id": "trust_2_icon", "label": "Icon 2 (emoji)", "default": "🧾" },
+    { "type": "text", "id": "trust_2_label", "label": "Label 2", "default": "GST invoice" },
+    { "type": "text", "id": "trust_2_sub", "label": "Sub 2", "default": "Included on every order" },
+    { "type": "text", "id": "trust_3_icon", "label": "Icon 3 (emoji)", "default": "⚡" },
+    { "type": "text", "id": "trust_3_label", "label": "Label 3", "default": "Same-day dispatch" },
+    { "type": "text", "id": "trust_3_sub", "label": "Sub 3", "default": "Mumbai · Bengaluru · Delhi" },
+    { "type": "text", "id": "trust_4_icon", "label": "Icon 4 (emoji)", "default": "↩️" },
+    { "type": "text", "id": "trust_4_label", "label": "Label 4", "default": "Easy returns" },
+    { "type": "text", "id": "trust_4_sub", "label": "Sub 4", "default": "7-day return window" },
+
+    { "type": "header", "content": "Legacy USPs (deprecated — use Trust strip above)" },
+    { "type": "text", "id": "usp_1", "label": "USP 1" },
+    { "type": "text", "id": "usp_2", "label": "USP 2" },
+
+    { "type": "header", "content": "Color scheme" },
     { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
       "options": [
         { "value": "scheme-1", "label": "Paper" },
@@ -329,6 +658,39 @@
       ]
     }
   ],
+  "blocks": [
+    {
+      "type": "rich_text",
+      "name": "Tab — Rich text",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Tab title", "default": "Description" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p>Describe your product, materials, and use cases.</p>" }
+      ]
+    },
+    {
+      "type": "specs_table",
+      "name": "Tab — Specs table",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Tab title", "default": "Specs" },
+        { "type": "richtext", "id": "intro", "label": "Intro (optional)" },
+        { "type": "textarea", "id": "specs", "label": "Specs (one per line, format: Label | Value)", "default": "Material | 80 GSM thermal paper\nDimensions | 100 × 150 mm\nCore | 25 mm\nPack | 1,000 labels / roll\nCase | 4 rolls / case" }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "Tab — FAQ",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Tab title", "default": "FAQ" },
+        { "type": "text", "id": "q1", "label": "Q1" }, { "type": "richtext", "id": "a1", "label": "A1" },
+        { "type": "text", "id": "q2", "label": "Q2" }, { "type": "richtext", "id": "a2", "label": "A2" },
+        { "type": "text", "id": "q3", "label": "Q3" }, { "type": "richtext", "id": "a3", "label": "A3" },
+        { "type": "text", "id": "q4", "label": "Q4" }, { "type": "richtext", "id": "a4", "label": "A4" },
+        { "type": "text", "id": "q5", "label": "Q5" }, { "type": "richtext", "id": "a5", "label": "A5" },
+        { "type": "text", "id": "q6", "label": "Q6" }, { "type": "richtext", "id": "a6", "label": "A6" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
   "enabled_on": { "templates": ["product"] }
 }
 {% endschema %}
