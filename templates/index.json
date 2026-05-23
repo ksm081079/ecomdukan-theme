@@ -9,40 +9,6 @@
  */
 {
   "sections": {
-    "announcement": {
-      "type": "ed-announcement",
-      "blocks": {
-        "m1": {
-          "type": "message",
-          "settings": {
-            "text": "Free shipping on orders above ₹2,500",
-            "link": ""
-          }
-        },
-        "m2": {
-          "type": "message",
-          "settings": {
-            "text": "GST invoice on every order",
-            "link": ""
-          }
-        },
-        "m3": {
-          "type": "message",
-          "settings": {
-            "text": "Reorder in one tap — Mumbai · Bengaluru · Delhi DCs",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "m1",
-        "m2",
-        "m3"
-      ],
-      "settings": {
-        "rotate_seconds": 6
-      }
-    },
     "hero": {
       "type": "ed-hero",
       "settings": {
@@ -319,7 +285,6 @@
     }
   },
   "order": [
-    "announcement",
     "hero",
     "usp",
     "categories",

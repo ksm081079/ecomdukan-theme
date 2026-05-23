@@ -2,17 +2,6 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "newsletter": {
-      "type": "ed-email-capture",
-      "settings": {
-        "eyebrow": "Newsletter",
-        "heading": "Restock & price-drop alerts",
-        "body": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff.",
-        "cta_label": "Subscribe",
-        "disclaimer": "We never share your email. Unsubscribe anytime.",
-        "color_scheme": "scheme-2"
-      }
-    },
     "footer": {
       "type": "footer",
       "blocks": {
@@ -64,5 +53,5 @@
       }
     }
   },
-  "order": ["newsletter", "footer"]
+  "order": ["footer"]
 }
