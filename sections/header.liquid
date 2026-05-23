@@ -82,10 +82,21 @@
     top: 0;
     z-index: 50;
     margin-bottom: {{ section.settings.margin_bottom | times: 0.75 | round: 0 }}px;
+    background: var(--ed-snow, #FBFAF6);
+  }
+  .section-header .header {
+    background: var(--ed-snow, #FBFAF6);
   }
 
-  /* Ensure sticky header sits above all sections + sections never bleed under it */
-  .shopify-section-header-sticky { z-index: 50; }
+  /* Sticky header — solid background, soft separator + tiny shadow on scroll */
+  .shopify-section-header-sticky {
+    z-index: 50;
+    background: var(--ed-snow, #FBFAF6);
+    border-bottom: 1px solid var(--ed-border, #E0DBCF);
+    box-shadow: 0 2px 8px rgba(10, 11, 14, 0.04);
+  }
+  .shopify-section-header-sticky .header { background: var(--ed-snow, #FBFAF6); }
+
   html { scroll-padding-top: var(--header-height, 72px); }
 
   @media screen and (min-width: 750px) {
