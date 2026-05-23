@@ -14,7 +14,7 @@
       </div>
     {%- endif -%}
 
-    <div style="display: grid; grid-template-columns: repeat({{ post_count }}, 1fr); gap: var(--sp-5);">
+    <div class="ed-resource-grid" style="display: grid; grid-template-columns: repeat({{ post_count }}, 1fr); gap: var(--sp-5);">
       {%- if blog and blog.articles.size > 0 -%}
         {%- for article in blog.articles limit: post_count -%}
           <a href="{{ article.url }}" class="ed-card" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: var(--sp-3);">
