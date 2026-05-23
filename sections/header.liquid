@@ -114,6 +114,44 @@
     white-space: nowrap;
   }
   .ed-header-quote:hover { background: #1747D6; border-color: #1747D6; }
+
+  /* ----- Brand font upgrade for header ----- */
+  /* Wordmark fallback (when no logo uploaded) */
+  .header__heading-link .h2 {
+    font-family: "Poppins", sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 26px !important;
+    letter-spacing: -0.045em !important;
+    line-height: 0.9 !important;
+    text-transform: lowercase;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  /* Navigation: Inter 500, tight */
+  .header__menu-item, .header__menu-item span {
+    font-family: "Inter", sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+  }
+  .header__active-menu-item { font-weight: 600 !important; }
+  .header__menu-item:hover { color: var(--ed-electric, #1E5FFF); }
+
+  /* Mega menu typography */
+  .mega-menu__list .mega-menu__link {
+    font-family: "Inter", sans-serif !important;
+    font-weight: 400; font-size: 14px;
+  }
+
+  /* Header icon stroke */
+  .header__icon { color: var(--ed-ink, #0A0B0E); }
+  .header__icon:hover { color: var(--ed-electric, #1E5FFF); }
+
+  /* Tighter header padding on mobile so it doesn't feel airy */
+  @media (max-width: 749px) {
+    .header { padding-left: 16px; padding-right: 16px; }
+    .ed-header-quote { display: none !important; }
+  }
 {%- endstyle -%}
 
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
@@ -640,9 +678,9 @@
       "label": "Quote button label"
     },
     {
-      "type": "url",
+      "type": "text",
       "id": "quote_link",
-      "label": "Quote button link",
+      "label": "Quote button link (URL or /pages/... path)",
       "default": "/pages/request-quote"
     },
     {

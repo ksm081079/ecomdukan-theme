@@ -1,39 +1,166 @@
 {%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-1'
+  assign layout = section.settings.layout | default: 'text-only'
+  assign align = section.settings.text_alignment | default: 'left'
 -%}
-<div class="color-{{ scheme }} ed-section ed-hero" style="background: rgb(var(--color-background));">
-  <div class="ed-container">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="ed-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+
+<div class="color-{{ scheme }} ed-hero-wrap ed-hero-wrap--{{ layout }}" style="background: rgb(var(--color-background));">
+  <div class="ed-container ed-hero-inner ed-hero-inner--{{ align }}{% if layout == 'image-bg' %} ed-hero-inner--overlay{% endif %}">
+
+    {%- if layout == 'image-bg' and section.settings.image != blank -%}
+      <div class="ed-hero-bg">
+        {{ section.settings.image | image_url: width: 2400 | image_tag:
+          loading: 'eager', widths: '600, 900, 1200, 1800, 2400',
+          alt: section.settings.heading | default: 'Hero', class: 'ed-hero-bg__img'
+        }}
+        <div class="ed-hero-bg__scrim"></div>
+      </div>
     {%- endif -%}
 
-    {%- if section.settings.heading != blank -%}
-      <h1 class="ed-hero__h">{{ section.settings.heading }}</h1>
-    {%- endif -%}
+    <div class="ed-hero-copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ed-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h1 class="ed-hero__h">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+      {%- if section.settings.subhead != blank -%}
+        <p class="ed-hero__sub">{{ section.settings.subhead }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_1_label != blank or section.settings.cta_2_label != blank -%}
+        <div class="ed-hero__ctas">
+          {%- if section.settings.cta_1_label != blank -%}
+            <a href="{{ section.settings.cta_1_link | default: '#' }}" class="ed-btn ed-btn--primary ed-btn--lg" data-action="hero_cta" data-cta="1">{{ section.settings.cta_1_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.cta_2_label != blank -%}
+            <a href="{{ section.settings.cta_2_link | default: '#' }}" class="ed-btn ed-btn--ghost ed-btn--lg" data-action="hero_cta" data-cta="2">{{ section.settings.cta_2_label }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
 
-    {%- if section.settings.subhead != blank -%}
-      <p class="ed-hero__sub">{{ section.settings.subhead }}</p>
-    {%- endif -%}
+      {%- if section.settings.trust_text != blank and layout != 'image-bg' -%}
+        <p class="ed-hero__trust">{{ section.settings.trust_text }}</p>
+      {%- endif -%}
+    </div>
 
-    {%- if section.settings.cta_1_label != blank or section.settings.cta_2_label != blank -%}
-      <div class="ed-hero__ctas">
-        {%- if section.settings.cta_1_label != blank -%}
-          <a href="{{ section.settings.cta_1_link | default: '#' }}" class="ed-btn ed-btn--primary ed-btn--lg">{{ section.settings.cta_1_label }}</a>
-        {%- endif -%}
-        {%- if section.settings.cta_2_label != blank -%}
-          <a href="{{ section.settings.cta_2_link | default: '#' }}" class="ed-btn ed-btn--ghost ed-btn--lg">{{ section.settings.cta_2_label }}</a>
-        {%- endif -%}
+    {%- if layout == 'split' and section.settings.image != blank -%}
+      <div class="ed-hero-media">
+        {{ section.settings.image | image_url: width: 1200 | image_tag:
+          loading: 'eager', widths: '500, 800, 1200',
+          alt: section.settings.heading | default: 'Hero', class: 'ed-hero-media__img'
+        }}
       </div>
     {%- endif -%}
   </div>
 </div>
 
+<style>
+  .ed-hero-wrap { padding-block: clamp(40px, 6vw, 96px); position: relative; }
+  .ed-hero-wrap--image-bg { padding-block: clamp(80px, 10vw, 160px); }
+
+  .ed-hero-inner { position: relative; z-index: 2; }
+  .ed-hero-inner--center { text-align: center; }
+  .ed-hero-inner--center .ed-hero__ctas { justify-content: center; }
+  .ed-hero-inner--right { text-align: right; }
+  .ed-hero-inner--right .ed-hero__ctas { justify-content: flex-end; }
+
+  /* Background image variant */
+  .ed-hero-bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+  .ed-hero-bg__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ed-hero-bg__scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,11,14,0.15) 0%, rgba(10,11,14,0.55) 100%);
+  }
+  .ed-hero-inner--overlay { color: var(--ed-paper, #F4F0E8); max-width: 720px; }
+  .ed-hero-inner--overlay .ed-hero__h { color: inherit; }
+  .ed-hero-inner--overlay .ed-hero__sub { color: rgba(244,240,232,0.92); }
+
+  /* Split (50/50) variant */
+  .ed-hero-wrap--split .ed-hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 5vw, 64px);
+    align-items: center;
+  }
+  .ed-hero-media {
+    aspect-ratio: 4 / 5;
+    border: 1.5px solid var(--ed-ink, #0A0B0E);
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--ed-paper, #F4F0E8);
+  }
+  .ed-hero-media__img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+
+  /* Type */
+  .ed-hero__eyebrow {
+    margin: 0 0 12px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.65);
+  }
+  .ed-hero__h {
+    margin: 0 0 16px;
+    font-family: "Poppins", sans-serif; font-weight: 700;
+    font-size: clamp(32px, 5.5vw, 64px);
+    letter-spacing: -0.045em; line-height: 1.05;
+  }
+  .ed-hero__sub {
+    margin: 0 0 24px;
+    font-family: "Inter", sans-serif;
+    font-size: clamp(15px, 1.4vw, 18px); line-height: 1.5;
+    color: rgba(var(--color-foreground), 0.78);
+    max-width: 56ch;
+  }
+  .ed-hero-inner--center .ed-hero__sub { margin-left: auto; margin-right: auto; }
+  .ed-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .ed-hero__trust {
+    margin: 24px 0 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.55);
+  }
+
+  /* Mobile */
+  @media (max-width: 749px) {
+    .ed-hero-wrap--split .ed-hero-inner { grid-template-columns: 1fr; }
+    .ed-hero-media { aspect-ratio: 4 / 3; max-height: 380px; }
+    .ed-hero-wrap--image-bg { padding-block: 80px; }
+    .ed-hero__ctas .ed-btn { flex: 1; justify-content: center; }
+  }
+</style>
+
+<script>
+  document.addEventListener('click', function(e) {
+    const el = e.target.closest('[data-action="hero_cta"]');
+    if (!el || !window.posthog) return;
+    try { posthog.capture('hero_cta_click', { cta: el.dataset.cta, label: el.textContent.trim(), href: el.getAttribute('href') }); } catch (err) {}
+  });
+</script>
+
 {% schema %}
 {
-  "name": "ED Hero (type-only)",
+  "name": "ED Hero",
   "tag": "section",
   "class": "ed-hero-section",
   "settings": [
+    { "type": "select", "id": "layout", "label": "Layout", "default": "split",
+      "options": [
+        { "value": "text-only", "label": "Text only (no image)" },
+        { "value": "split", "label": "50/50 split (text + image)" },
+        { "value": "image-bg", "label": "Full-bleed image background" }
+      ]
+    },
+    { "type": "select", "id": "text_alignment", "label": "Text alignment", "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
     { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
       "options": [
         { "value": "scheme-1", "label": "Paper" },
@@ -42,9 +169,17 @@
         { "value": "scheme-4", "label": "Ink" }
       ]
     },
+
+    { "type": "header", "content": "Image (split / background layouts)" },
+    { "type": "image_picker", "id": "image", "label": "Hero image" },
+
+    { "type": "header", "content": "Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "दुकान, scaled · Made in India" },
     { "type": "textarea", "id": "heading", "label": "Headline", "default": "Stationery & printer labels, in bulk, in stock." },
     { "type": "textarea", "id": "subhead", "label": "Subhead", "default": "One supplier. One invoice. Three DCs — Mumbai, Bengaluru, Delhi." },
+    { "type": "text", "id": "trust_text", "label": "Trust line (under CTAs)", "default": "Same-day dispatch · GST invoice on every order" },
+
+    { "type": "header", "content": "CTAs" },
     { "type": "text", "id": "cta_1_label", "label": "Primary CTA label", "default": "Shop labels" },
     { "type": "url",  "id": "cta_1_link",  "label": "Primary CTA link" },
     { "type": "text", "id": "cta_2_label", "label": "Secondary CTA label", "default": "Get bulk quote" },

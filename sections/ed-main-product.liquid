@@ -135,9 +135,9 @@
             <div></div>
           </div>
 
-          <button type="submit" name="add" class="ed-btn ed-btn--primary ed-btn--lg ed-btn--block" {% unless product.available %}disabled{% endunless %}>
+          <button type="submit" name="add" class="ed-btn ed-btn--primary ed-btn--lg ed-btn--block" id="ed-pdp-add" data-base-price="{{ variant.price }}" data-currency="{{ cart.currency.symbol }}" {% unless product.available %}disabled{% endunless %}>
             {%- if product.available -%}
-              Add to cart
+              <span data-ed-btn-label>Add to cart</span> <span data-ed-btn-total class="ed-mono" style="opacity:.85;"> · {{ variant.price | money }}</span>
             {%- else -%}
               Sold out
             {%- endif -%}
@@ -174,6 +174,17 @@
       </div>
     </div>
   </div>
+
+  {%- comment -%} Sticky mobile bottom bar {%- endcomment -%}
+  {%- if product.available -%}
+    <div class="ed-pdp-stickybar" id="ed-pdp-stickybar" aria-hidden="true">
+      <div class="ed-pdp-stickybar__info">
+        <p class="ed-pdp-stickybar__title">{{ product.title | truncate: 38 }}</p>
+        <p class="ed-pdp-stickybar__price" data-ed-stickybar-price>{{ variant.price | money }}</p>
+      </div>
+      <button type="submit" form="product-form" class="ed-btn ed-btn--primary ed-pdp-stickybar__btn" data-action="pdp_sticky_add">Add to cart</button>
+    </div>
+  {%- endif -%}
 </div>
 
 <style>
@@ -181,18 +192,123 @@
     .ed-pdp-grid { grid-template-columns: 1fr !important; }
     .ed-pdp__info { position: static !important; }
   }
+  .ed-tier-list { list-style: none; padding: 0; border: 1px solid var(--ed-border, #E0DBCF); border-radius: 2px; overflow: hidden; }
+  .ed-tier-list li {
+    display: grid; grid-template-columns: 1fr auto auto;
+    gap: 12px; align-items: center;
+    padding: 10px 14px;
+    font-family: "IBM Plex Mono", monospace; font-size: 13px;
+    border-top: 1px solid var(--ed-border, #E0DBCF);
+  }
+  .ed-tier-list li:first-child { border-top: 0; }
+  .ed-tier-list li.is-active { background: rgba(30, 95, 255, 0.08); }
+  .ed-tier-range { font-weight: 500; }
+  .ed-tier-price { font-weight: 700; color: var(--ed-ink, #0A0B0E); }
+  .ed-tier-save { color: var(--ed-success, #1E6B3A); font-size: 11px; font-weight: 600; }
+
+  /* Sticky mobile bar */
+  .ed-pdp-stickybar {
+    display: none;
+    position: fixed; left: 0; right: 0; bottom: 0;
+    z-index: 49;
+    background: var(--ed-snow, #FBFAF6);
+    border-top: 1.5px solid var(--ed-ink, #0A0B0E);
+    padding: 10px 16px;
+    align-items: center; gap: 12px;
+    box-shadow: 0 -6px 20px rgba(10,11,14,0.08);
+  }
+  .ed-pdp-stickybar__info { flex: 1; min-width: 0; }
+  .ed-pdp-stickybar__title {
+    margin: 0; font-family: "Inter", sans-serif; font-weight: 600;
+    font-size: 13px; line-height: 1.2;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ed-pdp-stickybar__price {
+    margin: 2px 0 0; font-family: "IBM Plex Mono", monospace;
+    font-weight: 700; font-size: 16px;
+  }
+  .ed-pdp-stickybar__btn {
+    height: 44px; padding: 0 18px; font-size: 14px;
+  }
+  @media (max-width: 749px) {
+    .ed-pdp-stickybar { display: flex; }
+    body { padding-bottom: 76px; }
+  }
 </style>
 
 <script>
-  document.querySelectorAll('[data-ed-qty-step]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var step = parseInt(btn.dataset.edQtyStep, 10);
-      var input = btn.parentElement.querySelector('input[type="number"]');
-      var v = Math.max(1, (parseInt(input.value, 10) || 1) + step);
-      input.value = v;
-      input.dispatchEvent(new Event('change', { bubbles: true }));
+  (function() {
+    const ph = function(name, props) { if (window.posthog) try { posthog.capture(name, props || {}); } catch (e) {} };
+    const meta = { product_id: '{{ product.id }}', product_handle: '{{ product.handle }}', product_title: {{ product.title | json }} };
+
+    // Qty stepper
+    document.querySelectorAll('[data-ed-qty-step]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const step = parseInt(btn.dataset.edQtyStep, 10);
+        const input = btn.parentElement.querySelector('input[type="number"]');
+        const v = Math.max(1, (parseInt(input.value, 10) || 1) + step);
+        input.value = v;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
     });
-  });
+
+    // Live total + tier highlight on qty change
+    const qtyInput = document.getElementById('ed-qty');
+    const btn = document.getElementById('ed-pdp-add');
+    const stickyPrice = document.querySelector('[data-ed-stickybar-price]');
+    const totalEl = document.querySelector('[data-ed-btn-total]');
+    const tiers = document.querySelectorAll('.ed-tier-list li');
+    const base = btn ? parseInt(btn.dataset.basePrice, 10) : 0;
+    const sym = btn ? btn.dataset.currency || '₹' : '₹';
+
+    function formatMoney(cents) {
+      return sym + (cents / 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    if (qtyInput && totalEl) {
+      qtyInput.addEventListener('change', function() {
+        const q = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+        const total = base * q;
+        totalEl.textContent = ' · ' + formatMoney(total);
+        if (stickyPrice) stickyPrice.textContent = formatMoney(total);
+        // Highlight matching tier row (best-effort: parse range like "1-4" or "5-19" or "50+")
+        tiers.forEach(function(li) {
+          const range = (li.querySelector('.ed-tier-range') || {}).textContent || '';
+          const m = range.match(/(\d+)\s*[-–]\s*(\d+)/) || range.match(/(\d+)\s*\+/);
+          let lo = m ? parseInt(m[1], 10) : 0;
+          let hi = m && m[2] ? parseInt(m[2], 10) : Infinity;
+          li.classList.toggle('is-active', q >= lo && q <= hi);
+        });
+        ph('qty_changed', Object.assign({}, meta, { quantity: q, surface: 'pdp' }));
+      });
+      // initial tier highlight
+      qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    // Variant select tracking
+    document.querySelectorAll('.ed-form select').forEach(function(sel) {
+      sel.addEventListener('change', function() {
+        ph('variant_selected', Object.assign({}, meta, { option: sel.name, value: sel.value }));
+      });
+    });
+
+    // Add to cart tracking (PDP fires alongside Shopify form submission)
+    const form = document.getElementById('product-form');
+    if (form) {
+      form.addEventListener('submit', function() {
+        const q = qtyInput ? parseInt(qtyInput.value, 10) : 1;
+        ph('add_to_cart', Object.assign({}, meta, { quantity: q, surface: 'pdp' }));
+      });
+    }
+
+    // Sticky-bar PostHog event
+    document.querySelectorAll('[data-action="pdp_sticky_add"]').forEach(function(b) {
+      b.addEventListener('click', function() { ph('add_to_cart_sticky', meta); });
+    });
+
+    // PDP viewed
+    ph('pdp_view', meta);
+  })();
 </script>
 
 {% schema %}
