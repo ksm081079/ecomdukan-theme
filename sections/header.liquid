@@ -78,22 +78,42 @@
   }
 
   .section-header {
-    position: sticky; /* This is for fixing a Safari z-index issue. PR #2147 */
+    position: sticky;
+    top: 0;
+    z-index: 50;
     margin-bottom: {{ section.settings.margin_bottom | times: 0.75 | round: 0 }}px;
   }
 
-  @media screen and (min-width: 750px) {
-    .section-header {
-      margin-bottom: {{ section.settings.margin_bottom }}px;
-    }
-  }
+  /* Ensure sticky header sits above all sections + sections never bleed under it */
+  .shopify-section-header-sticky { z-index: 50; }
+  html { scroll-padding-top: var(--header-height, 72px); }
 
+  @media screen and (min-width: 750px) {
+    .section-header { margin-bottom: {{ section.settings.margin_bottom }}px; }
+  }
   @media screen and (min-width: 990px) {
     .header {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* Quote CTA button in header */
+  .ed-header-quote {
+    display: inline-flex; align-items: center;
+    background: var(--ed-electric, #1E5FFF);
+    color: var(--ed-paper, #F4F0E8);
+    font-family: "Inter", sans-serif; font-weight: 600;
+    font-size: 13px; letter-spacing: 0.02em;
+    padding: 10px 16px;
+    border: 1.5px solid var(--ed-electric, #1E5FFF);
+    border-radius: 2px;
+    text-decoration: none;
+    margin: 0 8px;
+    transition: background 120ms, border-color 120ms;
+    white-space: nowrap;
+  }
+  .ed-header-quote:hover { background: #1747D6; border-color: #1747D6; }
 {%- endstyle -%}
 
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
@@ -270,6 +290,12 @@
         {%- endcase -%}
       {%- endfor -%}
 
+      {%- if section.settings.show_quote_cta and section.settings.quote_link != blank -%}
+        <a href="{{ section.settings.quote_link }}" class="ed-header-quote small-hide medium-hide" data-action="quote_cta_click">
+          {{ section.settings.quote_label | default: 'Get a quote' }}
+        </a>
+      {%- endif -%}
+
       <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
           {% if cart == empty %}
             <span class="svg-wrapper">{{'icon-cart-empty.svg' | inline_asset_content }}</span>
@@ -404,6 +430,13 @@
   }
 
   customElements.define('sticky-header', StickyHeader);
+
+  // Quote CTA tracking
+  document.addEventListener('click', function(e) {
+    const el = e.target.closest('.ed-header-quote');
+    if (!el || !window.posthog) return;
+    try { posthog.capture('quote_cta_click', { surface: 'header', href: el.getAttribute('href') }); } catch (err) {}
+  });
 {% endjavascript %}
 
 <script type="application/ld+json">
@@ -589,6 +622,28 @@
       "default": true,
       "label": "t:sections.header.settings.enable_customer_avatar.label",
       "info": "t:sections.header.settings.enable_customer_avatar.info"
+    },
+    {
+      "type": "header",
+      "content": "Quote CTA"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quote_cta",
+      "default": true,
+      "label": "Show 'Get a quote' button in header (desktop)"
+    },
+    {
+      "type": "text",
+      "id": "quote_label",
+      "default": "Get a quote",
+      "label": "Quote button label"
+    },
+    {
+      "type": "url",
+      "id": "quote_link",
+      "label": "Quote button link",
+      "default": "/pages/request-quote"
     },
     {
       "type": "header",
