@@ -142,45 +142,98 @@
           </div>
 
           {%- if product.variants.size > 1 -%}
-            <div class="ed-fieldset">
-              {%- for option in product.options_with_values -%}
-                <label class="ed-label" for="ed-opt-{{ forloop.index }}">{{ option.name }}</label>
-                <select id="ed-opt-{{ forloop.index }}" class="ed-select" name="options[{{ option.name }}]">
+            {%- for option in product.options_with_values -%}
+              <div class="ed-rm-card ed-rm-variant-card">
+                <p class="ed-rm-variant-card__label">{{ option.name }}</p>
+                <div class="ed-rm-variant-pills" role="radiogroup" aria-label="{{ option.name }}">
                   {%- for value in option.values -%}
-                    <option value="{{ value }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
+                    {%- assign selected = false -%}
+                    {%- if option.selected_value == value -%}{%- assign selected = true -%}{%- endif -%}
+                    <label class="ed-rm-pill-opt{% if selected %} is-active{% endif %}">
+                      <input type="radio" name="options[{{ option.name }}]" value="{{ value | escape }}" {% if selected %}checked{% endif %}>
+                      <span>{{ value }}</span>
+                    </label>
                   {%- endfor -%}
-                </select>
-              {%- endfor -%}
-            </div>
+                </div>
+              </div>
+            {%- endfor -%}
           {%- endif -%}
 
-          <div style="display: grid; grid-template-columns: 140px 1fr; gap: var(--sp-3); align-items: end; margin-bottom: var(--sp-3);">
-            <div>
-              <label class="ed-label" for="ed-qty">Quantity</label>
-              <div style="display: grid; grid-template-columns: 40px 1fr 40px; border: 1.5px solid var(--ed-ink); border-radius: 2px; overflow: hidden;">
-                <button type="button" aria-label="Decrease" data-ed-qty-step="-1" style="background: var(--ed-snow); border: 0; border-right: 1.5px solid var(--ed-ink); cursor: pointer; font-family: var(--font-ed-mono); font-size: 16px;">−</button>
-                <input id="ed-qty" type="number" name="quantity" value="1" min="1" class="ed-input" style="border: 0; text-align: center; font-family: var(--font-ed-mono); padding: 12px 0;">
-                <button type="button" aria-label="Increase" data-ed-qty-step="1" style="background: var(--ed-snow); border: 0; border-left: 1.5px solid var(--ed-ink); cursor: pointer; font-family: var(--font-ed-mono); font-size: 16px;">+</button>
+          {%- comment -%} Qty stepper (compact) + split add-to-cart bar (Rentmojo-style) {%- endcomment -%}
+          <div class="ed-rm-buy">
+            <div class="ed-rm-buy__qty">
+              <span class="ed-rm-buy__qty-label">Qty</span>
+              <div class="ed-rm-qty">
+                <button type="button" aria-label="Decrease" data-ed-qty-step="-1">−</button>
+                <input id="ed-qty" type="number" name="quantity" value="1" min="1" aria-label="Quantity">
+                <button type="button" aria-label="Increase" data-ed-qty-step="1">+</button>
               </div>
             </div>
-            <div></div>
+
+            <button type="submit" name="add" class="ed-rm-buy__bar" id="ed-pdp-add" data-base-price="{{ variant.price }}" data-currency="{{ cart.currency.symbol }}" {% unless product.available %}disabled{% endunless %}>
+              {%- if product.available -%}
+                <span class="ed-rm-buy__bar-left">
+                  <span class="ed-rm-buy__bar-meta">Total <span class="ed-rm-buy__bar-sub">(incl GST)</span></span>
+                  <span class="ed-rm-buy__bar-total" data-ed-btn-total>{{ variant.price | money }}</span>
+                </span>
+                <span class="ed-rm-buy__bar-right">
+                  <span class="ed-rm-buy__bar-cta" data-ed-btn-label>Add to cart</span>
+                  <span aria-hidden="true" class="ed-rm-buy__bar-arrow">→</span>
+                </span>
+              {%- else -%}
+                <span class="ed-rm-buy__bar-cta">Sold out</span>
+              {%- endif -%}
+            </button>
           </div>
 
-          <button type="submit" name="add" class="ed-btn ed-btn--primary ed-btn--lg ed-btn--block" id="ed-pdp-add" data-base-price="{{ variant.price }}" data-currency="{{ cart.currency.symbol }}" {% unless product.available %}disabled{% endunless %}>
-            {%- if product.available -%}
-              <span data-ed-btn-label>Add to cart</span> <span data-ed-btn-total class="ed-mono" style="opacity:.85;"> · {{ variant.price | money }}</span>
-            {%- else -%}
-              Sold out
-            {%- endif -%}
-          </button>
           <div class="product-form__error-message-wrapper" role="alert" hidden>
             <span class="product-form__error-message"></span>
           </div>
         {%- endform -%}
         </product-form>
 
+        {%- comment -%} Upsell card — bulk savings or quote (Rentmojo Mojo-Secure equivalent) {%- endcomment -%}
+        {%- if section.settings.upsell_heading != blank -%}
+          <a href="{{ section.settings.upsell_link | default: '/pages/bulk-pricing' }}" class="ed-rm-card ed-rm-upsell" data-action="upsell_click">
+            <span class="ed-rm-upsell__icon" aria-hidden="true">{{ section.settings.upsell_icon | default: '🛡️' }}</span>
+            <span class="ed-rm-upsell__body">
+              <span class="ed-rm-upsell__h">{{ section.settings.upsell_heading }}</span>
+              <span class="ed-rm-upsell__sub">{{ section.settings.upsell_sub }}</span>
+            </span>
+            <span class="ed-rm-upsell__arrow" aria-hidden="true">›</span>
+          </a>
+        {%- endif -%}
+
+        {%- comment -%} Delivery promise card {%- endcomment -%}
+        {%- if section.settings.promise_text != blank -%}
+          <div class="ed-rm-card ed-rm-promise">
+            <span class="ed-rm-promise__icon" aria-hidden="true">{{ section.settings.promise_icon | default: '🚚' }}</span>
+            <span class="ed-rm-promise__text">{{ section.settings.promise_text }}</span>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Two-col policy info row {%- endcomment -%}
+        {%- if section.settings.policy_1_label != blank or section.settings.policy_2_label != blank -%}
+          <div class="ed-rm-policies">
+            {%- if section.settings.policy_1_label != blank -%}
+              <a href="{{ section.settings.policy_1_url | default: '#' }}" class="ed-rm-policy" data-action="policy_click" data-policy="1">
+                <span class="ed-rm-policy__icon" aria-hidden="true">{{ section.settings.policy_1_icon | default: '↩️' }}</span>
+                <span class="ed-rm-policy__label">{{ section.settings.policy_1_label }}</span>
+                <span class="ed-rm-policy__arrow" aria-hidden="true">›</span>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.policy_2_label != blank -%}
+              <a href="{{ section.settings.policy_2_url | default: '#' }}" class="ed-rm-policy" data-action="policy_click" data-policy="2">
+                <span class="ed-rm-policy__icon" aria-hidden="true">{{ section.settings.policy_2_icon | default: '🧾' }}</span>
+                <span class="ed-rm-policy__label">{{ section.settings.policy_2_label }}</span>
+                <span class="ed-rm-policy__arrow" aria-hidden="true">›</span>
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
         {%- if section.settings.show_quote_cta -%}
-          <a href="{{ section.settings.quote_url | default: '/pages/request-quote' }}" class="ed-btn ed-btn--ghost ed-btn--block" style="margin-top: var(--sp-3);">Request 50+ quote</a>
+          <a href="{{ section.settings.quote_url | default: '/pages/request-quote' }}" class="ed-rm-quote-link" data-action="quote_link_click">{{ section.settings.quote_cta_label | default: 'Need 50+ cases? Request a custom quote →' }}</a>
         {%- endif -%}
 
         {%- comment -%} Trust strip — icon grid (Rentmojo-style) {%- endcomment -%}
@@ -473,6 +526,226 @@
     .ed-pdp-tabs__tab { padding: 12px 14px; font-size: 13px; }
   }
 
+  /* ===== Rentmojo-style stacked-card PDP info column ===== */
+  .ed-rm { display: flex; flex-direction: column; gap: 12px; }
+  .ed-rm__title {
+    margin: 0 0 4px;
+    font-family: "Poppins", sans-serif; font-weight: 700;
+    font-size: clamp(22px, 2.4vw, 30px);
+    letter-spacing: -0.025em; line-height: 1.15;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-rm-card {
+    background: var(--ed-snow, #FBFAF6);
+    border: 1px solid var(--ed-border, #E0DBCF);
+    border-radius: 8px;
+    padding: 16px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  /* Price card */
+  .ed-rm-price-card__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .ed-rm-price-card__amount { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .ed-rm-price-card__big {
+    font-family: "IBM Plex Mono", monospace; font-weight: 700;
+    font-size: 28px; color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-rm-price-card__compare {
+    font-family: "IBM Plex Mono", monospace; font-size: 15px;
+    color: var(--ed-text-mute, #5C6068); text-decoration: line-through;
+  }
+  .ed-rm-price-card__off {
+    font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 12px;
+    background: var(--ed-electric, #1E5FFF); color: var(--ed-paper, #F4F0E8);
+    padding: 3px 8px; border-radius: 2px;
+  }
+  .ed-rm-price-card__unit { font-family: "Inter", sans-serif; font-size: 14px; color: var(--ed-text-mute, #5C6068); }
+  .ed-rm-pill {
+    font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 12px;
+    padding: 4px 10px; border-radius: 999px;
+    background: var(--ed-paper, #F4F0E8);
+    color: var(--ed-ink, #0A0B0E);
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .ed-rm-price-card__meta {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid var(--ed-border, #E0DBCF);
+    font-family: "Inter", sans-serif; font-size: 13px;
+    color: var(--ed-text-mute, #5C6068);
+  }
+  .ed-rm-rating {
+    background: var(--ed-success, #1E6B3A); color: var(--ed-paper, #F4F0E8);
+    padding: 3px 8px; border-radius: 4px;
+    font-weight: 600; font-size: 12px;
+  }
+
+  /* Variant card */
+  .ed-rm-variant-card { padding: 14px 16px; }
+  .ed-rm-variant-card__label {
+    margin: 0 0 10px;
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-rm-variant-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ed-rm-pill-opt {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 56px; padding: 8px 16px;
+    background: transparent;
+    border: 1.5px solid var(--ed-border, #E0DBCF);
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif; font-weight: 500; font-size: 13px;
+    color: var(--ed-ink, #0A0B0E);
+    transition: border-color 100ms, background 100ms, color 100ms;
+  }
+  .ed-rm-pill-opt:hover { border-color: var(--ed-ink, #0A0B0E); }
+  .ed-rm-pill-opt.is-active {
+    background: rgba(30, 95, 255, 0.08);
+    border-color: var(--ed-electric, #1E5FFF);
+    color: var(--ed-electric, #1E5FFF);
+    font-weight: 600;
+  }
+  .ed-rm-pill-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+  /* Buy bar (split: qty + main CTA) */
+  .ed-rm-buy {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: stretch;
+    margin-top: 4px;
+  }
+  .ed-rm-buy__qty {
+    display: flex; flex-direction: column; gap: 4px;
+    justify-content: center;
+  }
+  .ed-rm-buy__qty-label {
+    font-family: "Inter", sans-serif; font-weight: 500; font-size: 11px;
+    color: var(--ed-text-mute, #5C6068);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-left: 4px;
+  }
+  .ed-rm-qty {
+    display: inline-grid; grid-template-columns: 36px 44px 36px;
+    border: 1.5px solid var(--ed-ink, #0A0B0E);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 52px;
+  }
+  .ed-rm-qty button {
+    background: transparent; border: 0; cursor: pointer;
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 18px;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-rm-qty button:hover { background: var(--ed-ink, #0A0B0E); color: var(--ed-paper, #F4F0E8); }
+  .ed-rm-qty input {
+    border: 0;
+    border-left: 1px solid var(--ed-border, #E0DBCF);
+    border-right: 1px solid var(--ed-border, #E0DBCF);
+    background: transparent;
+    font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 14px;
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+  .ed-rm-qty input::-webkit-outer-spin-button,
+  .ed-rm-qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .ed-rm-buy__bar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    height: 52px; padding: 0 16px 0 18px;
+    background: var(--ed-electric, #1E5FFF);
+    color: var(--ed-paper, #F4F0E8);
+    border: 0; border-radius: 8px;
+    cursor: pointer;
+    transition: background 120ms, transform 120ms;
+  }
+  .ed-rm-buy__bar:hover { background: #1747D6; }
+  .ed-rm-buy__bar:active { transform: scale(0.99); }
+  .ed-rm-buy__bar:disabled { background: rgba(10,11,14,0.18); cursor: not-allowed; }
+  .ed-rm-buy__bar-left { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
+  .ed-rm-buy__bar-meta {
+    font-family: "Inter", sans-serif; font-weight: 500; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    opacity: 0.85;
+  }
+  .ed-rm-buy__bar-sub { font-size: 10px; opacity: 0.75; }
+  .ed-rm-buy__bar-total {
+    font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 17px;
+    margin-top: 2px;
+  }
+  .ed-rm-buy__bar-right { display: inline-flex; align-items: center; gap: 6px; }
+  .ed-rm-buy__bar-cta {
+    font-family: "Inter", sans-serif; font-weight: 700; font-size: 15px;
+    letter-spacing: 0.02em;
+  }
+  .ed-rm-buy__bar-arrow { font-size: 16px; transition: transform 120ms; }
+  .ed-rm-buy__bar:hover .ed-rm-buy__bar-arrow { transform: translateX(2px); }
+
+  /* Upsell card */
+  .ed-rm-upsell {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(30, 95, 255, 0.04);
+    border-color: var(--ed-electric, #1E5FFF);
+    transition: background 120ms;
+  }
+  .ed-rm-upsell:hover { background: rgba(30, 95, 255, 0.08); }
+  .ed-rm-upsell__icon { font-size: 22px; flex: 0 0 auto; }
+  .ed-rm-upsell__body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .ed-rm-upsell__h { font-family: "Inter", sans-serif; font-weight: 700; font-size: 14px; color: var(--ed-ink, #0A0B0E); }
+  .ed-rm-upsell__sub { font-family: "Inter", sans-serif; font-size: 12px; color: var(--ed-text-mute, #5C6068); }
+  .ed-rm-upsell__arrow { font-size: 20px; color: var(--ed-electric, #1E5FFF); font-weight: 600; }
+
+  /* Delivery promise card */
+  .ed-rm-promise {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+  }
+  .ed-rm-promise__icon { font-size: 18px; flex: 0 0 auto; }
+  .ed-rm-promise__text { font-family: "Inter", sans-serif; font-size: 13px; color: var(--ed-ink, #0A0B0E); }
+
+  /* Two-col policy row */
+  .ed-rm-policies {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .ed-rm-policy {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 14px;
+    background: var(--ed-snow, #FBFAF6);
+    border: 1px solid var(--ed-border, #E0DBCF);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ed-ink, #0A0B0E);
+    transition: border-color 120ms;
+  }
+  .ed-rm-policy:hover { border-color: var(--ed-ink, #0A0B0E); }
+  .ed-rm-policy__icon { font-size: 16px; flex: 0 0 auto; }
+  .ed-rm-policy__label { flex: 1; font-family: "Inter", sans-serif; font-weight: 600; font-size: 12px; }
+  .ed-rm-policy__arrow { color: var(--ed-text-mute, #5C6068); font-size: 16px; }
+
+  .ed-rm-quote-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 13px;
+    color: var(--ed-electric, #1E5FFF);
+    text-decoration: none;
+    border-bottom: 1.5px solid currentColor;
+    padding-bottom: 1px;
+    align-self: flex-start;
+  }
+
+  @media (max-width: 749px) {
+    .ed-rm-policies { grid-template-columns: 1fr; }
+    .ed-rm-buy { grid-template-columns: 1fr; }
+    .ed-rm-buy__qty { flex-direction: row; align-items: center; gap: 8px; }
+    .ed-rm-qty { height: 44px; grid-template-columns: 32px 40px 32px; }
+    .ed-rm-buy__bar { height: 56px; }
+  }
+
   /* Sticky mobile bar */
   .ed-pdp-stickybar {
     display: none;
@@ -612,6 +885,25 @@
       input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); check(); } });
     }
 
+    // Variant pills (radio-styled labels) — toggle is-active class on change
+    document.querySelectorAll('.ed-rm-pill-opt input').forEach(function(input) {
+      input.addEventListener('change', function() {
+        const group = input.closest('.ed-rm-variant-pills');
+        if (!group) return;
+        group.querySelectorAll('.ed-rm-pill-opt').forEach(function(p) {
+          p.classList.toggle('is-active', p.querySelector('input').checked);
+        });
+        ph('variant_pill_selected', Object.assign({}, meta, { option: input.name, value: input.value }));
+      });
+    });
+
+    // Upsell / policy click tracking
+    document.querySelectorAll('[data-action="upsell_click"], [data-action="policy_click"], [data-action="quote_link_click"]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        ph(el.dataset.action, Object.assign({}, meta, { href: el.getAttribute('href'), policy: el.dataset.policy }));
+      });
+    });
+
     // Tabs
     document.querySelectorAll('[data-ed-tabs]').forEach(function(wrap) {
       const tabs = wrap.querySelectorAll('.ed-pdp-tabs__tab');
@@ -642,12 +934,37 @@
   "settings": [
     { "type": "header", "content": "Layout" },
     { "type": "checkbox", "id": "show_breadcrumb", "label": "Show breadcrumb", "default": true },
-    { "type": "checkbox", "id": "show_quote_cta", "label": "Show 'Request 50+ quote' CTA", "default": true },
-    { "type": "url", "id": "quote_url", "label": "Quote page URL" },
-    { "type": "url", "id": "sample_url", "label": "Sample-pack page URL" },
+    { "type": "text", "id": "price_unit_label", "label": "Price unit label (e.g. 'case', 'roll')", "default": "case" },
+    { "type": "text", "id": "delivery_promise", "label": "Delivery promise (in price card)", "default": "Same-day dispatch" },
+
+    { "type": "header", "content": "Quote CTA" },
+    { "type": "checkbox", "id": "show_quote_cta", "label": "Show quote link", "default": true },
+    { "type": "text", "id": "quote_cta_label", "label": "Quote link label", "default": "Need 50+ cases? Request a custom quote →" },
+    { "type": "text", "id": "quote_url", "label": "Quote page URL", "default": "/pages/request-quote" },
+    { "type": "text", "id": "sample_url", "label": "Sample-pack page URL", "default": "/pages/sample-pack" },
+
+    { "type": "header", "content": "Upsell card (Mojo-Secure equivalent)" },
+    { "type": "text", "id": "upsell_icon", "label": "Icon (emoji)", "default": "💎" },
+    { "type": "text", "id": "upsell_heading", "label": "Heading", "default": "Bulk savings unlock at 20+ cases" },
+    { "type": "text", "id": "upsell_sub", "label": "Sub", "default": "Save up to 11% per case. See the full tier table." },
+    { "type": "text", "id": "upsell_link", "label": "Link", "default": "/pages/bulk-pricing" },
+
+    { "type": "header", "content": "Delivery promise card" },
+    { "type": "text", "id": "promise_icon", "label": "Icon (emoji)", "default": "🚚" },
+    { "type": "text", "id": "promise_text", "label": "Text", "default": "Order by 2 PM IST · Ships same day from Mumbai DC" },
+
+    { "type": "header", "content": "Policy row (two cards)" },
+    { "type": "text", "id": "policy_1_icon", "label": "Policy 1 icon", "default": "↩️" },
+    { "type": "text", "id": "policy_1_label", "label": "Policy 1 label", "default": "Returns & exchanges" },
+    { "type": "text", "id": "policy_1_url", "label": "Policy 1 link" },
+    { "type": "text", "id": "policy_2_icon", "label": "Policy 2 icon", "default": "🧾" },
+    { "type": "text", "id": "policy_2_label", "label": "Policy 2 label", "default": "GST invoicing info" },
+    { "type": "text", "id": "policy_2_url", "label": "Policy 2 link" },
 
     { "type": "header", "content": "Delivery check" },
     { "type": "checkbox", "id": "show_pincode_check", "label": "Show pincode delivery checker", "default": true },
+
+    { "type": "header", "content": "Legacy" },
 
     { "type": "header", "content": "Trust strip (4 cells)" },
     { "type": "text", "id": "trust_1_icon", "label": "Icon 1 (emoji)", "default": "🚚" },
