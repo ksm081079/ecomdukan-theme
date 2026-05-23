@@ -116,6 +116,9 @@
         "heading": "Moving fast this week",
         "collection": "",
         "product_count": 8,
+        "layout": "grid",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
         "color_scheme": "scheme-1"
       }
     },
@@ -243,6 +246,23 @@
         "color_scheme": "scheme-1"
       }
     },
+    "collection_tabs": {
+      "type": "ed-collection-tabs",
+      "settings": {
+        "eyebrow": "Shop by category",
+        "heading": "Trending across categories",
+        "layout": "carousel",
+        "products_per_tab": 8,
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "t1": { "type": "tab", "settings": { "label": "Thermal labels", "collection": "thermal-labels" } },
+        "t2": { "type": "tab", "settings": { "label": "Branded labels", "collection": "branded-labels" } },
+        "t3": { "type": "tab", "settings": { "label": "Office paper", "collection": "office-paper" } },
+        "t4": { "type": "tab", "settings": { "label": "Packing supplies", "collection": "packing-supplies" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"]
+    },
     "testimonial": {
       "type": "ed-testimonial",
       "settings": {
@@ -251,6 +271,30 @@
         "role": "Ops Lead, FreshFold (Mumbai)",
         "color_scheme": "scheme-2"
       }
+    },
+    "reviews_grid": {
+      "type": "ed-reviews-grid",
+      "settings": {
+        "heading_lead": "Built on",
+        "heading_accent": "real reviews",
+        "subhead": "Here's what D2C brands, packers and printers say about Ecomdukan.",
+        "accent_color": "#1E5FFF",
+        "view_all_url": "",
+        "total_count": "",
+        "color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "r1": { "type": "review", "settings": { "name": "Riya Mehta", "rating": 5, "body": "Reorder went from a half-day spreadsheet to one tap. Their tier pricing pays for itself by the second case." } },
+        "r2": { "type": "review", "settings": { "name": "Vikas Bhatia", "rating": 5, "body": "Same-day dispatch from Mumbai DC is the real deal. GST invoice attached every time — no chasing." } },
+        "r3": { "type": "review", "settings": { "name": "Anjali R.", "rating": 5, "body": "Solid quality." } },
+        "r4": { "type": "review", "settings": { "name": "Sahil Mathur", "rating": 5, "body": "We tried 3 label suppliers in 2025. Ecomdukan was the only one that actually shipped what was on the page, in the spec listed." } },
+        "r5": { "type": "review", "settings": { "name": "Pooja N.", "rating": 5, "body": "Custom print turnaround beat the quote by a day." } },
+        "r6": { "type": "review", "settings": { "name": "Karan S.", "rating": 5, "body": "Highly recommend for D2C ops teams." } },
+        "r7": { "type": "review", "settings": { "name": "Tushar G.", "rating": 5, "body": "Free sample pack closed the deal for our buyer. Cases were exactly as sampled." } },
+        "r8": { "type": "review", "settings": { "name": "Meera D.", "rating": 5, "body": "Helpful WhatsApp support." } },
+        "r9": { "type": "review", "settings": { "name": "Rohit V.", "rating": 5, "body": "Excellent." } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9"]
     },
     "custom_print_cta": {
       "type": "ed-custom-print-cta",

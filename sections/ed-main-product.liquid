@@ -3,6 +3,9 @@
   Reads metafields under `specs.*`, `pricing.tiers`, `lead.*`.
 {%- endcomment -%}
 
+{{ 'component-loading-spinner.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
 {%- liquid
   assign variant = product.selected_or_first_available_variant
   assign sku = variant.sku | default: product.sku
@@ -57,34 +60,40 @@
         {%- endif -%}
       </div>
 
-      {%- comment -%} Info column {%- endcomment -%}
-      <div class="ed-pdp__info" style="position: sticky; top: 24px;">
-        {%- comment -%} Stock badge ABOVE title (per spec) {%- endcomment -%}
-        <div style="margin-bottom: var(--sp-4);">
-          {%- if product.available -%}
-            <span class="ed-badge ed-badge--instock">In stock · Ships today</span>
-          {%- else -%}
-            <span class="ed-badge ed-badge--oos">Currently out — notify me below</span>
-          {%- endif -%}
+      {%- comment -%} Info column — Rentmojo-style stacked cards {%- endcomment -%}
+      <div class="ed-pdp__info ed-rm">
+        <h1 class="ed-rm__title">{{ product.title }}</h1>
+
+        {%- comment -%} Price + stock + rating card {%- endcomment -%}
+        <div class="ed-rm-card ed-rm-price-card">
+          <div class="ed-rm-price-card__row">
+            <div class="ed-rm-price-card__amount">
+              <span class="ed-rm-price-card__big">{{ variant.price | money }}</span>
+              {%- if variant.compare_at_price and variant.compare_at_price > variant.price -%}
+                <s class="ed-rm-price-card__compare">{{ variant.compare_at_price | money }}</s>
+                {%- assign pct = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price -%}
+                <span class="ed-rm-price-card__off">−{{ pct }}%</span>
+              {%- endif -%}
+              {%- if section.settings.price_unit_label != blank -%}
+                <span class="ed-rm-price-card__unit">/{{ section.settings.price_unit_label }}</span>
+              {%- endif -%}
+            </div>
+            {%- if dims -%}
+              <span class="ed-rm-pill">{{ dims }}</span>
+            {%- endif -%}
+          </div>
+          <div class="ed-rm-price-card__meta">
+            {%- if product.metafields.reviews.rating.value -%}
+              <span class="ed-rm-rating">★ {{ product.metafields.reviews.rating.value }}</span>
+            {%- endif -%}
+            {%- if product.metafields.reviews.rating_count -%}
+              <span class="ed-rm-meta-item">👤 {{ product.metafields.reviews.rating_count }} reviews</span>
+            {%- endif -%}
+            {%- if product.available -%}
+              <span class="ed-rm-meta-item">📦 {{ section.settings.delivery_promise | default: 'Same-day dispatch' }}</span>
+            {%- endif -%}
+          </div>
         </div>
-
-        <h1 class="ed-display-m" style="margin: 0 0 var(--sp-3);">{{ product.title }}</h1>
-
-        {%- if dims -%}
-          <p class="ed-mono" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-5); text-transform: uppercase; letter-spacing: .04em;">{{ dims }}</p>
-        {%- endif -%}
-
-        {%- comment -%} Spec table {%- endcomment -%}
-        <table class="ed-spec" style="margin-bottom: var(--sp-6);">
-          <tbody>
-            {%- if sku -%}<tr><th>SKU</th><td>{{ sku }}</td></tr>{%- endif -%}
-            {%- if gsm -%}<tr><th>GSM</th><td>{{ gsm }}</td></tr>{%- endif -%}
-            {%- if pack -%}<tr><th>Pack</th><td>{{ pack }} per pack</td></tr>{%- endif -%}
-            {%- if case_qty -%}<tr><th>Case</th><td>{{ case_qty }} per case</td></tr>{%- endif -%}
-            {%- if core -%}<tr><th>Core</th><td>{{ core }}</td></tr>{%- endif -%}
-            {%- if dcs -%}<tr><th>In stock at</th><td>{{ dcs | join: ' · ' }}</td></tr>{%- endif -%}
-          </tbody>
-        </table>
 
         {%- comment -%} Tier pricing — selectable cards (rentmojo-style) {%- endcomment -%}
         {%- if tiers != blank -%}
@@ -124,9 +133,13 @@
           </div>
         {%- endif -%}
 
-        {%- comment -%} Buy form {%- endcomment -%}
-        {%- form 'product', product, id: 'product-form', class: 'ed-form' -%}
+        {%- comment -%} Buy form — wrapped in <product-form> so cart drawer auto-opens on add {%- endcomment -%}
+        <product-form class="ed-product-form-wrap" data-section="{{ section.id }}">
+        {%- form 'product', product, id: 'product-form', class: 'ed-form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
           <input type="hidden" name="id" value="{{ variant.id }}">
+          <div class="loading__spinner hidden">
+            <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg>
+          </div>
 
           {%- if product.variants.size > 1 -%}
             <div class="ed-fieldset">
@@ -160,7 +173,11 @@
               Sold out
             {%- endif -%}
           </button>
+          <div class="product-form__error-message-wrapper" role="alert" hidden>
+            <span class="product-form__error-message"></span>
+          </div>
         {%- endform -%}
+        </product-form>
 
         {%- if section.settings.show_quote_cta -%}
           <a href="{{ section.settings.quote_url | default: '/pages/request-quote' }}" class="ed-btn ed-btn--ghost ed-btn--block" style="margin-top: var(--sp-3);">Request 50+ quote</a>
