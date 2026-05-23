@@ -1,7 +1,7 @@
 {%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-1'
   assign per_page = section.settings.products_per_page | default: 24
-  assign cols_desktop = section.settings.columns_desktop | default: 3
+  assign cols_desktop = section.settings.columns_desktop | default: 4
   assign cols_mobile = section.settings.columns_mobile | default: 2
 -%}
 {%- paginate collection.products by per_page -%}
@@ -120,7 +120,7 @@
   "settings": [
     { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
     { "type": "checkbox", "id": "in_stock_default", "label": "Default 'In stock only' toggle on", "default": true },
-    { "type": "range", "id": "columns_desktop", "label": "Desktop columns", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "range", "id": "columns_desktop", "label": "Desktop columns", "min": 2, "max": 6, "step": 1, "default": 4 },
     { "type": "select", "id": "columns_mobile", "label": "Mobile columns", "default": "2",
       "options": [
         { "value": "1", "label": "1 per row" },

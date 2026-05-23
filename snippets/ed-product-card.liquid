@@ -53,25 +53,31 @@
   endif
 -%}
 
-<div class="ed-product-card" data-product-id="{{ product.id }}">
-  <a href="{{ product.url }}" class="ed-product-card__media-link">
+<div class="ed-product-card" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" data-product-title="{{ product.title | escape }}">
+  <div class="ed-product-card__media-wrap">
+    <a href="{{ product.url }}" class="ed-product-card__media-link" data-action="card_click">
     <div class="ed-product-card__media">
-      {%- if product.featured_media -%}
-        {{ product.featured_media | image_url: width: 800 | image_tag:
-          loading: 'lazy',
-          widths: '300, 500, 800',
-          sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw',
-          alt: product.featured_media.alt | default: product.title,
-          class: 'ed-product-card__img'
-        }}
-        {%- if show_hover_image and product.media[1] -%}
-          {{ product.media[1] | image_url: width: 800 | image_tag:
-            loading: 'lazy',
-            widths: '300, 500, 800',
-            sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw',
-            alt: product.media[1].alt | default: product.title,
-            class: 'ed-product-card__img ed-product-card__img--hover'
-          }}
+      {%- if product.media.size > 0 -%}
+        <div class="ed-product-card__carousel" data-carousel role="region" aria-label="Product images">
+          {%- for media in product.media limit: 5 -%}
+            {{ media | image_url: width: 800 | image_tag:
+              loading: 'lazy',
+              widths: '300, 500, 800',
+              sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw',
+              alt: media.alt | default: product.title,
+              class: 'ed-product-card__img',
+              data-index: forloop.index0
+            }}
+          {%- endfor -%}
+        </div>
+        {%- if product.media.size > 1 -%}
+          <div class="ed-product-card__dots" data-dots>
+            {%- for media in product.media limit: 5 -%}
+              <button type="button" class="ed-product-card__dot{% if forloop.first %} is-active{% endif %}" data-dot-index="{{ forloop.index0 }}" aria-label="Image {{ forloop.index }}"></button>
+            {%- endfor -%}
+          </div>
+          <button type="button" class="ed-product-card__nav ed-product-card__nav--prev" data-nav="prev" aria-label="Previous image">‹</button>
+          <button type="button" class="ed-product-card__nav ed-product-card__nav--next" data-nav="next" aria-label="Next image">›</button>
         {%- endif -%}
       {%- else -%}
         <div class="ed-product-card__placeholder">
@@ -99,7 +105,8 @@
         </div>
       {%- endif -%}
     </div>
-  </a>
+    </a>
+  </div>
 
   <div class="ed-product-card__body">
     {%- if show_sku and sku != blank -%}
@@ -135,6 +142,14 @@
       {%- elsif product.metafields.pricing.tiers.value != blank -%}
         <p class="ed-product-card__tier">▼ Bulk tiers available</p>
       {%- endif -%}
+    {%- endif -%}
+
+    {%- if product.variants.size > 1 -%}
+      <p class="ed-product-card__variants">{{ product.variants.size }} options ·
+        {%- for opt in product.options_with_values limit: 2 -%}
+          {{ opt.name }}{% unless forloop.last %}, {% endunless %}
+        {%- endfor -%}
+      </p>
     {%- endif -%}
 
     {%- if show_quick_add -%}
@@ -176,6 +191,7 @@
     height: 100%;
   }
   .ed-product-card:hover { border-width: 2.5px; }
+  .ed-product-card__media-wrap { position: relative; }
   .ed-product-card__media-link {
     display: block;
     text-decoration: none;
@@ -188,20 +204,52 @@
     overflow: hidden;
     border-bottom: 1.5px solid var(--ed-ink, #0A0B0E);
   }
+  .ed-product-card__carousel {
+    display: flex;
+    width: 100%; height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ed-product-card__carousel::-webkit-scrollbar { display: none; }
   .ed-product-card__img {
+    flex: 0 0 100%;
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: opacity 200ms ease, transform 400ms ease;
+    scroll-snap-align: start;
+    transition: transform 400ms ease;
   }
-  .ed-product-card__img--hover {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
+  .ed-product-card:hover .ed-product-card__img:first-child { transform: scale(1.03); }
+  .ed-product-card__dots {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 4px;
+    background: rgba(10,11,14,0.55); padding: 4px 8px; border-radius: 12px;
+    z-index: 2;
   }
-  .ed-product-card:hover .ed-product-card__img--hover { opacity: 1; }
-  .ed-product-card:hover .ed-product-card__img:not(.ed-product-card__img--hover) { transform: scale(1.04); }
+  .ed-product-card__dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(244,240,232,0.5);
+    border: 0; padding: 0; cursor: pointer;
+    transition: background 120ms;
+  }
+  .ed-product-card__dot.is-active { background: var(--ed-paper, #F4F0E8); }
+  .ed-product-card__nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(244,240,232,0.92);
+    border: 1px solid var(--ed-ink, #0A0B0E);
+    color: var(--ed-ink, #0A0B0E);
+    font-size: 16px; font-weight: 700; line-height: 1;
+    cursor: pointer; z-index: 2; opacity: 0;
+    transition: opacity 120ms;
+  }
+  .ed-product-card__nav--prev { left: 8px; }
+  .ed-product-card__nav--next { right: 8px; }
+  .ed-product-card:hover .ed-product-card__nav { opacity: 1; }
+  @media (hover: none) { .ed-product-card__nav { display: none; } }
   .ed-product-card__placeholder {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
@@ -311,6 +359,13 @@
     font-weight: 500;
     color: var(--ed-electric, #1E5FFF);
   }
+  .ed-product-card__variants {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    color: var(--ed-text-mute, #5C6068);
+    letter-spacing: 0.02em;
+  }
   .ed-product-card__form {
     margin-top: 12px;
     display: grid;
@@ -372,6 +427,18 @@
 
 <script>
   (function() {
+    const ph = function(name, props) { if (window.posthog) try { posthog.capture(name, props || {}); } catch (e) {} };
+    const cardMeta = function(el) {
+      const card = el.closest('.ed-product-card');
+      if (!card) return {};
+      return {
+        product_id: card.dataset.productId,
+        product_handle: card.dataset.productHandle,
+        product_title: card.dataset.productTitle
+      };
+    };
+
+    // Qty stepper
     document.addEventListener('click', function(e) {
       const btn = e.target.closest('.ed-qty-btn');
       if (!btn) return;
@@ -383,16 +450,83 @@
       const next = btn.dataset.action === 'inc' ? current + 1 : Math.max(min, current - 1);
       input.value = next;
       input.dispatchEvent(new Event('change', { bubbles: true }));
+      ph('qty_changed', Object.assign(cardMeta(btn), { quantity: next, direction: btn.dataset.action }));
     });
 
+    // Card click
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('.ed-product-card__media-link');
+      if (!link) return;
+      ph('product_card_click', cardMeta(link));
+    });
+
+    // Carousel: dots
+    document.addEventListener('click', function(e) {
+      const dot = e.target.closest('.ed-product-card__dot');
+      if (!dot) return;
+      const card = dot.closest('.ed-product-card');
+      const carousel = card && card.querySelector('[data-carousel]');
+      if (!carousel) return;
+      const idx = parseInt(dot.dataset.dotIndex, 10) || 0;
+      const child = carousel.children[idx];
+      if (child) carousel.scrollTo({ left: child.offsetLeft, behavior: 'smooth' });
+      ph('product_card_image_scroll', Object.assign(cardMeta(card), { image_index: idx, source: 'dot' }));
+    });
+
+    // Carousel: prev/next
+    document.addEventListener('click', function(e) {
+      const nav = e.target.closest('.ed-product-card__nav');
+      if (!nav) return;
+      e.preventDefault();
+      const card = nav.closest('.ed-product-card');
+      const carousel = card && card.querySelector('[data-carousel]');
+      if (!carousel) return;
+      const w = carousel.clientWidth;
+      const dir = nav.dataset.nav === 'next' ? 1 : -1;
+      carousel.scrollBy({ left: w * dir, behavior: 'smooth' });
+    });
+
+    // Carousel: update active dot on scroll
+    document.querySelectorAll('[data-carousel]').forEach(function(c) {
+      let t;
+      c.addEventListener('scroll', function() {
+        clearTimeout(t);
+        t = setTimeout(function() {
+          const idx = Math.round(c.scrollLeft / c.clientWidth);
+          const card = c.closest('.ed-product-card');
+          if (!card) return;
+          card.querySelectorAll('.ed-product-card__dot').forEach(function(d, i) {
+            d.classList.toggle('is-active', i === idx);
+          });
+        }, 90);
+      });
+    });
+
+    // Card visibility tracking
+    if ('IntersectionObserver' in window) {
+      const seen = new WeakSet();
+      const io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(ent) {
+          if (ent.isIntersecting && !seen.has(ent.target)) {
+            seen.add(ent.target);
+            ph('product_card_view', cardMeta(ent.target));
+          }
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('.ed-product-card').forEach(function(c) { io.observe(c); });
+    }
+
+    // Quick-add submit
     document.addEventListener('submit', function(e) {
       const form = e.target.closest('.ed-product-card__form');
       if (!form) return;
       e.preventDefault();
       const btn = form.querySelector('.ed-product-card__add');
       const original = btn.textContent;
+      const qty = parseInt(form.querySelector('input[name="quantity"]').value, 10) || 1;
       btn.textContent = 'Adding…';
       btn.disabled = true;
+      ph('quick_add_click', Object.assign(cardMeta(form), { quantity: qty }));
       const data = new FormData(form);
       fetch(window.routes && window.routes.cart_add_url || '/cart/add.js', {
         method: 'POST',
@@ -402,26 +536,23 @@
         .then(function(r) { return r.ok ? r.json() : Promise.reject(r); })
         .then(function() {
           btn.textContent = '✓ Added';
-          if (typeof PUB_SUB_EVENTS !== 'undefined' && window.publish) {
-            window.publish(PUB_SUB_EVENTS.cartUpdate, {});
-          } else {
-            // Refresh cart bubble
-            fetch('/cart.js').then(function(r){return r.json();}).then(function(cart){
-              const bubble = document.querySelector('#cart-icon-bubble .cart-count-bubble span[aria-hidden]');
-              if (bubble) bubble.textContent = cart.item_count;
-              const drawer = document.querySelector('cart-drawer');
-              if (drawer && drawer.renderContents) {
-                fetch('/?sections=cart-drawer').then(function(r){return r.json();}).then(function(s){
-                  drawer.renderContents({ sections: s });
-                  if (drawer.open) drawer.open();
-                });
-              }
-            });
-          }
+          ph('quick_add_success', Object.assign(cardMeta(form), { quantity: qty }));
+          fetch('/cart.js').then(function(r){return r.json();}).then(function(cart){
+            const bubble = document.querySelector('#cart-icon-bubble .cart-count-bubble span[aria-hidden]');
+            if (bubble) bubble.textContent = cart.item_count;
+            const drawer = document.querySelector('cart-drawer');
+            if (drawer) {
+              fetch('/?sections=cart-drawer').then(function(r){return r.json();}).then(function(s){
+                if (drawer.renderContents) drawer.renderContents({ sections: s });
+                if (drawer.open) drawer.open();
+              });
+            }
+          });
           setTimeout(function() { btn.textContent = original; btn.disabled = false; }, 1600);
         })
-        .catch(function() {
+        .catch(function(err) {
           btn.textContent = 'Error — try again';
+          ph('quick_add_error', cardMeta(form));
           setTimeout(function() { btn.textContent = original; btn.disabled = false; }, 2000);
         });
     });
