@@ -101,6 +101,35 @@
 {%- endpaginate -%}
 
 <style>
+  /* Rentmojo-style filter rail */
+  .ed-coll-layout { grid-template-columns: 240px 1fr !important; gap: 32px !important; }
+  .ed-filters details {
+    border: 0 !important; border-bottom: 1px solid var(--ed-border, #E0DBCF) !important;
+    padding: 14px 0 !important;
+  }
+  .ed-filters details summary {
+    font-family: "Inter", sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    color: var(--ed-ink, #0A0B0E) !important;
+  }
+  .ed-filters details label {
+    padding: 6px 0 !important;
+    font-size: 13px !important;
+  }
+  .ed-filters details label input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--ed-electric, #1E5FFF);
+    margin-right: 4px;
+  }
+  .ed-filters details label .ed-mono {
+    color: rgba(var(--color-foreground), 0.5) !important;
+    font-family: "Inter", sans-serif !important;
+    font-size: 12px !important;
+  }
+
   @media (max-width: 989px) {
     .ed-coll-layout { grid-template-columns: 1fr !important; }
     .ed-filters { position: static !important; }
