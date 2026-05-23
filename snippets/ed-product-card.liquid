@@ -10,7 +10,7 @@
     show_compare       — bool, default true  (strikethrough + Save ₹X)
     show_tier_teaser   — bool, default true
     show_quick_add     — bool, default true
-    show_qty_stepper   — bool, default true
+    qty_mode           — 'chips' | 'stepper' | 'none' (default 'chips') — 11-may chip picker
     show_hover_image   — bool, default true
     add_to_cart_label  — string, default "Add to cart"
     choose_options_label — string, default "Choose options"
@@ -153,10 +153,21 @@
     {%- endif -%}
 
     {%- if show_quick_add -%}
+      {%- assign qty_mode = qty_mode | default: 'chips' -%}
       {%- if product.available and product.variants.size == 1 -%}
-        <form method="post" action="{{ routes.cart_add_url }}" class="ed-product-card__form{% unless show_qty_stepper %} ed-product-card__form--no-qty{% endunless %}" data-type="add-to-cart-form">
+        <form method="post" action="{{ routes.cart_add_url }}" class="ed-product-card__form ed-product-card__form--{{ qty_mode }}" data-type="add-to-cart-form">
           <input type="hidden" name="id" value="{{ first_variant.id }}">
-          {%- if show_qty_stepper -%}
+
+          {%- if qty_mode == 'chips' -%}
+            <div class="ed-cqp" data-cqp role="radiogroup" aria-label="Quantity">
+              <button type="button" class="ed-cqp__chip is-active" data-qty="1" aria-checked="true">1</button>
+              <button type="button" class="ed-cqp__chip" data-qty="2" aria-checked="false">2</button>
+              <button type="button" class="ed-cqp__chip" data-qty="5" aria-checked="false">5</button>
+              <button type="button" class="ed-cqp__chip" data-qty="10" aria-checked="false">10</button>
+              <input type="number" class="ed-cqp__custom" min="1" max="99" step="1" placeholder="Qty" inputmode="numeric" aria-label="Custom quantity">
+              <input type="hidden" name="quantity" value="1" data-cqp-qty>
+            </div>
+          {%- elsif qty_mode == 'stepper' -%}
             <div class="ed-product-card__qty">
               <button type="button" class="ed-qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
               <input type="number" name="quantity" value="1" min="1" class="ed-qty-input" aria-label="Quantity">
@@ -165,6 +176,7 @@
           {%- else -%}
             <input type="hidden" name="quantity" value="1">
           {%- endif -%}
+
           <button type="submit" class="ed-btn ed-btn--primary ed-product-card__add" aria-label="{{ add_to_cart_label | escape }}">
             {{ add_to_cart_label }}
           </button>
@@ -369,11 +381,56 @@
   .ed-product-card__form {
     margin-top: 12px;
     display: grid;
-    grid-template-columns: auto 1fr;
     gap: 8px;
     align-items: stretch;
   }
-  .ed-product-card__form--no-qty { grid-template-columns: 1fr; }
+  .ed-product-card__form--stepper { grid-template-columns: auto 1fr; }
+  .ed-product-card__form--none { grid-template-columns: 1fr; }
+  .ed-product-card__form--chips { grid-template-columns: 1fr; }
+
+  /* Chip-style qty picker (11-may pattern, brand-spec polished) */
+  .ed-cqp {
+    display: flex; gap: 4px; align-items: stretch;
+  }
+  .ed-cqp__chip {
+    flex: 1;
+    min-width: 0;
+    height: 32px; padding: 0 4px;
+    background: var(--ed-snow, #FBFAF6);
+    border: 1.5px solid var(--ed-ink, #0A0B0E);
+    border-radius: 2px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px; font-weight: 600;
+    color: var(--ed-ink, #0A0B0E);
+    cursor: pointer;
+    transition: background 100ms, color 100ms;
+  }
+  .ed-cqp__chip:hover { background: var(--ed-ink, #0A0B0E); color: var(--ed-paper, #F4F0E8); }
+  .ed-cqp__chip.is-active {
+    background: var(--ed-electric, #1E5FFF);
+    color: var(--ed-paper, #F4F0E8);
+    border-color: var(--ed-electric, #1E5FFF);
+  }
+  .ed-cqp__custom {
+    width: 52px; min-width: 52px; height: 32px;
+    padding: 0 6px;
+    background: var(--ed-snow, #FBFAF6);
+    border: 1.5px solid var(--ed-ink, #0A0B0E);
+    border-radius: 2px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px; font-weight: 600;
+    color: var(--ed-ink, #0A0B0E);
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+  .ed-cqp__custom::-webkit-outer-spin-button,
+  .ed-cqp__custom::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .ed-cqp__custom::placeholder { color: var(--ed-mute, #8A8E97); font-size: 11px; }
+  .ed-cqp__custom:focus {
+    outline: 0;
+    border-color: var(--ed-electric, #1E5FFF);
+    box-shadow: inset 0 0 0 1px var(--ed-electric, #1E5FFF);
+  }
   .ed-product-card__qty {
     display: inline-flex;
     align-items: stretch;
@@ -451,6 +508,42 @@
       input.value = next;
       input.dispatchEvent(new Event('change', { bubbles: true }));
       ph('qty_changed', Object.assign(cardMeta(btn), { quantity: next, direction: btn.dataset.action }));
+    });
+
+    // Chip qty picker
+    document.addEventListener('click', function(e) {
+      const chip = e.target.closest('.ed-cqp__chip');
+      if (!chip) return;
+      e.preventDefault();
+      const wrap = chip.closest('[data-cqp]');
+      const qty = parseInt(chip.dataset.qty, 10) || 1;
+      wrap.querySelectorAll('.ed-cqp__chip').forEach(function(c) {
+        c.classList.toggle('is-active', c === chip);
+        c.setAttribute('aria-checked', c === chip ? 'true' : 'false');
+      });
+      const custom = wrap.querySelector('.ed-cqp__custom');
+      if (custom) custom.value = '';
+      const hidden = wrap.querySelector('[data-cqp-qty]');
+      if (hidden) hidden.value = qty;
+      ph('qty_changed', Object.assign(cardMeta(chip), { quantity: qty, source: 'chip' }));
+    });
+    document.addEventListener('input', function(e) {
+      const custom = e.target.closest('.ed-cqp__custom');
+      if (!custom) return;
+      const wrap = custom.closest('[data-cqp]');
+      const q = Math.max(1, parseInt(custom.value, 10) || 1);
+      wrap.querySelectorAll('.ed-cqp__chip').forEach(function(c) {
+        c.classList.remove('is-active');
+        c.setAttribute('aria-checked', 'false');
+      });
+      const hidden = wrap.querySelector('[data-cqp-qty]');
+      if (hidden) hidden.value = q;
+    });
+    document.addEventListener('change', function(e) {
+      const custom = e.target.closest('.ed-cqp__custom');
+      if (!custom) return;
+      const q = Math.max(1, parseInt(custom.value, 10) || 1);
+      ph('qty_changed', Object.assign(cardMeta(custom), { quantity: q, source: 'custom' }));
     });
 
     // Card click
