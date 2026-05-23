@@ -1,9 +1,43 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-404",
+      "disabled": true,
       "settings": {}
+    },
+    "ed_custom_print_form_JPFfRX": {
+      "type": "ed-custom-print-form",
+      "name": "ED Custom-print form",
+      "settings": {
+        "eyebrow": "Custom print",
+        "heading": "Send us your brief",
+        "body": "<p>Dimensions, material, finish, colors. We quote in 2 business hours.</p>",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "ed_pairs_well_EXCmVE": {
+      "type": "ed-pairs-well",
+      "name": "ED Pairs well with",
+      "settings": {
+        "heading": "Pairs well with",
+        "collection": "frontpage",
+        "product_count": 4,
+        "color_scheme": "scheme-1"
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main",
+    "ed_custom_print_form_JPFfRX",
+    "ed_pairs_well_EXCmVE"
+  ]
 }

@@ -1,14 +1,47 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "announcement": {
       "type": "ed-announcement",
-      "settings": { "rotate_seconds": 6 },
       "blocks": {
-        "m1": { "type": "message", "settings": { "text": "Free shipping on orders above ₹2,500" } },
-        "m2": { "type": "message", "settings": { "text": "GST invoice on every order" } },
-        "m3": { "type": "message", "settings": { "text": "Reorder in one tap — Mumbai · Bengaluru · Delhi DCs" } }
+        "m1": {
+          "type": "message",
+          "settings": {
+            "text": "Free shipping on orders above ₹2,500",
+            "link": ""
+          }
+        },
+        "m2": {
+          "type": "message",
+          "settings": {
+            "text": "GST invoice on every order",
+            "link": ""
+          }
+        },
+        "m3": {
+          "type": "message",
+          "settings": {
+            "text": "Reorder in one tap — Mumbai · Bengaluru · Delhi DCs",
+            "link": ""
+          }
+        }
       },
-      "block_order": ["m1", "m2", "m3"]
+      "block_order": [
+        "m1",
+        "m2",
+        "m3"
+      ],
+      "settings": {
+        "rotate_seconds": 6
+      }
     },
     "hero": {
       "type": "ed-hero",
@@ -25,42 +58,139 @@
     },
     "usp": {
       "type": "ed-usp-strip",
-      "settings": { "color_scheme": "scheme-1" },
       "blocks": {
-        "p1": { "type": "promise", "settings": { "heading": "In stock, in spec.", "sub": "What's on the page is in the warehouse, today." } },
-        "p2": { "type": "promise", "settings": { "heading": "Made for the line.", "sub": "Engineered for thermal printers and packing tables." } },
-        "p3": { "type": "promise", "settings": { "heading": "Receipts you'd frame.", "sub": "Invoices and packaging that match your brand." } },
-        "p4": { "type": "promise", "settings": { "heading": "Reorder in one tap.", "sub": "Procurement should not be project work." } }
+        "p1": {
+          "type": "promise",
+          "settings": {
+            "heading": "In stock, in spec.",
+            "sub": "What's on the page is in the warehouse, today."
+          }
+        },
+        "p2": {
+          "type": "promise",
+          "settings": {
+            "heading": "Made for the line.",
+            "sub": "Engineered for thermal printers and packing tables."
+          }
+        },
+        "p3": {
+          "type": "promise",
+          "settings": {
+            "heading": "Receipts you'd frame.",
+            "sub": "Invoices and packaging that match your brand."
+          }
+        },
+        "p4": {
+          "type": "promise",
+          "settings": {
+            "heading": "Reorder in one tap.",
+            "sub": "Procurement should not be project work."
+          }
+        }
       },
-      "block_order": ["p1", "p2", "p3", "p4"]
+      "block_order": [
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
     },
     "categories": {
       "type": "ed-featured-categories",
+      "blocks": {
+        "c1": {
+          "type": "category",
+          "settings": {
+            "title": "Thermal labels",
+            "link": "shopify://collections/thermal-labels"
+          }
+        },
+        "c2": {
+          "type": "category",
+          "settings": {
+            "title": "Branded labels",
+            "link": "shopify://collections/branded-labels"
+          }
+        },
+        "c3": {
+          "type": "category",
+          "settings": {
+            "title": "Office paper",
+            "link": "shopify://collections/office-paper"
+          }
+        },
+        "c4": {
+          "type": "category",
+          "settings": {
+            "title": "Packing supplies",
+            "link": "shopify://collections/packing-supplies"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
       "settings": {
         "heading": "Shop by category",
         "link_label": "All categories",
         "link_url": "shopify://collections",
         "color_scheme": "scheme-2"
-      },
-      "blocks": {
-        "c1": { "type": "category", "settings": { "title": "Thermal labels", "link": "shopify://collections/thermal-labels" } },
-        "c2": { "type": "category", "settings": { "title": "Branded labels", "link": "shopify://collections/branded-labels" } },
-        "c3": { "type": "category", "settings": { "title": "Office paper",   "link": "shopify://collections/office-paper" } },
-        "c4": { "type": "category", "settings": { "title": "Packing supplies", "link": "shopify://collections/packing-supplies" } }
-      },
-      "block_order": ["c1", "c2", "c3", "c4"]
+      }
     },
     "bestsellers": {
       "type": "ed-bestsellers",
       "settings": {
         "eyebrow": "Best-sellers",
         "heading": "Moving fast this week",
+        "collection": "",
         "product_count": 8,
         "color_scheme": "scheme-1"
       }
     },
     "bulk_story": {
       "type": "ed-bulk-story",
+      "blocks": {
+        "s1": {
+          "type": "spec",
+          "settings": {
+            "label": "Min order",
+            "value": "1 case (1,000 labels)"
+          }
+        },
+        "s2": {
+          "type": "spec",
+          "settings": {
+            "label": "Lead time",
+            "value": "Same day · in-stock SKUs"
+          }
+        },
+        "s3": {
+          "type": "spec",
+          "settings": {
+            "label": "GST invoice",
+            "value": "Included on every order"
+          }
+        },
+        "s4": {
+          "type": "spec",
+          "settings": {
+            "label": "Tier discounts",
+            "value": "5% @ 5+ cases · 11% @ 20+"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
       "settings": {
         "eyebrow": "The bulk story",
         "heading": "Built for the packing table. Priced for the spreadsheet.",
@@ -70,32 +200,82 @@
         "cta_2_label": "Request a sample",
         "cta_2_link": "shopify://pages/sample-pack",
         "color_scheme": "scheme-2"
-      },
-      "blocks": {
-        "s1": { "type": "spec", "settings": { "label": "Min order", "value": "1 case (1,000 labels)" } },
-        "s2": { "type": "spec", "settings": { "label": "Lead time", "value": "Same day · in-stock SKUs" } },
-        "s3": { "type": "spec", "settings": { "label": "GST invoice", "value": "Included on every order" } },
-        "s4": { "type": "spec", "settings": { "label": "Tier discounts", "value": "5% @ 5+ cases · 11% @ 20+" } }
-      },
-      "block_order": ["s1", "s2", "s3", "s4"]
+      }
     },
     "logos": {
       "type": "ed-customer-logos",
+      "blocks": {
+        "l1": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand 1",
+            "link": ""
+          }
+        },
+        "l2": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand 2",
+            "link": ""
+          }
+        },
+        "l3": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand 3",
+            "link": ""
+          }
+        },
+        "l4": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand 4",
+            "link": ""
+          }
+        },
+        "l5": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand 5",
+            "link": ""
+          }
+        },
+        "l6": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand 6",
+            "link": ""
+          }
+        },
+        "l7": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand 7",
+            "link": ""
+          }
+        },
+        "l8": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand 8",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4",
+        "l5",
+        "l6",
+        "l7",
+        "l8"
+      ],
       "settings": {
         "heading": "Trusted by D2C brands across India",
         "color_scheme": "scheme-1"
-      },
-      "blocks": {
-        "l1": { "type": "logo", "settings": { "name": "Brand 1" } },
-        "l2": { "type": "logo", "settings": { "name": "Brand 2" } },
-        "l3": { "type": "logo", "settings": { "name": "Brand 3" } },
-        "l4": { "type": "logo", "settings": { "name": "Brand 4" } },
-        "l5": { "type": "logo", "settings": { "name": "Brand 5" } },
-        "l6": { "type": "logo", "settings": { "name": "Brand 6" } },
-        "l7": { "type": "logo", "settings": { "name": "Brand 7" } },
-        "l8": { "type": "logo", "settings": { "name": "Brand 8" } }
-      },
-      "block_order": ["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8"]
+      }
     },
     "testimonial": {
       "type": "ed-testimonial",
@@ -121,6 +301,7 @@
       "type": "ed-resource-teaser",
       "settings": {
         "heading": "From the blog",
+        "blog": "",
         "post_count": 3,
         "color_scheme": "scheme-1"
       }
