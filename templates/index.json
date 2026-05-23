@@ -1,0 +1,153 @@
+{
+  "sections": {
+    "announcement": {
+      "type": "ed-announcement",
+      "settings": { "rotate_seconds": 6 },
+      "blocks": {
+        "m1": { "type": "message", "settings": { "text": "Free shipping on orders above ₹2,500" } },
+        "m2": { "type": "message", "settings": { "text": "GST invoice on every order" } },
+        "m3": { "type": "message", "settings": { "text": "Reorder in one tap — Mumbai · Bengaluru · Delhi DCs" } }
+      },
+      "block_order": ["m1", "m2", "m3"]
+    },
+    "hero": {
+      "type": "ed-hero",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "दुकान, scaled · Made in India",
+        "heading": "Stationery & printer labels, in bulk, in stock.",
+        "subhead": "One supplier. One invoice. Three DCs — Mumbai, Bengaluru, Delhi.",
+        "cta_1_label": "Shop labels",
+        "cta_1_link": "shopify://collections/labels",
+        "cta_2_label": "Get bulk quote",
+        "cta_2_link": "shopify://pages/request-quote"
+      }
+    },
+    "usp": {
+      "type": "ed-usp-strip",
+      "settings": { "color_scheme": "scheme-1" },
+      "blocks": {
+        "p1": { "type": "promise", "settings": { "heading": "In stock, in spec.", "sub": "What's on the page is in the warehouse, today." } },
+        "p2": { "type": "promise", "settings": { "heading": "Made for the line.", "sub": "Engineered for thermal printers and packing tables." } },
+        "p3": { "type": "promise", "settings": { "heading": "Receipts you'd frame.", "sub": "Invoices and packaging that match your brand." } },
+        "p4": { "type": "promise", "settings": { "heading": "Reorder in one tap.", "sub": "Procurement should not be project work." } }
+      },
+      "block_order": ["p1", "p2", "p3", "p4"]
+    },
+    "categories": {
+      "type": "ed-featured-categories",
+      "settings": {
+        "heading": "Shop by category",
+        "link_label": "All categories",
+        "link_url": "shopify://collections",
+        "color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "c1": { "type": "category", "settings": { "title": "Thermal labels", "link": "shopify://collections/thermal-labels" } },
+        "c2": { "type": "category", "settings": { "title": "Branded labels", "link": "shopify://collections/branded-labels" } },
+        "c3": { "type": "category", "settings": { "title": "Office paper",   "link": "shopify://collections/office-paper" } },
+        "c4": { "type": "category", "settings": { "title": "Packing supplies", "link": "shopify://collections/packing-supplies" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4"]
+    },
+    "bestsellers": {
+      "type": "ed-bestsellers",
+      "settings": {
+        "eyebrow": "Best-sellers",
+        "heading": "Moving fast this week",
+        "product_count": 8,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "bulk_story": {
+      "type": "ed-bulk-story",
+      "settings": {
+        "eyebrow": "The bulk story",
+        "heading": "Built for the packing table. Priced for the spreadsheet.",
+        "body": "<p>From 100 labels to 100,000. Same-day dispatch from three DCs. One GST invoice per order, every order.</p>",
+        "cta_1_label": "See bulk pricing",
+        "cta_1_link": "shopify://pages/bulk-pricing",
+        "cta_2_label": "Request a sample",
+        "cta_2_link": "shopify://pages/sample-pack",
+        "color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "s1": { "type": "spec", "settings": { "label": "Min order", "value": "1 case (1,000 labels)" } },
+        "s2": { "type": "spec", "settings": { "label": "Lead time", "value": "Same day · in-stock SKUs" } },
+        "s3": { "type": "spec", "settings": { "label": "GST invoice", "value": "Included on every order" } },
+        "s4": { "type": "spec", "settings": { "label": "Tier discounts", "value": "5% @ 5+ cases · 11% @ 20+" } }
+      },
+      "block_order": ["s1", "s2", "s3", "s4"]
+    },
+    "logos": {
+      "type": "ed-customer-logos",
+      "settings": {
+        "heading": "Trusted by D2C brands across India",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "l1": { "type": "logo", "settings": { "name": "Brand 1" } },
+        "l2": { "type": "logo", "settings": { "name": "Brand 2" } },
+        "l3": { "type": "logo", "settings": { "name": "Brand 3" } },
+        "l4": { "type": "logo", "settings": { "name": "Brand 4" } },
+        "l5": { "type": "logo", "settings": { "name": "Brand 5" } },
+        "l6": { "type": "logo", "settings": { "name": "Brand 6" } },
+        "l7": { "type": "logo", "settings": { "name": "Brand 7" } },
+        "l8": { "type": "logo", "settings": { "name": "Brand 8" } }
+      },
+      "block_order": ["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8"]
+    },
+    "testimonial": {
+      "type": "ed-testimonial",
+      "settings": {
+        "quote": "Reorder went from a half-day spreadsheet to one tap. Their tier pricing pays for itself by the second case.",
+        "attribution": "Riya Mehta",
+        "role": "Ops Lead, FreshFold (Mumbai)",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "custom_print_cta": {
+      "type": "ed-custom-print-cta",
+      "settings": {
+        "eyebrow": "Custom print",
+        "heading": "Need it printed your way?",
+        "body": "Send us a brief — dimensions, material, finish. We quote in 2 business hours.",
+        "cta_label": "Start a custom job",
+        "cta_link": "shopify://pages/custom-print",
+        "color_scheme": "scheme-3"
+      }
+    },
+    "resources": {
+      "type": "ed-resource-teaser",
+      "settings": {
+        "heading": "From the blog",
+        "post_count": 3,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "email": {
+      "type": "ed-email-capture",
+      "settings": {
+        "eyebrow": "Newsletter",
+        "heading": "Restock & price-drop alerts",
+        "body": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff.",
+        "cta_label": "Subscribe",
+        "disclaimer": "We never share your email. Unsubscribe anytime.",
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "hero",
+    "usp",
+    "categories",
+    "bestsellers",
+    "bulk_story",
+    "logos",
+    "testimonial",
+    "custom_print_cta",
+    "resources",
+    "email"
+  ]
+}

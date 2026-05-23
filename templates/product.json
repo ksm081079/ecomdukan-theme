@@ -1,0 +1,63 @@
+{
+  "sections": {
+    "main": {
+      "type": "ed-main-product",
+      "settings": {
+        "show_breadcrumb": true,
+        "show_quote_cta": true,
+        "quote_url": "shopify://pages/request-quote",
+        "sample_url": "shopify://pages/sample-pack",
+        "usp_1": "Free shipping on orders above ₹2,500",
+        "usp_2": "GST invoice included on every order",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "compatibility": {
+      "type": "ed-compatibility-checker",
+      "settings": {
+        "eyebrow": "Compatibility",
+        "heading": "Will it fit your printer?",
+        "body": "Type your printer model. We check against the verified compatibility list set on this product.",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "use_cases": {
+      "type": "ed-use-cases",
+      "settings": {
+        "heading": "How operators use this",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "u1": { "type": "case", "settings": { "eyebrow": "Shipping", "title": "Outbound dispatch", "body": "Stick, scan, ship. Mid-volume warehouses use these for 500–5,000 daily orders." } },
+        "u2": { "type": "case", "settings": { "eyebrow": "Branding", "title": "Custom-print labels", "body": "Two-color print on cream stock for D2C unboxing." } },
+        "u3": { "type": "case", "settings": { "eyebrow": "Packing", "title": "Invoice pouches", "body": "Pasted to outer boxes so couriers don't lose the bill." } },
+        "u4": { "type": "case", "settings": { "eyebrow": "Warning", "title": "Fragile & hazmat", "body": "Pre-printed warning labels — fragile, this side up, do not stack." } }
+      },
+      "block_order": ["u1", "u2", "u3", "u4"]
+    },
+    "pairs_well": {
+      "type": "ed-pairs-well",
+      "settings": {
+        "heading": "Pairs well with",
+        "product_count": 4,
+        "color_scheme": "scheme-2"
+      }
+    },
+    "faq": {
+      "type": "ed-faq",
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Questions, answered",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "q1": { "type": "qa", "settings": { "question": "Do you offer GST invoices?", "answer": "<p>Yes — every order ships with a GST-compliant invoice. Enter your GSTIN at checkout.</p>" } },
+        "q2": { "type": "qa", "settings": { "question": "Can I get a sample first?", "answer": "<p>Yes — request a free sample pack. Ships in 2 business days, no charge.</p>" } },
+        "q3": { "type": "qa", "settings": { "question": "What's your return policy?", "answer": "<p>Manufacturing defects — full replacement. Wrong size or change of mind — return within 7 days if unopened.</p>" } },
+        "q4": { "type": "qa", "settings": { "question": "Do you do custom print?", "answer": "<p>Yes — minimum order 5,000 units. Send us your brief on the custom-print page.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4"]
+    }
+  },
+  "order": ["main", "compatibility", "use_cases", "pairs_well", "faq"]
+}

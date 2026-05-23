@@ -1,0 +1,68 @@
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "newsletter": {
+      "type": "ed-email-capture",
+      "settings": {
+        "eyebrow": "Newsletter",
+        "heading": "Restock & price-drop alerts",
+        "body": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff.",
+        "cta_label": "Subscribe",
+        "disclaimer": "We never share your email. Unsubscribe anytime.",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "shop_links": {
+          "type": "link_list",
+          "settings": { "heading": "Shop", "menu": "footer-shop" }
+        },
+        "business_links": {
+          "type": "link_list",
+          "settings": { "heading": "For business", "menu": "footer-business" }
+        },
+        "help_links": {
+          "type": "link_list",
+          "settings": { "heading": "Help", "menu": "footer-help" }
+        },
+        "company_links": {
+          "type": "link_list",
+          "settings": { "heading": "Ecomdukan", "menu": "footer-company" }
+        },
+        "brand": {
+          "type": "brand_information",
+          "settings": {
+            "show_social": true,
+            "color_scheme": "scheme-1"
+          }
+        },
+        "compliance": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "subtext": "<p>Ecomdukan Pvt. Ltd. · GSTIN 27ABCDE1234F1Z5 · CIN U74999MH2026PTC123456 · Made in India</p>"
+          }
+        }
+      },
+      "block_order": ["shop_links", "business_links", "help_links", "company_links", "brand", "compliance"],
+      "settings": {
+        "color_scheme": "scheme-4",
+        "newsletter_enable": false,
+        "newsletter_heading": "",
+        "enable_follow_on_shop": false,
+        "show_social": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "payment_enable": true,
+        "show_policy": true,
+        "margin_top": 0,
+        "padding_top": 64,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": ["newsletter", "footer"]
+}

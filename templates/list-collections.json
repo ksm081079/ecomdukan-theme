@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "banner": {
+      "type": "ed-hero",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "eyebrow": "All categories",
+        "heading": "Everything we stock.",
+        "subhead": "Labels, paper, envelopes, mailers, tape — by printer, by size, by GSM."
+      }
+    },
+    "main": {
+      "type": "main-list-collections",
+      "settings": {}
+    }
+  },
+  "order": ["banner", "main"]
+}

@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "story": {
+      "type": "ed-editorial",
+      "settings": {
+        "eyebrow": "About",
+        "heading": "दुकान, scaled.",
+        "body": "<p>Ecomdukan is a bulk supplier of stationery and printer labels for D2C brands and businesses across India. We sit between the <em>kirana</em>-shop reliability our customers grew up with and the precision-grade output a modern fulfillment operation demands.</p>",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "h1": { "type": "heading", "settings": { "text": "Why we started" } },
+        "p1": { "type": "paragraph", "settings": { "text": "<p>Three years of running ops at D2C brands taught us one thing: nobody serves the line. Suppliers either treat you like a wholesale account (gates, MOQs, opaque pricing) or a consumer (one carton, retail-margin pricing). Neither works when you're shipping 500 orders a day.</p>" } },
+        "h2": { "type": "heading", "settings": { "text": "What we do differently" } },
+        "p2": { "type": "paragraph", "settings": { "text": "<p>We publish prices. We stock inventory. We GST-invoice every order. We ship same-day from three DCs. We answer WhatsApp in business hours. The combination is unremarkable in retail — and somehow rare in bulk supply.</p>" } },
+        "q1": { "type": "pull_quote", "settings": { "text": "Procurement should not be project work." } },
+        "h3": { "type": "heading", "settings": { "text": "By the numbers" } },
+        "st1": { "type": "stat", "settings": { "value": "92%", "label": "Orders ship within 24 hours" } },
+        "st2": { "type": "stat", "settings": { "value": "3", "label": "Distribution centres (Mumbai · Bengaluru · Delhi)" } },
+        "st3": { "type": "stat", "settings": { "value": "240+", "label": "Active D2C brand customers" } }
+      },
+      "block_order": ["h1", "p1", "h2", "p2", "q1", "h3", "st1", "st2", "st3"]
+    }
+  },
+  "order": ["story"]
+}

@@ -1,0 +1,57 @@
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
+  assign products = collections[section.settings.collection].products
+  assign limit = section.settings.product_count | default: 8
+-%}
+<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
+  <div class="ed-container">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--sp-6); gap: var(--sp-4); flex-wrap: wrap;">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-2);">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ed-display-m" style="margin: 0;">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.collection != blank -%}
+        <a href="{{ collections[section.settings.collection].url }}" class="ed-btn--link" style="font-family: var(--font-ed-body); font-weight: 600; font-size: 14px;">View all →</a>
+      {%- endif -%}
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-5);" class="ed-product-grid">
+      {%- for product in products limit: limit -%}
+        {%- render 'ed-product-card', product: product -%}
+      {%- else -%}
+        {%- for i in (1..limit) -%}
+          <div class="ed-card" style="aspect-ratio: 1/1.4;"><p class="ed-caption" style="color: var(--ed-mute);">Set a collection in section settings</p></div>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (max-width: 989px) { .ed-product-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+  @media (max-width: 599px) { .ed-product-grid { grid-template-columns: 1fr !important; } }
+</style>
+
+{% schema %}
+{
+  "name": "ED Best-sellers carousel",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Best-sellers" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Moving fast this week" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "product_count", "label": "Products to show", "min": 4, "max": 12, "step": 2, "default": 8 },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+      "options": [
+        { "value": "scheme-1", "label": "Paper" },
+        { "value": "scheme-2", "label": "Snow" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "ED Best-sellers" }]
+}
+{% endschema %}

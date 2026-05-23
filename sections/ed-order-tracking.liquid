@@ -1,0 +1,59 @@
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
+-%}
+<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
+  <div class="ed-container" style="max-width: 760px;">
+    <div style="text-align: center; margin-bottom: var(--sp-7);">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="ed-display-l" style="margin: 0 0 var(--sp-4);">{{ section.settings.heading | default: 'Track your order' }}</h1>
+      {%- if section.settings.body != blank -%}
+        <div class="ed-body-l" style="color: var(--ed-text-mute);">{{ section.settings.body }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="ed-card" style="padding: var(--sp-6);">
+      {%- if section.settings.tracking_url != blank -%}
+        {%- assign tracking = section.settings.tracking_url -%}
+        <form method="get" action="{{ tracking }}" target="_blank" class="ed-form">
+          <div>
+            <label class="ed-label" for="t-awb">AWB / Tracking number</label>
+            <input id="t-awb" type="text" name="awb" class="ed-input" placeholder="e.g. 1234567890" required>
+          </div>
+          <div>
+            <label class="ed-label" for="t-order">Order number (optional)</label>
+            <input id="t-order" type="text" name="order" class="ed-input" placeholder="ED-12345">
+          </div>
+          <button type="submit" class="ed-btn ed-btn--primary ed-btn--lg ed-btn--block">Track on courier site</button>
+        </form>
+      {%- else -%}
+        <p class="ed-body">Set a tracking URL in the section settings (e.g. Shiprocket's tracking page).</p>
+      {%- endif -%}
+
+      <p class="ed-help" style="text-align: center; margin-top: var(--sp-4);">
+        Lost your AWB? Email <a href="mailto:{{ settings.ed_contact_email | default: 'hello@ecomdukan.in' }}" style="color: var(--ed-electric);">{{ settings.ed_contact_email | default: 'hello@ecomdukan.in' }}</a> with your order number.
+      </p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "ED Order tracking",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Track order" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Track your order" },
+    { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Use the AWB from your dispatch email. Tracking goes to our courier's site.</p>" },
+    { "type": "url", "id": "tracking_url", "label": "Courier tracking URL (e.g. https://www.shiprocket.in/shipment-tracking/)" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+      "options": [
+        { "value": "scheme-1", "label": "Paper" },
+        { "value": "scheme-2", "label": "Snow" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "ED Order tracking" }]
+}
+{% endschema %}

@@ -1,0 +1,64 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "msg_1": {
+          "type": "announcement",
+          "settings": {
+            "text": "Free shipping on orders above ₹2,500",
+            "link": ""
+          }
+        },
+        "msg_2": {
+          "type": "announcement",
+          "settings": {
+            "text": "GST invoice on every order",
+            "link": ""
+          }
+        },
+        "msg_3": {
+          "type": "announcement",
+          "settings": {
+            "text": "Reorder in one tap — Mumbai · Bengaluru · Delhi DCs",
+            "link": "shopify://pages/bulk-pricing"
+          }
+        }
+      },
+      "block_order": ["msg_1", "msg_2", "msg_3"],
+      "settings": {
+        "auto_rotate": true,
+        "enable_scrolling_ticker": false,
+        "ticker_speed": 9,
+        "change_slides_speed": 6,
+        "color_scheme": "scheme-4",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "middle-left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "mega",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 12,
+        "padding_bottom": 12
+      }
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

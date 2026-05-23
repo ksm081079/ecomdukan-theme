@@ -1,0 +1,55 @@
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
+-%}
+<div class="color-{{ scheme }} ed-section ed-hero" style="background: rgb(var(--color-background));">
+  <div class="ed-container">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ed-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h1 class="ed-hero__h">{{ section.settings.heading }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subhead != blank -%}
+      <p class="ed-hero__sub">{{ section.settings.subhead }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.cta_1_label != blank or section.settings.cta_2_label != blank -%}
+      <div class="ed-hero__ctas">
+        {%- if section.settings.cta_1_label != blank -%}
+          <a href="{{ section.settings.cta_1_link | default: '#' }}" class="ed-btn ed-btn--primary ed-btn--lg">{{ section.settings.cta_1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.cta_2_label != blank -%}
+          <a href="{{ section.settings.cta_2_link | default: '#' }}" class="ed-btn ed-btn--ghost ed-btn--lg">{{ section.settings.cta_2_label }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "ED Hero (type-only)",
+  "tag": "section",
+  "class": "ed-hero-section",
+  "settings": [
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+      "options": [
+        { "value": "scheme-1", "label": "Paper" },
+        { "value": "scheme-2", "label": "Snow" },
+        { "value": "scheme-3", "label": "Indigo" },
+        { "value": "scheme-4", "label": "Ink" }
+      ]
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "दुकान, scaled · Made in India" },
+    { "type": "textarea", "id": "heading", "label": "Headline", "default": "Stationery & printer labels, in bulk, in stock." },
+    { "type": "textarea", "id": "subhead", "label": "Subhead", "default": "One supplier. One invoice. Three DCs — Mumbai, Bengaluru, Delhi." },
+    { "type": "text", "id": "cta_1_label", "label": "Primary CTA label", "default": "Shop labels" },
+    { "type": "url",  "id": "cta_1_link",  "label": "Primary CTA link" },
+    { "type": "text", "id": "cta_2_label", "label": "Secondary CTA label", "default": "Get bulk quote" },
+    { "type": "url",  "id": "cta_2_link",  "label": "Secondary CTA link" }
+  ],
+  "presets": [{ "name": "ED Hero" }]
+}
+{% endschema %}

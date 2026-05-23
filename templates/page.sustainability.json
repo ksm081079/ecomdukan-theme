@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "story": {
+      "type": "ed-editorial",
+      "settings": {
+        "eyebrow": "Sustainability",
+        "heading": "Smaller boxes. Lighter paper. Less ink.",
+        "body": "<p>Sustainability in supply means using less, more carefully. We don't make claims we can't back up. Here's what we do, and what we don't.</p>",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "h1": { "type": "heading", "settings": { "text": "What we do" } },
+        "p1": { "type": "paragraph", "settings": { "text": "<ul><li>Default GSM is the lowest that meets the spec — no over-engineering.</li><li>All kraft mailers and outer cases are 100% recycled, FSC-certified.</li><li>Our standard label stock is 85 GSM, not 100 — same performance, 15% less paper per roll.</li><li>We ship in right-sized boxes (no air filler) where the order allows.</li><li>Local DCs cut last-mile distance — average customer order travels < 300 km.</li></ul>" } },
+        "h2": { "type": "heading", "settings": { "text": "What we don't do (yet)" } },
+        "p2": { "type": "paragraph", "settings": { "text": "<ul><li>We don't carbon-offset shipping. We think buying offsets is greenwashing; reducing volume is the work.</li><li>We don't market \"eco\" SKUs at a premium. If a SKU is greener, it's the default — not a paid upgrade.</li><li>We don't pretend label adhesives are recyclable. They're not. We're working on a solvent-recoverable line; not ready to ship.</li></ul>" } },
+        "q1": { "type": "pull_quote", "settings": { "text": "Reducing volume is the work." } }
+      },
+      "block_order": ["h1", "p1", "h2", "p2", "q1"]
+    }
+  },
+  "order": ["story"]
+}

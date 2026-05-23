@@ -1,0 +1,31 @@
+{
+  "sections": {
+    "banner": {
+      "type": "ed-collection-banner",
+      "settings": {
+        "show_breadcrumb": true,
+        "color_scheme": "scheme-2"
+      }
+    },
+    "grid": {
+      "type": "ed-collection-grid",
+      "settings": {
+        "products_per_page": 24,
+        "in_stock_default": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "cta": {
+      "type": "ed-custom-print-cta",
+      "settings": {
+        "eyebrow": "Don't see what you need?",
+        "heading": "We can custom-print it.",
+        "body": "Custom dimensions, materials, finishes — minimum 5,000 units. Quote in 2 business hours.",
+        "cta_label": "Send a brief",
+        "cta_link": "shopify://pages/custom-print",
+        "color_scheme": "scheme-3"
+      }
+    }
+  },
+  "order": ["banner", "grid", "cta"]
+}

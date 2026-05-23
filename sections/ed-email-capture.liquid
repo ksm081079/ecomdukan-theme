@@ -1,0 +1,55 @@
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-2'
+-%}
+<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
+  <div class="ed-container" style="max-width: 720px; text-align: center;">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="ed-display-m" style="margin: 0 0 var(--sp-3);">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.body != blank -%}
+      <p class="ed-body" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-5);">{{ section.settings.body }}</p>
+    {%- endif -%}
+
+    {%- form 'customer', class: 'ed-form', id: 'ed-email-capture' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: var(--sp-3);">
+        <label for="ed-email" class="visually-hidden">Email</label>
+        <input id="ed-email" class="ed-input" type="email" name="contact[email]" placeholder="you@company.in" required autocomplete="email">
+        <button type="submit" class="ed-btn ed-btn--primary">{{ section.settings.cta_label | default: 'Subscribe' }}</button>
+      </div>
+      {%- if form.posted_successfully? -%}
+        <p class="ed-form-success" style="margin-top: var(--sp-4);">Thanks. We'll send the next restock & price update to your inbox.</p>
+      {%- elsif form.errors -%}
+        <p class="ed-err" style="margin-top: var(--sp-4);">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+    {%- endform -%}
+
+    {%- if section.settings.disclaimer != blank -%}
+      <p class="ed-help" style="margin-top: var(--sp-4);">{{ section.settings.disclaimer }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "ED Email capture",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Newsletter" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Restock & price-drop alerts" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff." },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Subscribe" },
+    { "type": "text", "id": "disclaimer", "label": "Disclaimer", "default": "We never share your email. Unsubscribe anytime." },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2",
+      "options": [
+        { "value": "scheme-1", "label": "Paper" },
+        { "value": "scheme-2", "label": "Snow" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "ED Email capture" }]
+}
+{% endschema %}

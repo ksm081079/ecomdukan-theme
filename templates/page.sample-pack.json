@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "form": {
+      "type": "ed-sample-form",
+      "settings": {
+        "eyebrow": "Sample pack · free",
+        "heading": "Try before you commit",
+        "body": "<p>Pick up to 3 SKUs you'd like to feel and test. We ship a sample pack — free, in 2 business days.</p>",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": ["form"]
+}

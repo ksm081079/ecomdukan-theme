@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "banner": {
+      "type": "ed-collection-banner",
+      "settings": { "show_breadcrumb": true, "color_scheme": "scheme-2" }
+    },
+    "grid": {
+      "type": "ed-collection-grid",
+      "settings": { "products_per_page": 24, "in_stock_default": false, "color_scheme": "scheme-1" }
+    }
+  },
+  "order": ["banner", "grid"]
+}

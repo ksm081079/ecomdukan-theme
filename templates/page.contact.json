@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ed-hero",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "eyebrow": "Contact",
+        "heading": "We answer in business hours.",
+        "subhead": "Mon–Sat · 9 AM – 7 PM IST. WhatsApp is fastest for urgent things; email is best for briefs and quotes.",
+        "cta_1_label": "WhatsApp us",
+        "cta_1_link": "https://wa.me/917842680660",
+        "cta_2_label": "Email us",
+        "cta_2_link": "mailto:hello@ecomdukan.in"
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {}
+    }
+  },
+  "order": ["hero", "form"]
+}

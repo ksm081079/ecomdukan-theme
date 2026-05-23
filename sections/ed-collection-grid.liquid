@@ -1,0 +1,129 @@
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
+  assign per_page = section.settings.products_per_page | default: 24
+-%}
+{%- paginate collection.products by per_page -%}
+<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background)); padding-block: var(--sp-6) var(--sp-8);">
+  <div class="ed-container">
+    <div class="ed-coll-layout" style="display: grid; grid-template-columns: 220px 1fr; gap: var(--sp-7); align-items: start;">
+
+      {%- comment -%} Filter rail {%- endcomment -%}
+      <aside class="ed-filters" style="position: sticky; top: 24px;">
+        {%- if collection.filters.size > 0 -%}
+          <form action="{{ collection.url }}" method="get" id="ed-filters-form">
+            {%- if section.settings.in_stock_default -%}
+              <label style="display: flex; align-items: center; gap: 8px; padding: var(--sp-3) 0; border-bottom: 1.5px solid var(--ed-ink);">
+                <input type="checkbox" name="filter.v.availability" value="1" checked style="accent-color: var(--ed-electric);">
+                <span class="ed-caption" style="color: var(--ed-ink);">In stock only</span>
+              </label>
+            {%- endif -%}
+
+            {%- for filter in collection.filters -%}
+              <details open style="padding: var(--sp-3) 0; border-bottom: 1px solid var(--ed-border);">
+                <summary class="ed-caption" style="cursor: pointer; padding-bottom: var(--sp-2); color: var(--ed-ink); list-style: none; display: flex; justify-content: space-between;">
+                  <span>{{ filter.label }}</span>
+                  <span class="ed-mono">+</span>
+                </summary>
+                <div style="padding-top: var(--sp-2);">
+                  {%- case filter.type -%}
+                    {%- when 'list' -%}
+                      {%- for value in filter.values -%}
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: var(--ed-ink); {% if value.count == 0 %}opacity: 0.4;{% endif %}">
+                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                          <span>{{ value.label }} <span class="ed-mono" style="color: var(--ed-mute);">({{ value.count }})</span></span>
+                        </label>
+                      {%- endfor -%}
+                    {%- when 'price_range' -%}
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <input type="number" name="{{ filter.min_value.param_name }}" placeholder="Min" value="{{ filter.min_value.value }}" class="ed-input" style="padding: 8px;">
+                        <input type="number" name="{{ filter.max_value.param_name }}" placeholder="Max" value="{{ filter.max_value.value }}" class="ed-input" style="padding: 8px;">
+                      </div>
+                  {%- endcase -%}
+                </div>
+              </details>
+            {%- endfor -%}
+
+            <button type="submit" class="ed-btn ed-btn--ghost ed-btn--block" style="margin-top: var(--sp-4);">Apply filters</button>
+            {%- if collection.current_vendor or collection.current_type or collection.url contains '?' -%}
+              <a href="{{ collection.url }}" class="ed-btn--link" style="display: block; text-align: center; margin-top: var(--sp-3); font-family: var(--font-ed-body); font-size: 13px;">Clear all</a>
+            {%- endif -%}
+          </form>
+        {%- else -%}
+          <p class="ed-help">No filters configured. Set up Search & Discovery in admin.</p>
+        {%- endif -%}
+      </aside>
+
+      {%- comment -%} Product grid {%- endcomment -%}
+      <div>
+        {%- comment -%} Sort bar {%- endcomment -%}
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-5); padding-bottom: var(--sp-3); border-bottom: 1.5px solid var(--ed-ink);">
+          <p class="ed-mono" style="color: var(--ed-text-mute); margin: 0; font-size: 12px;">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label for="ed-sort" class="ed-caption" style="color: var(--ed-text-mute);">Sort</label>
+            <select id="ed-sort" name="sort_by" class="ed-select" style="width: auto; padding: 8px 24px 8px 12px; font-size: 13px;" onchange="window.location.search = (new URLSearchParams(Object.assign(Object.fromEntries(new URLSearchParams(window.location.search)), { sort_by: this.value }))).toString();">
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value }}" {% if collection.sort_by == option.value %}selected{% endif %}>{{ option.name }}</option>
+              {%- endfor -%}
+            </select>
+          </div>
+        </div>
+
+        {%- if collection.products.size > 0 -%}
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-5);" class="ed-coll-grid">
+            {%- for product in collection.products -%}
+              {%- render 'ed-product-card', product: product -%}
+            {%- endfor -%}
+          </div>
+
+          {%- if paginate.pages > 1 -%}
+            <div style="text-align: center; margin-top: var(--sp-7);">
+              {%- if paginate.next -%}
+                <a href="{{ paginate.next.url }}" class="ed-btn ed-btn--ghost ed-btn--lg">Load next page ({{ paginate.current_page }}/{{ paginate.pages }})</a>
+              {%- else -%}
+                <p class="ed-caption" style="color: var(--ed-text-mute);">That's everything in this collection.</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <div class="ed-card" style="padding: var(--sp-7); text-align: center;">
+            <p class="ed-headline" style="margin: 0 0 var(--sp-3);">No products match those filters.</p>
+            <p class="ed-body" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-4);">Try clearing one — like the in-stock toggle, or a printer-type filter.</p>
+            <a href="{{ collection.url }}" class="ed-btn ed-btn--primary">Clear filters</a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- endpaginate -%}
+
+<style>
+  @media (max-width: 989px) {
+    .ed-coll-layout { grid-template-columns: 1fr !important; }
+    .ed-filters { position: static !important; }
+    .ed-coll-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 599px) { .ed-coll-grid { grid-template-columns: 1fr !important; } }
+  details[open] summary span:last-child { transform: rotate(45deg); transition: transform 120ms; }
+  summary::-webkit-details-marker { display: none; }
+</style>
+
+{% schema %}
+{
+  "name": "ED Collection grid",
+  "tag": "section",
+  "settings": [
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "checkbox", "id": "in_stock_default", "label": "Default 'In stock only' toggle on", "default": true },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+      "options": [
+        { "value": "scheme-1", "label": "Paper" },
+        { "value": "scheme-2", "label": "Snow" }
+      ]
+    }
+  ],
+  "enabled_on": { "templates": ["collection"] },
+  "presets": [{ "name": "ED Collection grid" }]
+}
+{% endschema %}

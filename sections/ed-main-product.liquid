@@ -1,0 +1,218 @@
+{%- comment -%}
+  Ecomdukan PDP — spec-led, bulk-buyer first.
+  Reads metafields under `specs.*`, `pricing.tiers`, `lead.*`.
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign sku = variant.sku | default: product.sku
+  assign gsm = product.metafields.specs.gsm.value
+  assign dims = product.metafields.specs.dimensions_mm.value
+  assign pack = product.metafields.specs.pack_qty.value
+  assign case_qty = product.metafields.specs.case_qty.value
+  assign core = product.metafields.specs.core_size.value
+  assign printers = product.metafields.specs.printer_compat.value
+  assign tiers = product.metafields.pricing.tiers.value
+  assign dcs = product.metafields.lead.in_stock_at.value
+  assign sample = product.metafields.lead.sample_available.value
+-%}
+
+<div class="color-{{ section.settings.color_scheme | default: 'scheme-1' }} ed-section" style="background: rgb(var(--color-background)); padding-block: var(--sp-5);">
+  <div class="ed-container">
+    {%- comment -%} Breadcrumb {%- endcomment -%}
+    {%- if section.settings.show_breadcrumb -%}
+      <nav class="ed-mono" style="font-size: 12px; color: var(--ed-text-mute); margin-bottom: var(--sp-5); text-transform: uppercase; letter-spacing: .06em;">
+        <a href="{{ routes.root_url }}" style="color: inherit; text-decoration: none;">Home</a>
+        {%- if collection -%}
+          <span class="ed-foot-meta__dot"> › </span>
+          <a href="{{ collection.url }}" style="color: inherit; text-decoration: none;">{{ collection.title }}</a>
+        {%- endif -%}
+        <span class="ed-foot-meta__dot"> › </span>
+        <span style="color: var(--ed-ink);">{{ product.title }}</span>
+      </nav>
+    {%- endif -%}
+
+    <div class="ed-pdp-grid" style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, 1fr); gap: var(--sp-7); align-items: start;">
+      {%- comment -%} Media gallery {%- endcomment -%}
+      <div class="ed-pdp__media">
+        {%- if product.media.size > 0 -%}
+          <div style="display: grid; gap: var(--sp-3);">
+            {%- for media in product.media limit: 6 -%}
+              <div style="border: 1.5px solid var(--ed-ink); border-radius: 2px; overflow: hidden; background: var(--ed-paper); aspect-ratio: 1/1;">
+                {%- case media.media_type -%}
+                  {%- when 'image' -%}
+                    {{ media | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1600', alt: media.alt | default: product.title, style: 'width:100%;height:100%;object-fit:cover;' }}
+                  {%- when 'video', 'external_video' -%}
+                    {{ media | media_tag: image_size: '1600x', autoplay: false, loop: false, controls: true, preload: 'metadata' }}
+                  {%- else -%}
+                    {{ media | media_tag }}
+                {%- endcase -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div style="aspect-ratio: 1/1; border: 1.5px solid var(--ed-ink); display: flex; align-items: center; justify-content: center; background: var(--ed-paper);">
+            <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" style="width: 96px; opacity: .25;">
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Info column {%- endcomment -%}
+      <div class="ed-pdp__info" style="position: sticky; top: 24px;">
+        {%- comment -%} Stock badge ABOVE title (per spec) {%- endcomment -%}
+        <div style="margin-bottom: var(--sp-4);">
+          {%- if product.available -%}
+            <span class="ed-badge ed-badge--instock">In stock · Ships today</span>
+          {%- else -%}
+            <span class="ed-badge ed-badge--oos">Currently out — notify me below</span>
+          {%- endif -%}
+        </div>
+
+        <h1 class="ed-display-m" style="margin: 0 0 var(--sp-3);">{{ product.title }}</h1>
+
+        {%- if dims -%}
+          <p class="ed-mono" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-5); text-transform: uppercase; letter-spacing: .04em;">{{ dims }}</p>
+        {%- endif -%}
+
+        {%- comment -%} Spec table {%- endcomment -%}
+        <table class="ed-spec" style="margin-bottom: var(--sp-6);">
+          <tbody>
+            {%- if sku -%}<tr><th>SKU</th><td>{{ sku }}</td></tr>{%- endif -%}
+            {%- if gsm -%}<tr><th>GSM</th><td>{{ gsm }}</td></tr>{%- endif -%}
+            {%- if pack -%}<tr><th>Pack</th><td>{{ pack }} per pack</td></tr>{%- endif -%}
+            {%- if case_qty -%}<tr><th>Case</th><td>{{ case_qty }} per case</td></tr>{%- endif -%}
+            {%- if core -%}<tr><th>Core</th><td>{{ core }}</td></tr>{%- endif -%}
+            {%- if dcs -%}<tr><th>In stock at</th><td>{{ dcs | join: ' · ' }}</td></tr>{%- endif -%}
+          </tbody>
+        </table>
+
+        {%- comment -%} Tier pricing — manual JSON metafield or block-driven {%- endcomment -%}
+        {%- if tiers != blank -%}
+          <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">Pricing (incl GST)</p>
+          <ul class="ed-tier-list" style="margin-bottom: var(--sp-5);">
+            {%- for tier in tiers -%}
+              <li>
+                <span class="ed-tier-range">{{ tier.range }}</span>
+                <span class="ed-tier-price">{{ tier.price }}</span>
+                {%- if tier.save -%}<span class="ed-tier-save">▼ {{ tier.save }}</span>{%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">Pricing</p>
+          <div class="ed-mono" style="font-size: 28px; color: var(--ed-ink); font-weight: 600; margin-bottom: var(--sp-5);">
+            {{ product.price_min | money }}
+            {%- if product.price_varies %} <span style="font-size: 13px; color: var(--ed-text-mute); font-weight: 400;">starting</span>{%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Buy form {%- endcomment -%}
+        {%- form 'product', product, id: 'product-form', class: 'ed-form' -%}
+          <input type="hidden" name="id" value="{{ variant.id }}">
+
+          {%- if product.variants.size > 1 -%}
+            <div class="ed-fieldset">
+              {%- for option in product.options_with_values -%}
+                <label class="ed-label" for="ed-opt-{{ forloop.index }}">{{ option.name }}</label>
+                <select id="ed-opt-{{ forloop.index }}" class="ed-select" name="options[{{ option.name }}]">
+                  {%- for value in option.values -%}
+                    <option value="{{ value }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
+                  {%- endfor -%}
+                </select>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <div style="display: grid; grid-template-columns: 140px 1fr; gap: var(--sp-3); align-items: end; margin-bottom: var(--sp-3);">
+            <div>
+              <label class="ed-label" for="ed-qty">Quantity</label>
+              <div style="display: grid; grid-template-columns: 40px 1fr 40px; border: 1.5px solid var(--ed-ink); border-radius: 2px; overflow: hidden;">
+                <button type="button" aria-label="Decrease" data-ed-qty-step="-1" style="background: var(--ed-snow); border: 0; border-right: 1.5px solid var(--ed-ink); cursor: pointer; font-family: var(--font-ed-mono); font-size: 16px;">−</button>
+                <input id="ed-qty" type="number" name="quantity" value="1" min="1" class="ed-input" style="border: 0; text-align: center; font-family: var(--font-ed-mono); padding: 12px 0;">
+                <button type="button" aria-label="Increase" data-ed-qty-step="1" style="background: var(--ed-snow); border: 0; border-left: 1.5px solid var(--ed-ink); cursor: pointer; font-family: var(--font-ed-mono); font-size: 16px;">+</button>
+              </div>
+            </div>
+            <div></div>
+          </div>
+
+          <button type="submit" name="add" class="ed-btn ed-btn--primary ed-btn--lg ed-btn--block" {% unless product.available %}disabled{% endunless %}>
+            {%- if product.available -%}
+              Add to cart
+            {%- else -%}
+              Sold out
+            {%- endif -%}
+          </button>
+        {%- endform -%}
+
+        {%- if section.settings.show_quote_cta -%}
+          <a href="{{ section.settings.quote_url | default: '/pages/request-quote' }}" class="ed-btn ed-btn--ghost ed-btn--block" style="margin-top: var(--sp-3);">Request 50+ quote</a>
+        {%- endif -%}
+
+        {%- comment -%} Trust strip {%- endcomment -%}
+        <ul style="list-style: none; padding: var(--sp-4) 0 0; margin: 0; border-top: 1px solid var(--ed-border); margin-top: var(--sp-5);">
+          {%- if section.settings.usp_1 != blank -%}
+            <li class="ed-body-s" style="display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; color: var(--ed-ink);"><span style="color: var(--ed-electric);">▸</span> {{ section.settings.usp_1 }}</li>
+          {%- endif -%}
+          {%- if section.settings.usp_2 != blank -%}
+            <li class="ed-body-s" style="display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; color: var(--ed-ink);"><span style="color: var(--ed-electric);">▸</span> {{ section.settings.usp_2 }}</li>
+          {%- endif -%}
+          {%- if sample -%}
+            <li class="ed-body-s" style="display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; color: var(--ed-ink);"><span style="color: var(--ed-electric);">▸</span> Sample available (₹0, ships free) · <a href="{{ section.settings.sample_url | default: '/pages/sample-pack' }}" style="color: var(--ed-electric);">Request a sample</a></li>
+          {%- endif -%}
+        </ul>
+
+        {%- if printers -%}
+          <details style="margin-top: var(--sp-5); border-top: 1px solid var(--ed-border); padding-top: var(--sp-4);">
+            <summary class="ed-caption" style="cursor: pointer; color: var(--ed-ink);">Printer compatibility ({{ printers.size }})</summary>
+            <ul class="ed-mono" style="list-style: none; padding: var(--sp-3) 0 0; margin: 0; font-size: 12px; color: var(--ed-text-mute);">
+              {%- for p in printers -%}
+                <li style="padding: 3px 0;">· {{ p }}</li>
+              {%- endfor -%}
+            </ul>
+          </details>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (max-width: 989px) {
+    .ed-pdp-grid { grid-template-columns: 1fr !important; }
+    .ed-pdp__info { position: static !important; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-ed-qty-step]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var step = parseInt(btn.dataset.edQtyStep, 10);
+      var input = btn.parentElement.querySelector('input[type="number"]');
+      var v = Math.max(1, (parseInt(input.value, 10) || 1) + step);
+      input.value = v;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "ED Main product",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "Show breadcrumb", "default": true },
+    { "type": "checkbox", "id": "show_quote_cta", "label": "Show 'Request 50+ quote' CTA", "default": true },
+    { "type": "url", "id": "quote_url", "label": "Quote page URL" },
+    { "type": "url", "id": "sample_url", "label": "Sample-pack page URL" },
+    { "type": "text", "id": "usp_1", "label": "USP 1", "default": "Free shipping on orders above ₹2,500" },
+    { "type": "text", "id": "usp_2", "label": "USP 2", "default": "GST invoice included on every order" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+      "options": [
+        { "value": "scheme-1", "label": "Paper" },
+        { "value": "scheme-2", "label": "Snow" }
+      ]
+    }
+  ],
+  "enabled_on": { "templates": ["product"] }
+}
+{% endschema %}
