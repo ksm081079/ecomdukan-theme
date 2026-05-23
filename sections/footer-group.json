@@ -29,7 +29,7 @@
         "support_email": "hello@ecomdukan.in",
         "support_phone": "+91 78426 80660",
         "support_hours": "Mon–Sat · 9 AM – 7 PM IST",
-        "show_newsletter": true,
+        "show_newsletter": false,
         "newsletter_eyebrow": "Newsletter",
         "newsletter_heading": "Restock & price-drop alerts",
         "newsletter_body": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff.",
