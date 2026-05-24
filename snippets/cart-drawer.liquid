@@ -852,15 +852,21 @@
 
 });
 
-  document.addEventListener('input', function (e) {
-  if (e.target.id === 'CartDrawer-Note') {
-    fetch('/cart/update.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ note: e.target.value })
+  (function() {
+    let noteTimer = null;
+    document.addEventListener('input', function (e) {
+      if (e.target.id !== 'CartDrawer-Note') return;
+      const value = e.target.value;
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(function() {
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note: value })
+        });
+      }, 400);
     });
-  }
-});
+  })();
 {% comment %} document.getElementById('add-gift-wrap').addEventListener('click', function () {
   window.location.href = '/cart/add?id=12345678901234&quantity=1';
 }); {% endcomment %}
@@ -1448,18 +1454,9 @@ document.addEventListener('cart:refresh', async () => {
       
       // Mark product as added
       addedProductIds.add(productId);
-      
-      // Optimistically update cart count (increment by 1)
+
+      // (cart count is updated from authoritative /cart.js response below — no optimistic bump)
       const cartCountElements = document.querySelectorAll('.cart-count-bubble span, #cart-icon-bubble .count, [data-cart-count]');
-      cartCountElements.forEach(el => {
-        const currentCount = parseInt(el.textContent || el.getAttribute('data-cart-count') || '0', 10);
-        const newCount = currentCount + 1;
-        if (el.tagName === 'SPAN' || el.classList.contains('count')) {
-          el.textContent = newCount;
-        } else {
-          el.setAttribute('data-cart-count', newCount);
-        }
-      });
       
       // Remove product card immediately with animation
       if (productCard && productCard.parentNode) {
@@ -1492,6 +1489,17 @@ document.addEventListener('cart:refresh', async () => {
           const sourceFooter = html.querySelector('.cart-drawer__footer');
           if (targetFooter && sourceFooter) {
             targetFooter.innerHTML = sourceFooter.innerHTML;
+          }
+
+          // Refresh free-shipping progress bar from server (uses fresh cart.total_price)
+          const targetShip = document.querySelector('.ed-ship-progress');
+          const sourceShip = html.querySelector('.ed-ship-progress');
+          if (targetShip && sourceShip) {
+            targetShip.outerHTML = sourceShip.outerHTML;
+          } else if (sourceShip && !targetShip) {
+            const drawerInner = document.querySelector('.drawer__inner');
+            const header = drawerInner && drawerInner.querySelector('.drawer__header');
+            if (header) header.insertAdjacentHTML('afterend', sourceShip.outerHTML);
           }
           
           // Update drawer footer container
