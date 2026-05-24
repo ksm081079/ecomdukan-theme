@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -7,22 +16,6 @@
         "show_quote_cta": true,
         "quote_url": "shopify://pages/request-quote",
         "sample_url": "shopify://pages/sample-pack",
-        "show_social_proof": true,
-        "sold_values": "8,12,15,18,22,26",
-        "viewing_min": 8,
-        "viewing_max": 32,
-        "offers_heading": "Available offers",
-        "offer_1": "Get ₹100 off",
-        "offer_1_tagline": "On carts above ₹899",
-        "offer_1_code": "SAVE100",
-        "offer_2": "Get 9% off",
-        "offer_2_tagline": "On carts above ₹1,200",
-        "offer_2_code": "SAVE09",
-        "offer_3": "Get 15% off",
-        "offer_3_tagline": "On carts above ₹2,400",
-        "offer_3_code": "SAVE15",
-        "highlight_icon": "⏰",
-        "highlight_text": "Order before 2:30 PM IST for same-day dispatch",
         "usp_1": "Free shipping on orders above ₹2,500",
         "usp_2": "GST invoice included on every order",
         "color_scheme": "scheme-1"
@@ -54,20 +47,78 @@
     },
     "use_cases": {
       "type": "ed-use-cases",
+      "blocks": {
+        "u1": {
+          "type": "case",
+          "settings": {
+            "eyebrow": "Shipping",
+            "title": "Outbound dispatch",
+            "body": "Stick, scan, ship. Mid-volume warehouses use these for 500–5,000 daily orders."
+          }
+        },
+        "u2": {
+          "type": "case",
+          "settings": {
+            "eyebrow": "Branding",
+            "title": "Custom-print labels",
+            "body": "Two-color print on cream stock for D2C unboxing."
+          }
+        },
+        "u3": {
+          "type": "case",
+          "settings": {
+            "eyebrow": "Packing",
+            "title": "Invoice pouches",
+            "body": "Pasted to outer boxes so couriers don't lose the bill."
+          }
+        },
+        "u4": {
+          "type": "case",
+          "settings": {
+            "eyebrow": "Warning",
+            "title": "Fragile & hazmat",
+            "body": "Pre-printed warning labels — fragile, this side up, do not stack."
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ],
       "settings": {
         "heading": "How operators use this",
         "color_scheme": "scheme-1"
-      },
-      "blocks": {
-        "u1": { "type": "case", "settings": { "eyebrow": "Shipping", "title": "Outbound dispatch", "body": "Stick, scan, ship. Mid-volume warehouses use these for 500–5,000 daily orders." } },
-        "u2": { "type": "case", "settings": { "eyebrow": "Branding", "title": "Custom-print labels", "body": "Two-color print on cream stock for D2C unboxing." } },
-        "u3": { "type": "case", "settings": { "eyebrow": "Packing", "title": "Invoice pouches", "body": "Pasted to outer boxes so couriers don't lose the bill." } },
-        "u4": { "type": "case", "settings": { "eyebrow": "Warning", "title": "Fragile & hazmat", "body": "Pre-printed warning labels — fragile, this side up, do not stack." } }
-      },
-      "block_order": ["u1", "u2", "u3", "u4"]
+      }
     },
     "why_choose": {
       "type": "ed-why-choose",
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "caption": "Same-day dispatch from Mumbai DC"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "caption": "GST invoice on every order"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "caption": "Bulk savings unlock at 20+ cases"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ],
       "settings": {
         "heading": "Why choose",
         "tag": "Ecomdukan",
@@ -75,13 +126,7 @@
         "color_scheme": "scheme-1",
         "padding_top": 60,
         "padding_bottom": 80
-      },
-      "blocks": {
-        "c1": { "type": "card", "settings": { "caption": "Same-day dispatch from Mumbai DC" } },
-        "c2": { "type": "card", "settings": { "caption": "GST invoice on every order" } },
-        "c3": { "type": "card", "settings": { "caption": "Bulk savings unlock at 20+ cases" } }
-      },
-      "block_order": ["c1", "c2", "c3"]
+      }
     },
     "pairs_well": {
       "type": "ed-pairs-well",
@@ -93,19 +138,57 @@
     },
     "faq": {
       "type": "ed-faq",
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "question": "Do you offer GST invoices?",
+            "answer": "<p>Yes — every order ships with a GST-compliant invoice. Enter your GSTIN at checkout.</p>"
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "question": "Can I get a sample first?",
+            "answer": "<p>Yes — request a free sample pack. Ships in 2 business days, no charge.</p>"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "question": "What's your return policy?",
+            "answer": "<p>Manufacturing defects — full replacement. Wrong size or change of mind — return within 7 days if unopened.</p>"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "question": "Do you do custom print?",
+            "answer": "<p>Yes — minimum order 5,000 units. Send us your brief on the custom-print page.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ],
       "settings": {
         "eyebrow": "FAQ",
         "heading": "Questions, answered",
         "color_scheme": "scheme-1"
-      },
-      "blocks": {
-        "q1": { "type": "qa", "settings": { "question": "Do you offer GST invoices?", "answer": "<p>Yes — every order ships with a GST-compliant invoice. Enter your GSTIN at checkout.</p>" } },
-        "q2": { "type": "qa", "settings": { "question": "Can I get a sample first?", "answer": "<p>Yes — request a free sample pack. Ships in 2 business days, no charge.</p>" } },
-        "q3": { "type": "qa", "settings": { "question": "What's your return policy?", "answer": "<p>Manufacturing defects — full replacement. Wrong size or change of mind — return within 7 days if unopened.</p>" } },
-        "q4": { "type": "qa", "settings": { "question": "Do you do custom print?", "answer": "<p>Yes — minimum order 5,000 units. Send us your brief on the custom-print page.</p>" } }
-      },
-      "block_order": ["q1", "q2", "q3", "q4"]
+      }
     }
   },
-  "order": ["main", "compatibility", "pdp_banner", "bundles", "use_cases", "why_choose", "pairs_well", "faq"]
+  "order": [
+    "main",
+    "compatibility",
+    "pdp_banner",
+    "bundles",
+    "use_cases",
+    "why_choose",
+    "pairs_well",
+    "faq"
+  ]
 }
