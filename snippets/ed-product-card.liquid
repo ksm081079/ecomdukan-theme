@@ -57,28 +57,14 @@
   <div class="ed-product-card__media-wrap">
     <a href="{{ product.url }}" class="ed-product-card__media-link" data-action="card_click">
     <div class="ed-product-card__media">
-      {%- if product.media.size > 0 -%}
-        <div class="ed-product-card__carousel" data-carousel role="region" aria-label="Product images">
-          {%- for media in product.media limit: 5 -%}
-            {{ media | image_url: width: 800 | image_tag:
-              loading: 'lazy',
-              widths: '300, 500, 800',
-              sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw',
-              alt: media.alt | default: product.title,
-              class: 'ed-product-card__img',
-              data-index: forloop.index0
-            }}
-          {%- endfor -%}
-        </div>
-        {%- if product.media.size > 1 -%}
-          <div class="ed-product-card__dots" data-dots>
-            {%- for media in product.media limit: 5 -%}
-              <button type="button" class="ed-product-card__dot{% if forloop.first %} is-active{% endif %}" data-dot-index="{{ forloop.index0 }}" aria-label="Image {{ forloop.index }}"></button>
-            {%- endfor -%}
-          </div>
-          <button type="button" class="ed-product-card__nav ed-product-card__nav--prev" data-nav="prev" aria-label="Previous image">‹</button>
-          <button type="button" class="ed-product-card__nav ed-product-card__nav--next" data-nav="next" aria-label="Next image">›</button>
-        {%- endif -%}
+      {%- if product.featured_media -%}
+        {{ product.featured_media | image_url: width: 800 | image_tag:
+          loading: 'lazy',
+          widths: '300, 500, 800',
+          sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw',
+          alt: product.featured_media.alt | default: product.title,
+          class: 'ed-product-card__img'
+        }}
       {%- else -%}
         <div class="ed-product-card__placeholder">
           <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" width="60">
@@ -220,53 +206,17 @@
     overflow: hidden;
     border-bottom: 1px solid var(--ed-border, #E0DBCF);
   }
-  .ed-product-card__carousel {
-    display: flex;
-    width: 100%; height: 100%;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .ed-product-card__carousel::-webkit-scrollbar { display: none; }
   .ed-product-card__img {
-    flex: 0 0 100%;
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
-    scroll-snap-align: start;
     padding: 6px;
     box-sizing: border-box;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
   }
-  /* image hover-zoom removed — natural display only */
-  .ed-product-card__dots {
-    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 4px;
-    background: rgba(10,11,14,0.55); padding: 4px 8px; border-radius: 12px;
-    z-index: 2;
-  }
-  .ed-product-card__dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: rgba(244,240,232,0.5);
-    border: 0; padding: 0; cursor: pointer;
-    transition: background 120ms;
-  }
-  .ed-product-card__dot.is-active { background: var(--ed-paper, #F4F0E8); }
-  .ed-product-card__nav {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 28px; height: 28px; border-radius: 50%;
-    background: rgba(244,240,232,0.92);
-    border: 1px solid var(--ed-ink, #0A0B0E);
-    color: var(--ed-ink, #0A0B0E);
-    font-size: 16px; font-weight: 700; line-height: 1;
-    cursor: pointer; z-index: 2; opacity: 0;
-    transition: opacity 120ms;
-  }
-  .ed-product-card__nav--prev { left: 8px; }
-  .ed-product-card__nav--next { right: 8px; }
-  .ed-product-card:hover .ed-product-card__nav { opacity: 1; }
-  @media (hover: none) { .ed-product-card__nav { display: none; } }
   .ed-product-card__placeholder {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
@@ -496,7 +446,6 @@
     .ed-cqp__chip { height: 26px; font-size: 10px; }
     .ed-cqp__custom { height: 26px; font-size: 10px; }
     .ed-product-card__stock { bottom: 6px; left: 6px; }
-    .ed-product-card__nav { display: none; }
     .ed-product-card__img { padding: 4px; }
   }
   @media (max-width: 480px) {
@@ -575,48 +524,6 @@
       const link = e.target.closest('.ed-product-card__media-link');
       if (!link) return;
       ph('product_card_click', cardMeta(link));
-    });
-
-    // Carousel: dots
-    document.addEventListener('click', function(e) {
-      const dot = e.target.closest('.ed-product-card__dot');
-      if (!dot) return;
-      const card = dot.closest('.ed-product-card');
-      const carousel = card && card.querySelector('[data-carousel]');
-      if (!carousel) return;
-      const idx = parseInt(dot.dataset.dotIndex, 10) || 0;
-      const child = carousel.children[idx];
-      if (child) carousel.scrollTo({ left: child.offsetLeft, behavior: 'smooth' });
-      ph('product_card_image_scroll', Object.assign(cardMeta(card), { image_index: idx, source: 'dot' }));
-    });
-
-    // Carousel: prev/next
-    document.addEventListener('click', function(e) {
-      const nav = e.target.closest('.ed-product-card__nav');
-      if (!nav) return;
-      e.preventDefault();
-      const card = nav.closest('.ed-product-card');
-      const carousel = card && card.querySelector('[data-carousel]');
-      if (!carousel) return;
-      const w = carousel.clientWidth;
-      const dir = nav.dataset.nav === 'next' ? 1 : -1;
-      carousel.scrollBy({ left: w * dir, behavior: 'smooth' });
-    });
-
-    // Carousel: update active dot on scroll
-    document.querySelectorAll('[data-carousel]').forEach(function(c) {
-      let t;
-      c.addEventListener('scroll', function() {
-        clearTimeout(t);
-        t = setTimeout(function() {
-          const idx = Math.round(c.scrollLeft / c.clientWidth);
-          const card = c.closest('.ed-product-card');
-          if (!card) return;
-          card.querySelectorAll('.ed-product-card__dot').forEach(function(d, i) {
-            d.classList.toggle('is-active', i === idx);
-          });
-        }, 90);
-      });
     });
 
     // Card visibility tracking

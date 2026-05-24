@@ -229,11 +229,15 @@
             {%- endfor -%}
           {%- endif -%}
 
-          {%- comment -%} Qty stepper (compact) + split add-to-cart bar (Rentmojo-style) {%- endcomment -%}
+          {%- comment -%} Multi-qty picker (chips + custom + stepper) + blue add-to-cart bar {%- endcomment -%}
           <div class="ed-rm-buy">
-            <div class="ed-rm-buy__qty">
-              <span class="ed-rm-buy__qty-label">Qty</span>
-              <div class="ed-rm-qty">
+            <div class="ed-rm-qpicker" role="radiogroup" aria-label="Select quantity">
+              <span class="ed-rm-qpicker__label">Qty</span>
+              <button type="button" class="ed-rm-qpicker__chip is-active" data-ed-qchip="1" aria-checked="true">1</button>
+              <button type="button" class="ed-rm-qpicker__chip" data-ed-qchip="2" aria-checked="false">2</button>
+              <button type="button" class="ed-rm-qpicker__chip" data-ed-qchip="5" aria-checked="false">5</button>
+              <button type="button" class="ed-rm-qpicker__chip" data-ed-qchip="10" aria-checked="false">10</button>
+              <div class="ed-rm-qpicker__stepper">
                 <button type="button" aria-label="Decrease" data-ed-qty-step="-1">−</button>
                 <input id="ed-qty" type="number" name="quantity" value="1" min="1" aria-label="Quantity">
                 <button type="button" aria-label="Increase" data-ed-qty-step="1">+</button>
@@ -467,10 +471,10 @@
     .ed-offers__row { grid-template-columns: 1fr; gap: 8px; }
     .ed-offer { padding: 10px 12px; }
     .ed-offer__head { font-size: 13px; }
-    .ed-rm-buy { grid-template-columns: 1fr; gap: 8px; }
-    .ed-rm-buy__qty { flex-direction: row; align-items: center; gap: 8px; }
-    .ed-rm-qty { height: 44px; }
-    .ed-rm-buy__bar { height: 50px; padding: 0 14px; }
+    .ed-rm-buy { gap: 8px; }
+    .ed-rm-qpicker__chip { min-width: 34px; height: 32px; padding: 0 8px; font-size: 12px; }
+    .ed-rm-qpicker__stepper { height: 32px; grid-template-columns: 26px 36px 26px; }
+    .ed-rm-buy__bar { height: 50px !important; padding: 0 14px; }
     .ed-rm-buy__bar-total { font-size: 15px; }
     .ed-rm-buy__bar-cta { font-size: 14px; }
     .ed-rm-highlight { padding: 8px 12px; font-size: 12px; }
@@ -483,19 +487,19 @@
   /* Gallery — left vertical thumb rail + main stage (11-may layout) */
   .ed-gallery { display: block; }
   .ed-gallery__inner {
-    display: grid;
-    grid-template-columns: 80px 1fr;
+    display: flex;
     gap: 12px;
-    align-items: start;
+    align-items: flex-start;
   }
   .ed-gallery__stage {
     position: relative;
+    flex: 1 1 0;
+    min-width: 0;
     aspect-ratio: 1 / 1;
     background: var(--ed-paper, #F4F0E8);
     border: 1px solid var(--ed-border, #E0DBCF);
     border-radius: 12px;
     overflow: hidden;
-    min-width: 0;
   }
   .ed-gallery__slide {
     position: absolute; inset: 0;
@@ -547,6 +551,7 @@
 
   /* Thumbnail rail — vertical column on desktop */
   .ed-gallery__thumbs {
+    flex: 0 0 80px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -933,60 +938,82 @@
 
   /* Buy bar (split: qty + main CTA) */
   .ed-rm-buy {
-    display: grid;
-    grid-template-columns: auto 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
-    align-items: stretch;
     margin-top: 4px;
   }
-  .ed-rm-buy__qty {
-    display: flex; flex-direction: column; gap: 4px;
-    justify-content: center;
+
+  /* Multi-qty picker: chip row + stepper */
+  .ed-rm-qpicker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
   }
-  .ed-rm-buy__qty-label {
-    font-family: "Inter", sans-serif; font-weight: 500; font-size: 11px;
+  .ed-rm-qpicker__label {
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 12px;
     color: var(--ed-text-mute, #5C6068);
     text-transform: uppercase; letter-spacing: 0.06em;
-    margin-left: 4px;
+    margin-right: 4px;
   }
-  .ed-rm-qty {
-    display: inline-grid; grid-template-columns: 36px 44px 36px;
-    border: 1.5px solid var(--ed-ink, #0A0B0E);
+  .ed-rm-qpicker__chip {
+    min-width: 38px; height: 36px; padding: 0 10px;
+    background: #fff;
+    border: 1.5px solid var(--ed-border, #E0DBCF);
+    border-radius: 8px;
+    font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 13px;
+    color: var(--ed-ink, #0A0B0E);
+    cursor: pointer;
+    transition: border-color 120ms, background 120ms, color 120ms;
+  }
+  .ed-rm-qpicker__chip:hover { border-color: var(--ed-ink, #0A0B0E); }
+  .ed-rm-qpicker__chip.is-active {
+    background: #1E5FFF;
+    color: #F4F0E8;
+    border-color: #1E5FFF;
+  }
+  .ed-rm-qpicker__stepper {
+    margin-left: auto;
+    display: inline-grid; grid-template-columns: 30px 44px 30px;
+    border: 1.5px solid var(--ed-border, #E0DBCF);
     border-radius: 8px;
     overflow: hidden;
-    height: 52px;
+    height: 36px;
   }
-  .ed-rm-qty button {
-    background: transparent; border: 0; cursor: pointer;
-    font-family: "Inter", sans-serif; font-weight: 600; font-size: 18px;
+  .ed-rm-qpicker__stepper button {
+    background: #fff; border: 0; cursor: pointer;
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 16px;
     color: var(--ed-ink, #0A0B0E);
   }
-  .ed-rm-qty button:hover { background: var(--ed-ink, #0A0B0E); color: var(--ed-paper, #F4F0E8); }
-  .ed-rm-qty input {
+  .ed-rm-qpicker__stepper button:hover { background: var(--ed-ink, #0A0B0E); color: var(--ed-paper, #F4F0E8); }
+  .ed-rm-qpicker__stepper input {
     border: 0;
     border-left: 1px solid var(--ed-border, #E0DBCF);
     border-right: 1px solid var(--ed-border, #E0DBCF);
-    background: transparent;
-    font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 14px;
+    background: #fff;
+    font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 13px;
     text-align: center;
     -moz-appearance: textfield;
+    min-width: 0; width: 100%;
   }
-  .ed-rm-qty input::-webkit-outer-spin-button,
-  .ed-rm-qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .ed-rm-qpicker__stepper input::-webkit-outer-spin-button,
+  .ed-rm-qpicker__stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
   .ed-rm-buy__bar {
     display: flex; align-items: center; justify-content: space-between;
     gap: 16px;
     height: 52px; padding: 0 16px 0 18px;
-    background: var(--ed-electric, #1E5FFF);
-    color: var(--ed-paper, #F4F0E8);
-    border: 0; border-radius: 8px;
+    background: #1E5FFF !important;
+    color: #F4F0E8 !important;
+    border: 0 !important;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 120ms, transform 120ms;
+    transition: background 120ms;
+    font-family: "Inter", sans-serif;
   }
-  .ed-rm-buy__bar:hover { background: #1747D6; }
-  .ed-rm-buy__bar:active { transform: scale(0.99); }
-  .ed-rm-buy__bar:disabled { background: rgba(10,11,14,0.18); cursor: not-allowed; }
+  .ed-rm-buy__bar:hover { background: #1747D6 !important; }
+  .ed-rm-buy__bar:disabled { background: rgba(10,11,14,0.25) !important; color: #fff !important; cursor: not-allowed; }
   .ed-rm-buy__bar-left { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
   .ed-rm-buy__bar-meta {
     font-family: "Inter", sans-serif; font-weight: 500; font-size: 11px;
@@ -1112,6 +1139,41 @@
       });
     });
 
+    // Multi-qty chip picker (1 / 2 / 5 / 10)
+    document.querySelectorAll('[data-ed-qchip]').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        const q = parseInt(chip.dataset.edQchip, 10) || 1;
+        document.querySelectorAll('[data-ed-qchip]').forEach(function(c) {
+          const active = c === chip;
+          c.classList.toggle('is-active', active);
+          c.setAttribute('aria-checked', active ? 'true' : 'false');
+        });
+        const input = document.getElementById('ed-qty');
+        if (input) {
+          input.value = q;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        ph('qty_chip_selected', Object.assign({}, meta, { quantity: q }));
+      });
+    });
+
+    // Custom typed qty: clear chip active state when user types a custom value
+    (function() {
+      const customInput = document.getElementById('ed-qty');
+      if (!customInput) return;
+      customInput.addEventListener('input', function() {
+        const v = parseInt(customInput.value, 10) || 1;
+        const chips = document.querySelectorAll('[data-ed-qchip]');
+        let matched = false;
+        chips.forEach(function(c) {
+          const active = parseInt(c.dataset.edQchip, 10) === v;
+          c.classList.toggle('is-active', active);
+          c.setAttribute('aria-checked', active ? 'true' : 'false');
+          if (active) matched = true;
+        });
+      });
+    })();
+
     // Live total + tier highlight on qty change
     const qtyInput = document.getElementById('ed-qty');
     const btn = document.getElementById('ed-pdp-add');
@@ -1152,32 +1214,91 @@
       });
     });
 
-    // Add to cart tracking (PDP fires alongside Shopify form submission)
+    // Add-to-cart: take full control. Bypass Dawn's product-form.js to guarantee
+    // the cart drawer opens cleanly every time (11 may behavior: tap add → drawer slides in).
     const form = document.getElementById('product-form');
     if (form) {
-      form.addEventListener('submit', function() {
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const submitBtn = form.querySelector('[type="submit"][name="add"]');
+        if (submitBtn && submitBtn.getAttribute('aria-disabled') === 'true') return;
+        if (submitBtn) {
+          submitBtn.setAttribute('aria-disabled', 'true');
+          submitBtn.classList.add('loading');
+        }
+        const spinner = form.querySelector('.loading__spinner');
+        if (spinner) spinner.classList.remove('hidden');
+        const errorWrap = form.querySelector('.product-form__error-message-wrapper');
+        if (errorWrap) { errorWrap.hidden = true; }
+
         const q = qtyInput ? parseInt(qtyInput.value, 10) : 1;
         ph('add_to_cart', Object.assign({}, meta, { quantity: q, surface: 'pdp' }));
-      });
-    }
 
-    // Fail-safe: open cart drawer on any cart update. Dawn's renderContents is
-    // supposed to call open() but if anything misfires (sections missing, web
-    // component timing), this guarantees the drawer slides in.
-    try {
-      if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined' && PUB_SUB_EVENTS.cartUpdate) {
-        subscribe(PUB_SUB_EVENTS.cartUpdate, function(payload) {
-          if (!payload || payload.source === 'cart-items') return;
+        try {
+          // 1. Add item to cart
+          const fd = new FormData(form);
           const drawer = document.querySelector('cart-drawer');
-          if (!drawer) return;
-          setTimeout(function() {
-            if (typeof drawer.open === 'function' && !drawer.classList.contains('active')) {
-              drawer.open();
+          const sections = drawer && typeof drawer.getSectionsToRender === 'function'
+            ? drawer.getSectionsToRender().map(function(s) { return s.id; }).join(',')
+            : 'cart-drawer,cart-icon-bubble,cart-live-region-text';
+          fd.append('sections', sections);
+          fd.append('sections_url', window.location.pathname);
+
+          const addRes = await fetch(window.routes ? window.routes.cart_add_url : '/cart/add.js', {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: fd
+          });
+          const addJson = await addRes.json();
+          if (!addRes.ok || addJson.status) {
+            const msg = addJson.description || addJson.message || 'Could not add to cart';
+            if (errorWrap) {
+              errorWrap.hidden = false;
+              const msgSpan = errorWrap.querySelector('.product-form__error-message');
+              if (msgSpan) msgSpan.textContent = msg;
             }
-          }, 350);
-        });
-      }
-    } catch (e) {}
+            throw new Error(msg);
+          }
+
+          // 2. Replace cart drawer HTML with fresh server-rendered sections
+          if (drawer && addJson.sections) {
+            const targets = drawer.getSectionsToRender ? drawer.getSectionsToRender() : [];
+            targets.forEach(function(t) {
+              const el = t.selector ? document.querySelector(t.selector) : document.getElementById(t.id);
+              if (!el || !addJson.sections[t.id]) return;
+              const parsed = new DOMParser().parseFromString(addJson.sections[t.id], 'text/html');
+              const src = parsed.querySelector(t.selector || '.shopify-section');
+              if (src) el.innerHTML = src.innerHTML;
+            });
+          }
+
+          // 3. Publish cart update event for any other listeners (cart icon bubble, etc.)
+          try {
+            if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+              publish(PUB_SUB_EVENTS.cartUpdate, { source: 'product-form', cartData: addJson });
+            }
+          } catch (e) {}
+
+          // 4. Open the drawer
+          if (drawer && typeof drawer.open === 'function') {
+            if (drawer.classList.contains('is-empty')) drawer.classList.remove('is-empty');
+            drawer.open();
+          } else {
+            // No drawer — fall back to cart page
+            window.location = window.routes ? window.routes.cart_url : '/cart';
+          }
+        } catch (err) {
+          console.error('[ed-pdp] add to cart failed:', err);
+        } finally {
+          if (submitBtn) {
+            submitBtn.removeAttribute('aria-disabled');
+            submitBtn.classList.remove('loading');
+          }
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }, true); // capture phase so we run before Dawn's listener
+    }
 
     // Sticky-bar PostHog event
     document.querySelectorAll('[data-action="pdp_sticky_add"]').forEach(function(b) {
