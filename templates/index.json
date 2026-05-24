@@ -13,8 +13,9 @@
       "type": "ed-hero",
       "settings": {
         "layout": "split",
-        "text_alignment": "left",
+        "text_alignment": "center",
         "color_scheme": "scheme-1",
+        "image": "shopify://shop_images/shipping-label.jpg",
         "eyebrow": "दुकान, scaled · Made in India",
         "heading": "Stationery & printer labels, in bulk, in stock.",
         "subhead": "One supplier. One invoice. Three DCs — Mumbai, Bengaluru, Delhi.",
@@ -49,7 +50,49 @@
             "link": "shopify://collections/office-paper"
           }
         },
+        "category_8Qzt3E": {
+          "type": "category",
+          "settings": {
+            "title": "Office paper",
+            "link": "shopify://collections/office-paper"
+          }
+        },
+        "category_Wi9qjG": {
+          "type": "category",
+          "settings": {
+            "title": "Office paper",
+            "link": "shopify://collections/office-paper"
+          }
+        },
+        "category_dpmgHC": {
+          "type": "category",
+          "settings": {
+            "title": "Office paper",
+            "link": "shopify://collections/office-paper"
+          }
+        },
         "c4": {
+          "type": "category",
+          "settings": {
+            "title": "Packing supplies",
+            "link": "shopify://collections/packing-supplies"
+          }
+        },
+        "category_m6494X": {
+          "type": "category",
+          "settings": {
+            "title": "Packing supplies",
+            "link": "shopify://collections/packing-supplies"
+          }
+        },
+        "category_zPERK9": {
+          "type": "category",
+          "settings": {
+            "title": "Packing supplies",
+            "link": "shopify://collections/packing-supplies"
+          }
+        },
+        "category_GEWbpK": {
           "type": "category",
           "settings": {
             "title": "Packing supplies",
@@ -61,7 +104,13 @@
         "c1",
         "c2",
         "c3",
-        "c4"
+        "category_8Qzt3E",
+        "category_Wi9qjG",
+        "category_dpmgHC",
+        "c4",
+        "category_m6494X",
+        "category_zPERK9",
+        "category_GEWbpK"
       ],
       "settings": {
         "heading": "Shop by category",
@@ -124,6 +173,7 @@
         "s4"
       ],
       "settings": {
+        "image": "shopify://shop_images/printer.png",
         "eyebrow": "The bulk story",
         "heading": "Built for the packing table. Priced for the spreadsheet.",
         "body": "<p>From 100 labels to 100,000. Same-day dispatch from three DCs. One GST invoice per order, every order.</p>",
