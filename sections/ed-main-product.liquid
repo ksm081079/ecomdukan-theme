@@ -520,7 +520,7 @@
     transition: background 120ms, transform 120ms;
     z-index: 2;
   }
-  .ed-gallery__nav:hover { background: #fff; transform: translateY(-50%) scale(1.05); }
+  .ed-gallery__nav:hover { background: #fff; }
   .ed-gallery__nav--prev { left: 12px; }
   .ed-gallery__nav--next { right: 12px; }
   .ed-gallery__counter {
@@ -1132,6 +1132,24 @@
         ph('add_to_cart', Object.assign({}, meta, { quantity: q, surface: 'pdp' }));
       });
     }
+
+    // Fail-safe: open cart drawer on any cart update. Dawn's renderContents is
+    // supposed to call open() but if anything misfires (sections missing, web
+    // component timing), this guarantees the drawer slides in.
+    try {
+      if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined' && PUB_SUB_EVENTS.cartUpdate) {
+        subscribe(PUB_SUB_EVENTS.cartUpdate, function(payload) {
+          if (!payload || payload.source === 'cart-items') return;
+          const drawer = document.querySelector('cart-drawer');
+          if (!drawer) return;
+          setTimeout(function() {
+            if (typeof drawer.open === 'function' && !drawer.classList.contains('active')) {
+              drawer.open();
+            }
+          }, 350);
+        });
+      }
+    } catch (e) {}
 
     // Sticky-bar PostHog event
     document.querySelectorAll('[data-action="pdp_sticky_add"]').forEach(function(b) {
