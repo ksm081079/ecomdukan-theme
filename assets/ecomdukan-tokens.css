@@ -104,22 +104,28 @@ h4, .h4 { font-size: var(--t-title);     letter-spacing: -0.02em; font-weight: 6
 .ed-surface-indigo{ background: var(--ed-indigo);color: var(--ed-paper); }
 .ed-surface-electric { background: var(--ed-electric); color: var(--ed-paper); }
 
-/* Flush wrappers: kill the .shopify-section padding/margin around hero/marquee/banners */
+/* ===== FLUSH: kill ALL inherited spacing around home top sections ===== */
+#MainContent { margin: 0 !important; padding: 0 !important; }
+#MainContent > .shopify-section:first-child,
+#MainContent > .shopify-section:first-child > section,
+#MainContent > .shopify-section:first-child > .ed-hero-section,
+#MainContent > .shopify-section:nth-child(2),
+#MainContent > .shopify-section:nth-child(2) > section {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+/* Hero section itself + its inner wrapper edge-to-edge, no gaps */
 .shopify-section:has(.ed-hero),
 .shopify-section:has(.ed-marquee),
 .shopify-section:has(.ed-pdp-banner),
-.shopify-section.ed-section-flush {
+.shopify-section.ed-section-flush,
+.ed-hero-section, .ed-marquee, .ed-pdp-banner {
   margin: 0 !important;
   padding: 0 !important;
 }
 .shopify-section:has(.ed-hero) + .shopify-section,
 .shopify-section:has(.ed-marquee) + .shopify-section {
   margin-top: 0 !important;
-}
-/* Strip any inherited block margin on the hero/marquee/banner section tags themselves */
-.ed-hero-section, .ed-marquee, .ed-pdp-banner__grid {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
 }
 
 /* Container — wide with small gutters (Alibaba-style edge-to-edge) */
