@@ -35,27 +35,49 @@
       </nav>
     {%- endif -%}
 
-    <div class="ed-pdp-grid" style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, 1fr); gap: var(--sp-7); align-items: start;">
-      {%- comment -%} Media gallery {%- endcomment -%}
-      <div class="ed-pdp__media">
+    <div class="ed-pdp-grid">
+      {%- comment -%} Media gallery — main featured + thumbnail rail (sticky on desktop) {%- endcomment -%}
+      <div class="ed-pdp__media ed-gallery" data-ed-gallery>
         {%- if product.media.size > 0 -%}
-          <div style="display: grid; gap: var(--sp-3);">
-            {%- for media in product.media limit: 6 -%}
-              <div style="border: 1.5px solid var(--ed-ink); border-radius: 2px; overflow: hidden; background: var(--ed-paper); aspect-ratio: 1/1;">
+          {%- assign featured = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+          <div class="ed-gallery__stage" data-ed-gallery-stage>
+            {%- for media in product.media -%}
+              <div class="ed-gallery__slide{% if media.id == featured.id %} is-active{% endif %}" data-ed-media-id="{{ media.id }}" data-media-type="{{ media.media_type }}">
                 {%- case media.media_type -%}
                   {%- when 'image' -%}
-                    {{ media | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1600', alt: media.alt | default: product.title, style: 'width:100%;height:100%;object-fit:contain;padding:24px;box-sizing:border-box;' }}
+                    {{ media | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200, 1600', sizes: '(min-width: 990px) 600px, 100vw', alt: media.alt | default: product.title, class: 'ed-gallery__img' }}
                   {%- when 'video', 'external_video' -%}
                     {{ media | media_tag: image_size: '1600x', autoplay: false, loop: false, controls: true, preload: 'metadata' }}
+                  {%- when 'model' -%}
+                    {{ media | media_tag: image_size: '1600x', toggleable: true }}
                   {%- else -%}
                     {{ media | media_tag }}
                 {%- endcase -%}
               </div>
             {%- endfor -%}
+            {%- if product.media.size > 1 -%}
+              <button type="button" class="ed-gallery__nav ed-gallery__nav--prev" aria-label="Previous image" data-ed-gallery-prev>‹</button>
+              <button type="button" class="ed-gallery__nav ed-gallery__nav--next" aria-label="Next image" data-ed-gallery-next>›</button>
+              <span class="ed-gallery__counter" aria-live="polite"><span data-ed-gallery-current>1</span> / {{ product.media.size }}</span>
+            {%- endif -%}
           </div>
+          {%- if product.media.size > 1 -%}
+            <div class="ed-gallery__thumbs" data-ed-gallery-thumbs role="tablist">
+              {%- for media in product.media -%}
+                <button type="button" class="ed-gallery__thumb{% if media.id == featured.id %} is-active{% endif %}" data-ed-thumb="{{ media.id }}" role="tab" aria-selected="{% if media.id == featured.id %}true{% else %}false{% endif %}" aria-label="View image {{ forloop.index }}">
+                  {{ media.preview_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 200, 240', sizes: '90px', alt: media.alt | default: product.title, class: 'ed-gallery__thumb-img' }}
+                  {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                    <span class="ed-gallery__thumb-badge" aria-hidden="true">▶</span>
+                  {%- elsif media.media_type == 'model' -%}
+                    <span class="ed-gallery__thumb-badge" aria-hidden="true">3D</span>
+                  {%- endif -%}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
         {%- else -%}
-          <div style="aspect-ratio: 1/1; border: 1.5px solid var(--ed-ink); display: flex; align-items: center; justify-content: center; background: var(--ed-paper);">
-            <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" style="width: 96px; opacity: .25;">
+          <div class="ed-gallery__stage ed-gallery__placeholder">
+            <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" class="ed-gallery__placeholder-img">
           </div>
         {%- endif -%}
       </div>
@@ -414,9 +436,125 @@
 </div>
 
 <style>
+  /* PDP grid (media left sticky / info right) */
+  .ed-pdp-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 1fr);
+    gap: var(--sp-7, 32px);
+    align-items: start;
+  }
+  @media (min-width: 990px) {
+    .ed-pdp__media { position: sticky; top: 80px; align-self: start; }
+  }
   @media (max-width: 989px) {
     .ed-pdp-grid { grid-template-columns: 1fr !important; }
     .ed-pdp__info { position: static !important; }
+    .ed-pdp__media { position: static !important; }
+  }
+
+  /* Gallery — main stage */
+  .ed-gallery { display: flex; flex-direction: column; gap: 12px; }
+  .ed-gallery__stage {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--ed-paper, #F4F0E8);
+    border: 1px solid var(--ed-border, #E0DBCF);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .ed-gallery__slide {
+    position: absolute; inset: 0;
+    display: none;
+    align-items: center; justify-content: center;
+  }
+  .ed-gallery__slide.is-active { display: flex; }
+  .ed-gallery__img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+    padding: 16px; box-sizing: border-box;
+  }
+  .ed-gallery__slide video,
+  .ed-gallery__slide model-viewer,
+  .ed-gallery__slide iframe {
+    width: 100%; height: 100%; max-height: 100%;
+    object-fit: contain; display: block;
+  }
+
+  /* Stage nav arrows */
+  .ed-gallery__nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--ed-border, #E0DBCF);
+    color: var(--ed-ink, #0A0B0E);
+    font-size: 22px; line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(10,11,14,0.08);
+    transition: background 120ms, transform 120ms;
+    z-index: 2;
+  }
+  .ed-gallery__nav:hover { background: #fff; transform: translateY(-50%) scale(1.05); }
+  .ed-gallery__nav--prev { left: 12px; }
+  .ed-gallery__nav--next { right: 12px; }
+  .ed-gallery__counter {
+    position: absolute; bottom: 12px; right: 12px;
+    padding: 4px 10px;
+    background: rgba(10,11,14,0.72);
+    color: var(--ed-paper, #F4F0E8);
+    border-radius: 999px;
+    font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    letter-spacing: 0.06em;
+    z-index: 2;
+  }
+
+  /* Thumbnail rail */
+  .ed-gallery__thumbs {
+    display: flex; gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding: 2px 0;
+  }
+  .ed-gallery__thumb {
+    position: relative;
+    flex: 0 0 auto;
+    width: 72px; height: 72px;
+    padding: 4px;
+    background: var(--ed-snow, #FBFAF6);
+    border: 1.5px solid var(--ed-border, #E0DBCF);
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 120ms, transform 120ms;
+  }
+  .ed-gallery__thumb:hover { border-color: var(--ed-ink, #0A0B0E); transform: translateY(-1px); }
+  .ed-gallery__thumb.is-active {
+    border-color: var(--ed-electric, #1E5FFF);
+    box-shadow: 0 0 0 1px var(--ed-electric, #1E5FFF);
+  }
+  .ed-gallery__thumb-img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .ed-gallery__thumb-badge {
+    position: absolute; bottom: 2px; right: 2px;
+    background: rgba(10,11,14,0.8); color: var(--ed-paper, #F4F0E8);
+    border-radius: 4px;
+    font-size: 9px; font-weight: 700;
+    padding: 1px 4px;
+    line-height: 1.2;
+  }
+
+  /* Placeholder */
+  .ed-gallery__placeholder { display: flex; align-items: center; justify-content: center; }
+  .ed-gallery__placeholder-img { width: 96px; opacity: 0.25; }
+
+  @media (max-width: 749px) {
+    .ed-gallery__thumb { width: 56px; height: 56px; }
+    .ed-gallery__nav { width: 32px; height: 32px; font-size: 18px; }
   }
   .ed-tier-list { list-style: none; padding: 0; border: 1px solid var(--ed-border, #E0DBCF); border-radius: 2px; overflow: hidden; }
   .ed-tier-list li {
@@ -1091,6 +1229,61 @@
       tick();
       setInterval(tick, rand(22000, 45000));
     })();
+
+    // Gallery — thumb click + arrows + variant featured-image swap
+    (function() {
+      const root = document.querySelector('[data-ed-gallery]');
+      if (!root) return;
+      const slides = Array.from(root.querySelectorAll('.ed-gallery__slide'));
+      const thumbs = Array.from(root.querySelectorAll('[data-ed-thumb]'));
+      const counter = root.querySelector('[data-ed-gallery-current]');
+      const prev = root.querySelector('[data-ed-gallery-prev]');
+      const next = root.querySelector('[data-ed-gallery-next]');
+      if (!slides.length) return;
+      const indexOfId = function(id) {
+        for (let i = 0; i < slides.length; i++) if (slides[i].dataset.edMediaId === String(id)) return i;
+        return -1;
+      };
+      const show = function(i) {
+        if (i < 0) i = slides.length - 1;
+        if (i >= slides.length) i = 0;
+        slides.forEach(function(s, idx) { s.classList.toggle('is-active', idx === i); });
+        thumbs.forEach(function(t, idx) {
+          const active = idx === i;
+          t.classList.toggle('is-active', active);
+          t.setAttribute('aria-selected', active ? 'true' : 'false');
+          if (active) t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        });
+        if (counter) counter.textContent = (i + 1);
+      };
+      const current = function() { return slides.findIndex(function(s) { return s.classList.contains('is-active'); }); };
+      thumbs.forEach(function(t, i) { t.addEventListener('click', function() { show(i); ph('gallery_thumb_click', Object.assign({}, meta, { index: i })); }); });
+      if (prev) prev.addEventListener('click', function() { show(current() - 1); });
+      if (next) next.addEventListener('click', function() { show(current() + 1); });
+      // keyboard nav
+      root.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); show(current() - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); show(current() + 1); }
+      });
+      root.setAttribute('tabindex', '0');
+      // Variant change → swap featured media if variant has featured_media
+      document.addEventListener('change', function(e) {
+        if (!e.target.matches('input[name^="options["]') && !e.target.matches('.ed-form select')) return;
+        // ask the form's variant_id input post-shopify-update; fallback: re-poll selected variant via name="id"
+        const idInput = document.querySelector('#product-form input[name="id"]');
+        if (!idInput) return;
+        const variantId = idInput.value;
+        // Variant data sits in product.variants — embedded below for client use
+        const variants = window.__edProductVariants || [];
+        const variant = variants.find(function(v) { return String(v.id) === String(variantId); });
+        if (variant && variant.featured_media && variant.featured_media.id) {
+          const idx = indexOfId(variant.featured_media.id);
+          if (idx >= 0) show(idx);
+        }
+      });
+    })();
+    // expose variant featured-media map for gallery
+    window.__edProductVariants = {{ product.variants | json }};
 
     // PDP viewed
     ph('pdp_view', meta);
