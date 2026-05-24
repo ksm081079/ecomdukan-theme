@@ -48,9 +48,9 @@
   --ed-section-y-m: 32px;
 
   /* Container — Alibaba-style full-bleed with small gutters */
-  --ed-container: 1600px;
-  --ed-container-wide: 1800px;
-  --ed-gutter-d: 24px;
+  --ed-container: 1800px;
+  --ed-container-wide: 1920px;
+  --ed-gutter-d: 16px;
   --ed-gutter-m: 12px;
 
   /* Font stacks — fall back to theme picker, then system */
