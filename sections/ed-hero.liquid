@@ -31,11 +31,12 @@
               <source media="(max-width: 749px)" srcset="{{ mob | image_url: width: 900 }} 1x, {{ mob | image_url: width: 1400 }} 2x">
             {%- endif -%}
             {%- if desk != blank -%}
+              {%- if forloop.first -%}{%- assign loadattr = 'eager' -%}{%- else -%}{%- assign loadattr = 'lazy' -%}{%- endif -%}
               {{ desk | image_url: width: 2400 | image_tag:
-                loading: forloop.first | replace_first: 'true', 'eager' | replace_first: 'false', 'lazy',
+                loading: loadattr,
                 widths: '900, 1400, 1800, 2400',
                 sizes: '100vw',
-                alt: h | default: 'Hero slide',
+                alt: h,
                 class: 'ed-hero__img' }}
             {%- else -%}
               <div class="ed-hero__placeholder">
