@@ -71,6 +71,37 @@
         "layout": "grid",
         "columns_desktop": 4,
         "columns_mobile": "2",
+        "show_view_all": true,
+        "show_view_all_bottom": true,
+        "view_all_label": "View all best-sellers",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "bestsellers_2": {
+      "type": "ed-bestsellers",
+      "settings": {
+        "eyebrow": "Bundles",
+        "heading": "Ready-to-buy combos",
+        "product_count": 8,
+        "layout": "carousel",
+        "show_view_all": true,
+        "show_view_all_bottom": true,
+        "view_all_label": "View all bundles",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "bestsellers_3": {
+      "type": "ed-bestsellers",
+      "settings": {
+        "eyebrow": "New",
+        "heading": "Just arrived",
+        "product_count": 8,
+        "layout": "grid",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "show_view_all": true,
+        "show_view_all_bottom": true,
+        "view_all_label": "Shop new arrivals",
         "color_scheme": "scheme-1"
       }
     },
@@ -145,9 +176,11 @@
     "collection_tabs",
     "bestsellers",
     "pdp_banner_1",
+    "bestsellers_2",
     "bulk_story",
     "logos",
     "testimonial",
+    "bestsellers_3",
     "resources",
     "faq",
     "usp",
