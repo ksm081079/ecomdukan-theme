@@ -509,9 +509,12 @@
   .ed-gallery__slide.is-active { display: flex; }
   .ed-gallery__img {
     width: 100%; height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center;
     display: block;
-    padding: 16px; box-sizing: border-box;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
   }
   .ed-gallery__slide video,
   .ed-gallery__slide model-viewer,
