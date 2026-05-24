@@ -93,9 +93,56 @@
               <span class="ed-rm-meta-item">📦 {{ section.settings.delivery_promise | default: 'Same-day dispatch' }}</span>
             {%- endif -%}
           </div>
+
+          {%- comment -%} Social proof: X sold today · Y viewing now {%- endcomment -%}
+          {%- if section.settings.show_social_proof -%}
+            <div class="ed-rm-social" data-ed-social>
+              {%- if section.settings.sold_values != blank -%}
+                <span class="ed-rm-social__item ed-rm-social__sold">
+                  <span class="ed-rm-social__dot" aria-hidden="true"></span>
+                  <strong data-ed-sold>0</strong> sold in last 24h
+                </span>
+              {%- endif -%}
+              {%- if section.settings.viewing_min > 0 -%}
+                <span class="ed-rm-social__item ed-rm-social__viewing">
+                  <span class="ed-rm-social__pulse" aria-hidden="true"></span>
+                  <strong data-ed-viewing>0</strong> viewing now
+                </span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
         </div>
 
-        {%- comment -%} Tier pricing — selectable cards (rentmojo-style) {%- endcomment -%}
+        {%- comment -%} Available offers strip (11-may style — 3 coupon cards with copy) {%- endcomment -%}
+        {%- if section.settings.offer_1_code != blank or section.settings.offer_2_code != blank or section.settings.offer_3_code != blank -%}
+          <div class="ed-offers">
+            <p class="ed-offers__title">{{ section.settings.offers_heading | default: 'Available offers' }}</p>
+            <div class="ed-offers__row">
+              {%- for i in (1..3) -%}
+                {%- assign h_key = 'offer_' | append: i -%}
+                {%- assign s_key = 'offer_' | append: i | append: '_tagline' -%}
+                {%- assign c_key = 'offer_' | append: i | append: '_code' -%}
+                {%- assign h = section.settings[h_key] -%}
+                {%- assign s = section.settings[s_key] -%}
+                {%- assign c = section.settings[c_key] -%}
+                {%- if c != blank -%}
+                  <div class="ed-offer">
+                    <span class="ed-offer__head">{{ h }}</span>
+                    {%- if s != blank -%}<span class="ed-offer__sub">{{ s }}</span>{%- endif -%}
+                    <div class="ed-offer__foot">
+                      <span class="ed-offer__code">Code: <strong>{{ c }}</strong></span>
+                      <button type="button" class="ed-offer__copy" data-ed-copy="{{ c }}" aria-label="Copy {{ c }}">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.999 6.667H8.333a1.667 1.667 0 0 0-1.667 1.667V15a1.667 1.667 0 0 0 1.667 1.667h6.666A1.667 1.667 0 0 0 16.667 15V8.334a1.667 1.667 0 0 0-1.667-1.667Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.334 6.667V5A1.667 1.667 0 0 0 11.667 3.333H5A1.667 1.667 0 0 0 3.333 5v6.667A1.667 1.667 0 0 0 5 13.333h1.666" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Tier pricing — selectable cards (rentmojo-style). Only shown when tiers exist. {%- endcomment -%}
         {%- if tiers != blank -%}
           <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">Choose your quantity (incl GST)</p>
           <div class="ed-tier-cards" data-ed-tier-cards>
@@ -108,16 +155,13 @@
               </button>
             {%- endfor -%}
           </div>
-        {%- else -%}
-          <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">Pricing</p>
-          <div class="ed-pdp-price">
-            <span class="ed-pdp-price__big">{{ product.price_min | money }}</span>
-            {%- if variant.compare_at_price and variant.compare_at_price > variant.price -%}
-              <s class="ed-pdp-price__compare">{{ variant.compare_at_price | money }}</s>
-              {%- assign pct = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price -%}
-              <span class="ed-pdp-price__off">−{{ pct }}%</span>
-            {%- endif -%}
-            {%- if product.price_varies %}<span class="ed-pdp-price__hint">starting</span>{%- endif -%}
+        {%- endif -%}
+
+        {%- comment -%} Highlight strip (e.g. "Order before 2:30 PM for same-day dispatch") {%- endcomment -%}
+        {%- if section.settings.highlight_text != blank -%}
+          <div class="ed-rm-highlight">
+            <span class="ed-rm-highlight__icon" aria-hidden="true">{{ section.settings.highlight_icon | default: '⏰' }}</span>
+            <span class="ed-rm-highlight__text">{{ section.settings.highlight_text }}</span>
           </div>
         {%- endif -%}
 
@@ -234,6 +278,13 @@
 
         {%- if section.settings.show_quote_cta -%}
           <a href="{{ section.settings.quote_url | default: '/pages/request-quote' }}" class="ed-rm-quote-link" data-action="quote_link_click">{{ section.settings.quote_cta_label | default: 'Need 50+ cases? Request a custom quote →' }}</a>
+        {%- endif -%}
+
+        {%- comment -%} Trust badge image (11-may style — single horizontal banner) {%- endcomment -%}
+        {%- if section.settings.trust_badge_image != blank -%}
+          <div class="ed-rm-trust-badge">
+            {{ section.settings.trust_badge_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200', alt: 'Trust badge', class: 'ed-rm-trust-badge__img' }}
+          </div>
         {%- endif -%}
 
         {%- comment -%} Trust strip — icon grid (Rentmojo-style) {%- endcomment -%}
@@ -433,6 +484,83 @@
     font-family: "Inter", sans-serif; font-size: 11px;
     color: var(--ed-text-mute, #5C6068);
   }
+
+  /* Social proof row (sold / viewing now) */
+  .ed-rm-social {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid var(--ed-border, #E0DBCF);
+    font-family: "Inter", sans-serif; font-size: 12px;
+    color: var(--ed-text-mute, #5C6068);
+  }
+  .ed-rm-social__item { display: inline-flex; align-items: center; gap: 6px; line-height: 1.3; }
+  .ed-rm-social__item strong { color: var(--ed-ink, #0A0B0E); font-weight: 700; }
+  .ed-rm-social__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ed-success, #1E6B3A); }
+  .ed-rm-social__pulse { width: 8px; height: 8px; border-radius: 50%; background: #E53935; box-shadow: 0 0 0 0 rgba(229,57,53,0.6); animation: ed-pulse 1.6s infinite; }
+  @keyframes ed-pulse { 0% { box-shadow: 0 0 0 0 rgba(229,57,53,0.6); } 70% { box-shadow: 0 0 0 6px rgba(229,57,53,0); } 100% { box-shadow: 0 0 0 0 rgba(229,57,53,0); } }
+
+  /* Offers strip (11 may inspired) */
+  .ed-offers { margin: 0 0 4px; }
+  .ed-offers__title {
+    margin: 0 0 10px;
+    font-family: "Inter", sans-serif; font-weight: 600; font-size: 14px;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-offers__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .ed-offer {
+    position: relative;
+    background: #fbefe4;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 4px;
+    color: #1a1a1a;
+  }
+  .ed-offer::before, .ed-offer::after {
+    content: ''; position: absolute; bottom: 30%;
+    width: 8px; height: 14px;
+    background: var(--ed-snow, #FBFAF6);
+    border-radius: 50px;
+  }
+  .ed-offer::before { left: -1px; border-top-right-radius: 50px; border-bottom-right-radius: 50px; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  .ed-offer::after { right: -1px; border-top-left-radius: 50px; border-bottom-left-radius: 50px; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .ed-offer__head { font-weight: 700; font-size: 14px; line-height: 1.2; }
+  .ed-offer__sub { font-size: 12px; color: rgba(39, 39, 36, 0.78); line-height: 1.3; }
+  .ed-offer__foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 6px;
+    margin-top: 6px; padding-top: 6px;
+    border-top: 1.5px dashed #c8b9a8;
+  }
+  .ed-offer__code { font-size: 12px; }
+  .ed-offer__code strong { color: #0E855B; font-weight: 700; letter-spacing: 0.02em; }
+  .ed-offer__copy {
+    background: transparent; border: 0; padding: 2px; cursor: pointer;
+    color: var(--ed-ink, #0A0B0E); line-height: 0;
+    border-radius: 6px;
+    transition: background 120ms;
+  }
+  .ed-offer__copy:hover { background: rgba(0,0,0,0.06); }
+  .ed-offer__copy.is-copied { color: #0E855B; }
+
+  /* Highlight strip */
+  .ed-rm-highlight {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: #FFF7E6;
+    border-left: 3px solid #F2A93B;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif; font-size: 13px;
+    color: var(--ed-ink, #0A0B0E);
+  }
+  .ed-rm-highlight__icon { font-size: 16px; line-height: 1; }
+  .ed-rm-highlight__text { font-weight: 500; }
+
+  /* Trust badge image */
+  .ed-rm-trust-badge { margin-top: 16px; }
+  .ed-rm-trust-badge__img { width: 100%; height: auto; display: block; border-radius: 12px; }
 
   /* PDP price block (no tiers) */
   .ed-pdp-price { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
@@ -924,6 +1052,46 @@
       });
     });
 
+    // Offer code copy-to-clipboard
+    document.querySelectorAll('[data-ed-copy]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const code = btn.getAttribute('data-ed-copy');
+        const done = function() {
+          btn.classList.add('is-copied');
+          const original = btn.innerHTML;
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          setTimeout(function() { btn.classList.remove('is-copied'); btn.innerHTML = original; }, 1600);
+          ph('offer_copy', Object.assign({}, meta, { code: code }));
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(done).catch(function() {
+            const ta = document.createElement('textarea'); ta.value = code; document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); done(); } catch (e) {}
+            document.body.removeChild(ta);
+          });
+        }
+      });
+    });
+
+    // Social proof — sold + viewing now (deterministic-ish randomness, refreshes every 22-45s)
+    (function() {
+      const wrap = document.querySelector('[data-ed-social]');
+      if (!wrap) return;
+      const soldEl = wrap.querySelector('[data-ed-sold]');
+      const viewEl = wrap.querySelector('[data-ed-viewing]');
+      const soldPool = ({{ section.settings.sold_values | default: '8,12,15,18,22,26' | json }} || '').split(',').map(function(s) { return parseInt(s.trim(), 10); }).filter(Boolean);
+      const vMin = {{ section.settings.viewing_min | default: 8 }};
+      const vMax = {{ section.settings.viewing_max | default: 32 }};
+      const pick = function(arr) { return arr[Math.floor(Math.random() * arr.length)]; };
+      const rand = function(lo, hi) { return Math.floor(lo + Math.random() * (hi - lo + 1)); };
+      const tick = function() {
+        if (soldEl && soldPool.length) soldEl.textContent = pick(soldPool);
+        if (viewEl) viewEl.textContent = rand(vMin, vMax);
+      };
+      tick();
+      setInterval(tick, rand(22000, 45000));
+    })();
+
     // PDP viewed
     ph('pdp_view', meta);
   })();
@@ -938,6 +1106,31 @@
     { "type": "checkbox", "id": "show_breadcrumb", "label": "Show breadcrumb", "default": true },
     { "type": "text", "id": "price_unit_label", "label": "Price unit label (e.g. 'case', 'roll')", "default": "case" },
     { "type": "text", "id": "delivery_promise", "label": "Delivery promise (in price card)", "default": "Same-day dispatch" },
+
+    { "type": "header", "content": "Social proof (sold + live viewers)" },
+    { "type": "checkbox", "id": "show_social_proof", "label": "Show sold / viewing-now row", "default": true },
+    { "type": "text", "id": "sold_values", "label": "Sold counts (comma-separated, rotates)", "default": "8,12,15,18,22,26" },
+    { "type": "range", "id": "viewing_min", "label": "Viewing now — min", "min": 0, "max": 100, "step": 1, "default": 8 },
+    { "type": "range", "id": "viewing_max", "label": "Viewing now — max", "min": 0, "max": 200, "step": 1, "default": 32 },
+
+    { "type": "header", "content": "Available offers (3 coupon cards)" },
+    { "type": "text", "id": "offers_heading", "label": "Heading", "default": "Available offers" },
+    { "type": "text", "id": "offer_1", "label": "Offer 1 — Title", "default": "Get ₹100 off" },
+    { "type": "text", "id": "offer_1_tagline", "label": "Offer 1 — Tagline", "default": "On carts above ₹899" },
+    { "type": "text", "id": "offer_1_code", "label": "Offer 1 — Code", "default": "SAVE100" },
+    { "type": "text", "id": "offer_2", "label": "Offer 2 — Title", "default": "Get 9% off" },
+    { "type": "text", "id": "offer_2_tagline", "label": "Offer 2 — Tagline", "default": "On carts above ₹1,200" },
+    { "type": "text", "id": "offer_2_code", "label": "Offer 2 — Code", "default": "SAVE09" },
+    { "type": "text", "id": "offer_3", "label": "Offer 3 — Title", "default": "Get 15% off" },
+    { "type": "text", "id": "offer_3_tagline", "label": "Offer 3 — Tagline", "default": "On carts above ₹2,400" },
+    { "type": "text", "id": "offer_3_code", "label": "Offer 3 — Code", "default": "SAVE15" },
+
+    { "type": "header", "content": "Highlight strip (single line under buy bar)" },
+    { "type": "text", "id": "highlight_icon", "label": "Icon (emoji)", "default": "⏰" },
+    { "type": "text", "id": "highlight_text", "label": "Text", "default": "Order before 2:30 PM IST for same-day dispatch" },
+
+    { "type": "header", "content": "Trust badge image (replaces emoji grid if set)" },
+    { "type": "image_picker", "id": "trust_badge_image", "label": "Image (full width, transparent PNG works best)" },
 
     { "type": "header", "content": "Quote CTA" },
     { "type": "checkbox", "id": "show_quote_cta", "label": "Show quote link", "default": true },

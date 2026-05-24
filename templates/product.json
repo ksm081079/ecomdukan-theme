@@ -7,6 +7,22 @@
         "show_quote_cta": true,
         "quote_url": "shopify://pages/request-quote",
         "sample_url": "shopify://pages/sample-pack",
+        "show_social_proof": true,
+        "sold_values": "8,12,15,18,22,26",
+        "viewing_min": 8,
+        "viewing_max": 32,
+        "offers_heading": "Available offers",
+        "offer_1": "Get ₹100 off",
+        "offer_1_tagline": "On carts above ₹899",
+        "offer_1_code": "SAVE100",
+        "offer_2": "Get 9% off",
+        "offer_2_tagline": "On carts above ₹1,200",
+        "offer_2_code": "SAVE09",
+        "offer_3": "Get 15% off",
+        "offer_3_tagline": "On carts above ₹2,400",
+        "offer_3_code": "SAVE15",
+        "highlight_icon": "⏰",
+        "highlight_text": "Order before 2:30 PM IST for same-day dispatch",
         "usp_1": "Free shipping on orders above ₹2,500",
         "usp_2": "GST invoice included on every order",
         "color_scheme": "scheme-1"
@@ -18,6 +34,21 @@
         "eyebrow": "Compatibility",
         "heading": "Will it fit your printer?",
         "body": "Type your printer model. We check against the verified compatibility list set on this product.",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "pdp_banner": {
+      "type": "ed-pdp-banner",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 40
+      }
+    },
+    "bundles": {
+      "type": "ed-bestsellers",
+      "settings": {
+        "heading": "Ready-to-buy combos",
         "color_scheme": "scheme-2"
       }
     },
@@ -35,10 +66,27 @@
       },
       "block_order": ["u1", "u2", "u3", "u4"]
     },
+    "why_choose": {
+      "type": "ed-why-choose",
+      "settings": {
+        "heading": "Why choose",
+        "tag": "Ecomdukan",
+        "subheading": "Bulk-friendly pricing, transparent invoicing, fast dispatch.",
+        "color_scheme": "scheme-1",
+        "padding_top": 60,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "c1": { "type": "card", "settings": { "caption": "Same-day dispatch from Mumbai DC" } },
+        "c2": { "type": "card", "settings": { "caption": "GST invoice on every order" } },
+        "c3": { "type": "card", "settings": { "caption": "Bulk savings unlock at 20+ cases" } }
+      },
+      "block_order": ["c1", "c2", "c3"]
+    },
     "pairs_well": {
       "type": "ed-pairs-well",
       "settings": {
-        "heading": "Pairs well with",
+        "heading": "Similar picks",
         "product_count": 4,
         "color_scheme": "scheme-2"
       }
@@ -59,5 +107,5 @@
       "block_order": ["q1", "q2", "q3", "q4"]
     }
   },
-  "order": ["main", "compatibility", "use_cases", "pairs_well", "faq"]
+  "order": ["main", "compatibility", "pdp_banner", "bundles", "use_cases", "why_choose", "pairs_well", "faq"]
 }
