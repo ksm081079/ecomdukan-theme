@@ -89,12 +89,22 @@
 </div>
 
 <style>
+  /* Force the section wrapper to butt against the header above + section below */
+  .shopify-section.ed-hero-section,
+  .section.ed-section-flush,
+  .shopify-section.ed-section-flush {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
   .ed-hero {
     position: relative;
     width: 100%;
     height: var(--dh);
     overflow: hidden;
     background: var(--ed-paper, #F4F0E8);
+    display: block;
   }
   .ed-hero__track {
     position: relative;
@@ -300,7 +310,7 @@
 {
   "name": "ED Hero",
   "tag": "section",
-  "class": "ed-hero-section",
+  "class": "ed-hero-section ed-section-flush",
   "settings": [
     { "type": "range", "id": "desktop_height", "label": "Desktop height (px)", "min": 360, "max": 1000, "step": 20, "default": 720 },
     { "type": "range", "id": "mobile_height", "label": "Mobile height (px)", "min": 280, "max": 800, "step": 20, "default": 480 },
