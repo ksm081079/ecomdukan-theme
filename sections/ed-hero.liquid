@@ -253,6 +253,30 @@
 </style>
 
 <script>
+  /* Hard-strip ALL inherited spacing around hero so it sits flush against the header. */
+  (function() {
+    const hero = document.querySelector('.ed-hero');
+    if (!hero) return;
+    let el = hero;
+    /* Walk up to find the shopify-section wrapper */
+    while (el && !el.classList.contains('shopify-section')) el = el.parentElement;
+    if (!el) return;
+    const flush = function(node) {
+      if (!node) return;
+      node.style.marginTop = '0';
+      node.style.marginBottom = '0';
+      node.style.paddingTop = '0';
+      node.style.paddingBottom = '0';
+    };
+    flush(el);
+    flush(el.previousElementSibling);
+    flush(el.nextElementSibling);
+    /* Also clear main + body margin */
+    const main = document.getElementById('MainContent');
+    if (main) { main.style.marginTop = '0'; main.style.paddingTop = '0'; }
+  })();
+</script>
+<script>
   (function() {
     const root = document.querySelector('[data-ed-hero]');
     if (!root) return;

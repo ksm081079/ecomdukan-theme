@@ -1,7 +1,5 @@
 {%- comment -%}
-  ED Product card — minimal rewrite.
-  Renders Shopify's featured image as-is (no carousel, no drag), title, price.
-  Args: product (required)
+  ED Product card — image + title + price + chip qty picker + add-to-cart.
 {%- endcomment -%}
 
 {%- liquid
@@ -13,45 +11,71 @@
     assign on_sale = true
     assign discount_pct = compare_at | minus: price | times: 100 | divided_by: compare_at
   endif
+  assign has_options = false
+  if product.variants.size > 1
+    assign has_options = true
+  endif
 -%}
 
-<a href="{{ product.url }}" class="ed-pc" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
-  <div class="ed-pc__media">
-    {%- if product.featured_image -%}
-      <img
-        class="ed-pc__img"
-        src="{{ product.featured_image | image_url: width: 600 }}"
-        srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
-                {{ product.featured_image | image_url: width: 600 }} 600w,
-                {{ product.featured_image | image_url: width: 900 }} 900w"
-        sizes="(min-width: 990px) 25vw, (min-width: 600px) 33vw, 50vw"
-        loading="lazy"
-        alt="{{ product.featured_image.alt | default: product.title | escape }}"
-        width="{{ product.featured_image.width }}"
-        height="{{ product.featured_image.height }}"
-      >
-    {%- else -%}
-      <div class="ed-pc__noimg">
-        <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" width="40">
-      </div>
-    {%- endif -%}
-    {%- if on_sale -%}
-      <span class="ed-pc__badge">−{{ discount_pct }}%</span>
-    {%- endif -%}
-    {%- unless product.available -%}
-      <span class="ed-pc__soldout">Sold out</span>
-    {%- endunless -%}
-  </div>
-  <div class="ed-pc__body">
-    <h3 class="ed-pc__title">{{ product.title }}</h3>
-    <div class="ed-pc__price">
-      <span class="ed-pc__price-now">{{ price | money }}</span>
-      {%- if on_sale -%}
-        <s class="ed-pc__price-was">{{ compare_at | money }}</s>
+<div class="ed-pc" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" data-product-title="{{ product.title | escape }}">
+  <a href="{{ product.url }}" class="ed-pc__link">
+    <div class="ed-pc__media">
+      {%- if product.featured_image -%}
+        <img
+          class="ed-pc__img"
+          src="{{ product.featured_image | image_url: width: 600 }}"
+          srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
+                  {{ product.featured_image | image_url: width: 600 }} 600w,
+                  {{ product.featured_image | image_url: width: 900 }} 900w"
+          sizes="(min-width: 990px) 25vw, (min-width: 600px) 33vw, 50vw"
+          loading="lazy"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+        >
+      {%- else -%}
+        <div class="ed-pc__noimg">
+          <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" width="40">
+        </div>
       {%- endif -%}
+      {%- if on_sale -%}
+        <span class="ed-pc__badge">−{{ discount_pct }}%</span>
+      {%- endif -%}
+      {%- unless product.available -%}
+        <span class="ed-pc__soldout">Sold out</span>
+      {%- endunless -%}
     </div>
-  </div>
-</a>
+    <div class="ed-pc__body-top">
+      <h3 class="ed-pc__title">{{ product.title }}</h3>
+      <div class="ed-pc__price">
+        <span class="ed-pc__price-now">{{ price | money }}</span>
+        {%- if on_sale -%}
+          <s class="ed-pc__price-was">{{ compare_at | money }}</s>
+        {%- endif -%}
+      </div>
+    </div>
+  </a>
+
+  {%- if product.available -%}
+    {%- if has_options -%}
+      <a href="{{ product.url }}" class="ed-pc__add ed-pc__add--ghost">Choose options</a>
+    {%- else -%}
+      <form class="ed-pc__form" data-ed-pc-form action="{{ routes.cart_add_url }}" method="post">
+        <input type="hidden" name="id" value="{{ variant.id }}">
+        <input type="hidden" name="quantity" value="1" data-ed-pc-qty>
+        <div class="ed-pc__chips" role="radiogroup" aria-label="Quantity">
+          <button type="button" class="ed-pc__chip is-active" data-ed-pc-chip="1" aria-checked="true">1</button>
+          <button type="button" class="ed-pc__chip" data-ed-pc-chip="2" aria-checked="false">2</button>
+          <button type="button" class="ed-pc__chip" data-ed-pc-chip="5" aria-checked="false">5</button>
+          <button type="button" class="ed-pc__chip" data-ed-pc-chip="10" aria-checked="false">10</button>
+        </div>
+        <button type="submit" class="ed-pc__add">Add to cart</button>
+      </form>
+    {%- endif -%}
+  {%- else -%}
+    <a href="{{ product.url }}" class="ed-pc__add ed-pc__add--ghost">Notify me</a>
+  {%- endif -%}
+</div>
 
 <style>
   .ed-pc {
@@ -61,14 +85,16 @@
     border: 1px solid var(--ed-border, #E0DBCF);
     border-radius: 12px;
     overflow: hidden;
-    text-decoration: none;
     color: var(--ed-ink, #0A0B0E);
     transition: border-color 120ms, transform 120ms;
     height: 100%;
   }
-  .ed-pc:hover {
-    border-color: var(--ed-ink, #0A0B0E);
-    transform: translateY(-2px);
+  .ed-pc:hover { border-color: var(--ed-ink, #0A0B0E); transform: translateY(-2px); }
+  .ed-pc__link {
+    display: flex; flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
   }
   .ed-pc__media {
     position: relative;
@@ -78,10 +104,8 @@
     overflow: hidden;
   }
   .ed-pc__img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
@@ -89,38 +113,26 @@
     user-select: none;
     -webkit-user-drag: none;
   }
-  .ed-pc__noimg {
-    width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0.25;
-  }
+  .ed-pc__noimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; opacity: 0.25; }
   .ed-pc__badge {
     position: absolute; top: 8px; right: 8px;
-    background: var(--ed-electric, #1E5FFF);
-    color: #fff;
+    background: var(--ed-electric, #1E5FFF); color: #fff;
     font-family: "IBM Plex Mono", monospace;
     font-weight: 700; font-size: 11px;
-    padding: 3px 7px;
-    border-radius: 6px;
+    padding: 3px 7px; border-radius: 6px;
     letter-spacing: 0.02em;
   }
   .ed-pc__soldout {
     position: absolute; bottom: 8px; left: 8px;
-    background: rgba(10,11,14,0.85);
-    color: #fff;
+    background: rgba(10,11,14,0.85); color: #fff;
     font-family: "Inter", sans-serif;
     font-weight: 600; font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    padding: 3px 8px; border-radius: 6px;
+    text-transform: uppercase; letter-spacing: 0.06em;
   }
-  .ed-pc__body {
-    padding: 10px 12px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
+  .ed-pc__body-top {
+    padding: 10px 12px 6px;
+    display: flex; flex-direction: column; gap: 4px;
   }
   .ed-pc__title {
     margin: 0;
@@ -133,12 +145,7 @@
     overflow: hidden;
     color: var(--ed-ink, #0A0B0E);
   }
-  .ed-pc__price {
-    margin-top: auto;
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-  }
+  .ed-pc__price { display: flex; align-items: baseline; gap: 6px; }
   .ed-pc__price-now {
     font-family: "IBM Plex Mono", monospace;
     font-weight: 700; font-size: 15px;
@@ -150,11 +157,152 @@
     color: var(--ed-text-mute, #5C6068);
     text-decoration: line-through;
   }
+
+  /* Chip quantity picker + Add-to-cart */
+  .ed-pc__form { padding: 4px 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+  .ed-pc__chips { display: flex; gap: 4px; }
+  .ed-pc__chip {
+    flex: 1;
+    height: 28px; padding: 0 4px;
+    background: #fff;
+    border: 1px solid var(--ed-border, #E0DBCF);
+    border-radius: 6px;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600; font-size: 11px;
+    color: var(--ed-ink, #0A0B0E);
+    cursor: pointer;
+    transition: background 100ms, color 100ms, border-color 100ms;
+  }
+  .ed-pc__chip:hover { border-color: var(--ed-ink, #0A0B0E); }
+  .ed-pc__chip.is-active {
+    background: var(--ed-electric, #1E5FFF);
+    color: #fff;
+    border-color: var(--ed-electric, #1E5FFF);
+  }
+  .ed-pc__add {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 34px; padding: 0 12px;
+    margin: 4px 10px 10px;
+    background: var(--ed-electric, #1E5FFF);
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 120ms;
+  }
+  .ed-pc__add:hover { background: #1747D6; color: #fff; }
+  .ed-pc__add--ghost {
+    background: transparent;
+    color: var(--ed-ink, #0A0B0E);
+    border: 1.5px solid var(--ed-ink, #0A0B0E);
+  }
+  .ed-pc__add--ghost:hover { background: var(--ed-ink, #0A0B0E); color: #fff; }
+  .ed-pc__form .ed-pc__add { margin: 0; }
+  .ed-pc__add.is-loading { opacity: 0.7; cursor: wait; }
+  .ed-pc__add.is-added { background: var(--ed-success, #1E6B3A) !important; color: #fff !important; }
+
   @media (max-width: 749px) {
-    .ed-pc__body { padding: 8px 10px 10px; }
+    .ed-pc__body-top { padding: 8px 10px 4px; }
     .ed-pc__title { font-size: 12px; }
     .ed-pc__price-now { font-size: 13px; }
     .ed-pc__price-was { font-size: 11px; }
     .ed-pc__badge { font-size: 10px; padding: 2px 5px; top: 6px; right: 6px; }
+    .ed-pc__form { padding: 4px 8px 8px; gap: 5px; }
+    .ed-pc__chip { height: 26px; font-size: 10px; }
+    .ed-pc__add { height: 30px; font-size: 11px; margin: 4px 8px 8px; }
   }
 </style>
+
+<script>
+  (function() {
+    if (window.__edPcWired) return;
+    window.__edPcWired = true;
+
+    // Chip click → set qty + active state
+    document.addEventListener('click', function(e) {
+      const chip = e.target.closest('[data-ed-pc-chip]');
+      if (!chip) return;
+      e.preventDefault();
+      const form = chip.closest('[data-ed-pc-form]');
+      if (!form) return;
+      form.querySelectorAll('[data-ed-pc-chip]').forEach(function(c) {
+        const active = c === chip;
+        c.classList.toggle('is-active', active);
+        c.setAttribute('aria-checked', active ? 'true' : 'false');
+      });
+      const qty = parseInt(chip.dataset.edPcChip, 10) || 1;
+      const qtyInput = form.querySelector('[data-ed-pc-qty]');
+      if (qtyInput) qtyInput.value = qty;
+    });
+
+    // Card form submit → AJAX add, open drawer, refresh
+    document.addEventListener('submit', function(e) {
+      const form = e.target.closest('[data-ed-pc-form]');
+      if (!form) return;
+      e.preventDefault();
+      const btn = form.querySelector('.ed-pc__add');
+      if (!btn || btn.classList.contains('is-loading')) return;
+      const originalLabel = btn.textContent;
+      btn.classList.add('is-loading');
+      btn.textContent = 'Adding…';
+
+      const fd = new FormData(form);
+      const drawer = document.querySelector('cart-drawer');
+      const sections = drawer && typeof drawer.getSectionsToRender === 'function'
+        ? drawer.getSectionsToRender().map(function(s) { return s.id; }).join(',')
+        : 'cart-drawer,cart-icon-bubble';
+      fd.append('sections', sections);
+      fd.append('sections_url', window.location.pathname);
+
+      fetch((window.routes && window.routes.cart_add_url) || '/cart/add.js', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: fd
+      })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.status) throw new Error(data.description || 'Could not add to cart');
+          btn.classList.remove('is-loading');
+          btn.classList.add('is-added');
+          btn.textContent = '✓ Added';
+
+          // Trigger cart update so drawer re-renders + opens
+          try {
+            if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+              publish(PUB_SUB_EVENTS.cartUpdate, { source: 'ed-pc', cartData: data });
+            }
+          } catch (e) {}
+
+          if (drawer && data.sections) {
+            const targets = drawer.getSectionsToRender ? drawer.getSectionsToRender() : [];
+            targets.forEach(function(t) {
+              const el = t.selector ? document.querySelector(t.selector) : document.getElementById(t.id);
+              if (!el || !data.sections[t.id]) return;
+              const parsed = new DOMParser().parseFromString(data.sections[t.id], 'text/html');
+              const src = parsed.querySelector(t.selector || '.shopify-section');
+              if (src) el.innerHTML = src.innerHTML;
+            });
+          }
+          if (drawer && typeof drawer.open === 'function') {
+            if (drawer.classList.contains('is-empty')) drawer.classList.remove('is-empty');
+            drawer.open();
+          }
+
+          if (window.posthog) try { posthog.capture('ed_pc_add_to_cart', { product_id: form.closest('.ed-pc').dataset.productId }); } catch (e) {}
+
+          setTimeout(function() {
+            btn.classList.remove('is-added');
+            btn.textContent = originalLabel;
+          }, 2000);
+        })
+        .catch(function(err) {
+          console.error('[ed-pc]', err);
+          btn.classList.remove('is-loading');
+          btn.textContent = originalLabel;
+        });
+    });
+  })();
+</script>
