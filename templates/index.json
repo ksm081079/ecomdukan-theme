@@ -1,7 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "ed-hero",
+      "blocks": {
+        "slide_jxVLJ4": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/shipping-label.jpg",
+            "image_mobile": "shopify://shop_images/labels.png",
+            "link": "",
+            "subheading": "",
+            "heading": "",
+            "description": "",
+            "cta_label": "",
+            "cta_link": "",
+            "content_position": "bottom-left"
+          }
+        }
+      },
+      "block_order": [
+        "slide_jxVLJ4"
+      ],
       "settings": {
         "desktop_height": 720,
         "mobile_height": 480,
@@ -10,55 +38,100 @@
         "show_arrows": true,
         "show_dots": true,
         "color_scheme": "scheme-1"
-      },
-      "blocks": {
-        "s1": {
-          "type": "slide",
-          "settings": {
-            "content_position": "bottom-left"
-          }
-        },
-        "s2": {
-          "type": "slide",
-          "settings": {
-            "content_position": "bottom-left"
-          }
-        },
-        "s3": {
-          "type": "slide",
-          "settings": {
-            "content_position": "bottom-left"
-          }
-        }
-      },
-      "block_order": ["s1", "s2", "s3"]
-    },
-    "marquee": {
-      "type": "ed-marquee",
-      "settings": {
-        "speed": 30,
-        "color_scheme": "scheme-4",
-        "padding_y": 14
-      },
-      "blocks": {
-        "m1": { "type": "item", "settings": { "icon": "🚚", "text": "Free shipping above ₹2,500" } },
-        "m2": { "type": "item", "settings": { "icon": "🧾", "text": "GST invoice on every order" } },
-        "m3": { "type": "item", "settings": { "icon": "⚡", "text": "Same-day dispatch — Mumbai · Bengaluru · Delhi" } },
-        "m4": { "type": "item", "settings": { "icon": "↩️", "text": "7-day easy returns" } }
-      },
-      "block_order": ["m1", "m2", "m3", "m4"]
+      }
     },
     "categories": {
       "type": "ed-featured-categories",
+      "blocks": {
+        "c1": {
+          "type": "category",
+          "settings": {
+            "title": "Thermal labels",
+            "link": "shopify://collections/thermal-labels"
+          }
+        },
+        "c2": {
+          "type": "category",
+          "settings": {
+            "title": "Branded labels",
+            "link": "shopify://collections/branded-labels"
+          }
+        },
+        "c3": {
+          "type": "category",
+          "settings": {
+            "title": "Office paper",
+            "link": "shopify://collections/office-paper"
+          }
+        },
+        "category_8Qzt3E": {
+          "type": "category",
+          "settings": {
+            "title": "Office paper",
+            "link": "shopify://collections/office-paper"
+          }
+        },
+        "category_Wi9qjG": {
+          "type": "category",
+          "settings": {
+            "title": "Office paper",
+            "link": "shopify://collections/office-paper"
+          }
+        },
+        "category_dpmgHC": {
+          "type": "category",
+          "settings": {
+            "title": "Office paper",
+            "link": "shopify://collections/office-paper"
+          }
+        },
+        "c4": {
+          "type": "category",
+          "settings": {
+            "title": "Packing supplies",
+            "link": "shopify://collections/packing-supplies"
+          }
+        },
+        "category_m6494X": {
+          "type": "category",
+          "settings": {
+            "title": "Packing supplies",
+            "link": "shopify://collections/packing-supplies"
+          }
+        },
+        "category_zPERK9": {
+          "type": "category",
+          "settings": {
+            "title": "Packing supplies",
+            "link": "shopify://collections/packing-supplies"
+          }
+        },
+        "category_GEWbpK": {
+          "type": "category",
+          "settings": {
+            "title": "Packing supplies",
+            "link": "shopify://collections/packing-supplies"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "category_8Qzt3E",
+        "category_Wi9qjG",
+        "category_dpmgHC",
+        "c4",
+        "category_m6494X",
+        "category_zPERK9",
+        "category_GEWbpK"
+      ],
       "settings": {
         "heading": "Shop by category",
-        "color_scheme": "scheme-1"
-      }
-    },
-    "collection_tabs": {
-      "type": "ed-collection-tabs",
-      "settings": {
-        "heading": "Trending now",
+        "link_label": "All categories",
+        "link_url": "shopify://collections",
+        "layout": "circles",
+        "circle_size": 84,
         "color_scheme": "scheme-2"
       }
     },
@@ -67,123 +140,198 @@
       "settings": {
         "eyebrow": "Best-sellers",
         "heading": "Moving fast this week",
+        "collection": "",
         "product_count": 8,
-        "layout": "grid",
-        "columns_desktop": 4,
-        "columns_mobile": "2",
         "show_view_all": true,
         "show_view_all_bottom": true,
-        "view_all_label": "View all best-sellers",
-        "color_scheme": "scheme-1"
-      }
-    },
-    "bestsellers_2": {
-      "type": "ed-bestsellers",
-      "settings": {
-        "eyebrow": "Bundles",
-        "heading": "Ready-to-buy combos",
-        "product_count": 8,
+        "view_all_label": "View all",
         "layout": "carousel",
-        "show_view_all": true,
-        "show_view_all_bottom": true,
-        "view_all_label": "View all bundles",
-        "color_scheme": "scheme-2"
-      }
-    },
-    "bestsellers_3": {
-      "type": "ed-bestsellers",
-      "settings": {
-        "eyebrow": "New",
-        "heading": "Just arrived",
-        "product_count": 8,
-        "layout": "grid",
         "columns_desktop": 4,
         "columns_mobile": "2",
-        "show_view_all": true,
-        "show_view_all_bottom": true,
-        "view_all_label": "Shop new arrivals",
         "color_scheme": "scheme-1"
-      }
-    },
-    "pdp_banner_1": {
-      "type": "ed-pdp-banner",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 20,
-        "padding_bottom": 20
       }
     },
     "bulk_story": {
       "type": "ed-bulk-story",
+      "blocks": {
+        "s1": {
+          "type": "spec",
+          "settings": {
+            "label": "Min order",
+            "value": "1 case (1,000 labels)"
+          }
+        },
+        "s2": {
+          "type": "spec",
+          "settings": {
+            "label": "Lead time",
+            "value": "Same day · in-stock SKUs"
+          }
+        },
+        "s3": {
+          "type": "spec",
+          "settings": {
+            "label": "GST invoice",
+            "value": "Included on every order"
+          }
+        },
+        "s4": {
+          "type": "spec",
+          "settings": {
+            "label": "Tier discounts",
+            "value": "5% @ 5+ cases · 11% @ 20+"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
       "settings": {
-        "heading": "Why bulk buyers choose us",
+        "image": "shopify://shop_images/printer.png",
+        "eyebrow": "The bulk story",
+        "heading": "Built for the packing table. Priced for the spreadsheet.",
+        "body": "<p>From 100 labels to 100,000. Same-day dispatch from three DCs. One GST invoice per order, every order.</p>",
+        "cta_1_label": "See bulk pricing",
+        "cta_1_link": "shopify://pages/bulk-pricing",
+        "cta_2_label": "Request a sample",
+        "cta_2_link": "shopify://pages/sample-pack",
         "color_scheme": "scheme-2"
       }
     },
     "logos": {
       "type": "ed-customer-logos",
+      "blocks": {
+        "l1": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/mark-electric-512.png",
+            "name": "Brand 1",
+            "link": ""
+          }
+        },
+        "l7": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/coloured_logo_ai_2.avif",
+            "name": "Brand 7",
+            "link": ""
+          }
+        },
+        "logo_EYTKGa": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Dawbu_Combination_Mark_Logo_Png.avif",
+            "name": "Brand",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "l1",
+        "l7",
+        "logo_EYTKGa"
+      ],
       "settings": {
-        "heading": "Trusted by",
+        "heading": "Trusted by D2C brands across India",
         "color_scheme": "scheme-1"
       }
     },
     "testimonial": {
       "type": "ed-testimonial",
       "settings": {
-        "heading": "What operators say",
+        "quote": "Reorder went from a half-day spreadsheet to one tap. Their tier pricing pays for itself by the second case.",
+        "attribution": "Riya Mehta",
+        "role": "Ops Lead, FreshFold (Mumbai)",
         "color_scheme": "scheme-2"
+      }
+    },
+    "usp": {
+      "type": "ed-usp-strip",
+      "blocks": {
+        "p1": {
+          "type": "promise",
+          "settings": {
+            "heading": "In stock, in spec.",
+            "sub": "What's on the page is in the warehouse, today."
+          }
+        },
+        "p2": {
+          "type": "promise",
+          "settings": {
+            "heading": "Made for the line.",
+            "sub": "Engineered for thermal printers and packing tables."
+          }
+        },
+        "p3": {
+          "type": "promise",
+          "settings": {
+            "heading": "Receipts you'd frame.",
+            "sub": "Invoices and packaging that match your brand."
+          }
+        },
+        "p4": {
+          "type": "promise",
+          "settings": {
+            "heading": "Reorder in one tap.",
+            "sub": "Procurement should not be project work."
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "custom_print_cta": {
+      "type": "ed-custom-print-cta",
+      "settings": {
+        "eyebrow": "Custom print",
+        "heading": "Need it printed your way?",
+        "body": "Send us a brief — dimensions, material, finish. We quote in 2 business hours.",
+        "cta_label": "Start a custom job",
+        "cta_link": "shopify://pages/custom-print",
+        "color_scheme": "scheme-3"
       }
     },
     "resources": {
       "type": "ed-resource-teaser",
       "settings": {
-        "heading": "Latest from the blog",
+        "heading": "From the blog",
+        "blog": "",
+        "post_count": 3,
         "color_scheme": "scheme-1"
-      }
-    },
-    "faq": {
-      "type": "ed-faq",
-      "settings": {
-        "eyebrow": "FAQ",
-        "heading": "Questions, answered",
-        "color_scheme": "scheme-2"
-      },
-      "blocks": {
-        "q1": { "type": "qa", "settings": { "question": "Do you offer GST invoices?", "answer": "<p>Yes — every order ships with a GST-compliant invoice.</p>" } },
-        "q2": { "type": "qa", "settings": { "question": "What's your minimum order?", "answer": "<p>No minimum on most items. Custom-print orders start at 5,000 units.</p>" } },
-        "q3": { "type": "qa", "settings": { "question": "How fast is dispatch?", "answer": "<p>Same-day from Mumbai for orders placed before 2:30 PM IST.</p>" } }
-      },
-      "block_order": ["q1", "q2", "q3"]
-    },
-    "usp": {
-      "type": "ed-usp-strip",
-      "settings": {
-        "color_scheme": "scheme-4"
       }
     },
     "email": {
       "type": "ed-email-capture",
       "settings": {
-        "heading": "Get bulk pricing alerts",
-        "color_scheme": "scheme-1"
+        "eyebrow": "Newsletter",
+        "heading": "Restock & price-drop alerts",
+        "body": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff.",
+        "cta_label": "Subscribe",
+        "disclaimer": "We never share your email. Unsubscribe anytime.",
+        "color_scheme": "scheme-2"
       }
     }
   },
   "order": [
     "hero",
-    "marquee",
     "categories",
-    "collection_tabs",
     "bestsellers",
-    "pdp_banner_1",
-    "bestsellers_2",
     "bulk_story",
     "logos",
     "testimonial",
-    "bestsellers_3",
-    "resources",
-    "faq",
     "usp",
+    "custom_print_cta",
+    "resources",
     "email"
   ]
 }
