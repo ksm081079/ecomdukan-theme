@@ -36,48 +36,52 @@
     {%- endif -%}
 
     <div class="ed-pdp-grid">
-      {%- comment -%} Media gallery — main featured + thumbnail rail (sticky on desktop) {%- endcomment -%}
+      {%- comment -%} Media gallery — left vertical thumb rail + main stage (11-may "thumbnail_left" layout) {%- endcomment -%}
       <div class="ed-pdp__media ed-gallery" data-ed-gallery>
         {%- if product.media.size > 0 -%}
           {%- assign featured = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
-          <div class="ed-gallery__stage" data-ed-gallery-stage>
-            {%- for media in product.media -%}
-              <div class="ed-gallery__slide{% if media.id == featured.id %} is-active{% endif %}" data-ed-media-id="{{ media.id }}" data-media-type="{{ media.media_type }}">
-                {%- case media.media_type -%}
-                  {%- when 'image' -%}
-                    {{ media | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200, 1600', sizes: '(min-width: 990px) 600px, 100vw', alt: media.alt | default: product.title, class: 'ed-gallery__img' }}
-                  {%- when 'video', 'external_video' -%}
-                    {{ media | media_tag: image_size: '1600x', autoplay: false, loop: false, controls: true, preload: 'metadata' }}
-                  {%- when 'model' -%}
-                    {{ media | media_tag: image_size: '1600x', toggleable: true }}
-                  {%- else -%}
-                    {{ media | media_tag }}
-                {%- endcase -%}
-              </div>
-            {%- endfor -%}
+          <div class="ed-gallery__inner">
             {%- if product.media.size > 1 -%}
-              <button type="button" class="ed-gallery__nav ed-gallery__nav--prev" aria-label="Previous image" data-ed-gallery-prev>‹</button>
-              <button type="button" class="ed-gallery__nav ed-gallery__nav--next" aria-label="Next image" data-ed-gallery-next>›</button>
-              <span class="ed-gallery__counter" aria-live="polite"><span data-ed-gallery-current>1</span> / {{ product.media.size }}</span>
+              <div class="ed-gallery__thumbs" data-ed-gallery-thumbs role="tablist" aria-label="Product images">
+                {%- for media in product.media -%}
+                  <button type="button" class="ed-gallery__thumb{% if media.id == featured.id %} is-active{% endif %}" data-ed-thumb="{{ media.id }}" role="tab" aria-selected="{% if media.id == featured.id %}true{% else %}false{% endif %}" aria-label="View image {{ forloop.index }}">
+                    {{ media.preview_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 200, 240', sizes: '80px', alt: media.alt | default: product.title, class: 'ed-gallery__thumb-img' }}
+                    {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                      <span class="ed-gallery__thumb-badge" aria-hidden="true">▶</span>
+                    {%- elsif media.media_type == 'model' -%}
+                      <span class="ed-gallery__thumb-badge" aria-hidden="true">3D</span>
+                    {%- endif -%}
+                  </button>
+                {%- endfor -%}
+              </div>
             {%- endif -%}
-          </div>
-          {%- if product.media.size > 1 -%}
-            <div class="ed-gallery__thumbs" data-ed-gallery-thumbs role="tablist">
+            <div class="ed-gallery__stage" data-ed-gallery-stage>
               {%- for media in product.media -%}
-                <button type="button" class="ed-gallery__thumb{% if media.id == featured.id %} is-active{% endif %}" data-ed-thumb="{{ media.id }}" role="tab" aria-selected="{% if media.id == featured.id %}true{% else %}false{% endif %}" aria-label="View image {{ forloop.index }}">
-                  {{ media.preview_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 200, 240', sizes: '90px', alt: media.alt | default: product.title, class: 'ed-gallery__thumb-img' }}
-                  {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
-                    <span class="ed-gallery__thumb-badge" aria-hidden="true">▶</span>
-                  {%- elsif media.media_type == 'model' -%}
-                    <span class="ed-gallery__thumb-badge" aria-hidden="true">3D</span>
-                  {%- endif -%}
-                </button>
+                <div class="ed-gallery__slide{% if media.id == featured.id %} is-active{% endif %}" data-ed-media-id="{{ media.id }}" data-media-type="{{ media.media_type }}">
+                  {%- case media.media_type -%}
+                    {%- when 'image' -%}
+                      {{ media | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200, 1600', sizes: '(min-width: 990px) 600px, 100vw', alt: media.alt | default: product.title, class: 'ed-gallery__img' }}
+                    {%- when 'video', 'external_video' -%}
+                      {{ media | media_tag: image_size: '1600x', autoplay: false, loop: false, controls: true, preload: 'metadata' }}
+                    {%- when 'model' -%}
+                      {{ media | media_tag: image_size: '1600x', toggleable: true }}
+                    {%- else -%}
+                      {{ media | media_tag }}
+                  {%- endcase -%}
+                </div>
               {%- endfor -%}
+              {%- if product.media.size > 1 -%}
+                <button type="button" class="ed-gallery__nav ed-gallery__nav--prev" aria-label="Previous image" data-ed-gallery-prev>‹</button>
+                <button type="button" class="ed-gallery__nav ed-gallery__nav--next" aria-label="Next image" data-ed-gallery-next>›</button>
+                <span class="ed-gallery__counter" aria-live="polite"><span data-ed-gallery-current>1</span> / {{ product.media.size }}</span>
+              {%- endif -%}
             </div>
-          {%- endif -%}
+          </div>
         {%- else -%}
-          <div class="ed-gallery__stage ed-gallery__placeholder">
-            <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" class="ed-gallery__placeholder-img">
+          <div class="ed-gallery__inner">
+            <div class="ed-gallery__stage ed-gallery__placeholder">
+              <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" class="ed-gallery__placeholder-img">
+            </div>
           </div>
         {%- endif -%}
       </div>
@@ -476,8 +480,14 @@
     .ed-pdp-tabs__tab { padding: 10px 12px; font-size: 12px; }
   }
 
-  /* Gallery — main stage */
-  .ed-gallery { display: flex; flex-direction: column; gap: 12px; }
+  /* Gallery — left vertical thumb rail + main stage (11-may layout) */
+  .ed-gallery { display: block; }
+  .ed-gallery__inner {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
   .ed-gallery__stage {
     position: relative;
     aspect-ratio: 1 / 1;
@@ -485,6 +495,7 @@
     border: 1px solid var(--ed-border, #E0DBCF);
     border-radius: 12px;
     overflow: hidden;
+    min-width: 0;
   }
   .ed-gallery__slide {
     position: absolute; inset: 0;
@@ -534,12 +545,15 @@
     z-index: 2;
   }
 
-  /* Thumbnail rail */
+  /* Thumbnail rail — vertical column on desktop */
   .ed-gallery__thumbs {
-    display: flex; gap: 8px;
-    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: calc(100vw * 0.4);
+    overflow-y: auto;
     scrollbar-width: thin;
-    padding: 2px 0;
+    padding: 2px;
   }
   .ed-gallery__thumb {
     position: relative;
@@ -551,9 +565,9 @@
     border-radius: 8px;
     cursor: pointer;
     overflow: hidden;
-    transition: border-color 120ms, transform 120ms;
+    transition: border-color 120ms;
   }
-  .ed-gallery__thumb:hover { border-color: var(--ed-ink, #0A0B0E); transform: translateY(-1px); }
+  .ed-gallery__thumb:hover { border-color: var(--ed-ink, #0A0B0E); }
   .ed-gallery__thumb.is-active {
     border-color: var(--ed-electric, #1E5FFF);
     box-shadow: 0 0 0 1px var(--ed-electric, #1E5FFF);
@@ -576,7 +590,21 @@
   .ed-gallery__placeholder { display: flex; align-items: center; justify-content: center; }
   .ed-gallery__placeholder-img { width: 96px; opacity: 0.25; }
 
+  /* Mobile gallery: stack thumbs UNDER stage, horizontal scroll */
   @media (max-width: 749px) {
+    .ed-gallery__inner {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .ed-gallery__inner .ed-gallery__thumbs {
+      order: 2;
+      flex-direction: row;
+      max-height: none;
+      overflow-y: visible;
+      overflow-x: auto;
+      padding: 2px 0;
+    }
+    .ed-gallery__inner .ed-gallery__stage { order: 1; }
     .ed-gallery__thumb { width: 56px; height: 56px; }
     .ed-gallery__nav { width: 32px; height: 32px; font-size: 18px; }
   }
@@ -1346,7 +1374,7 @@
     { "type": "checkbox", "id": "show_social_proof", "label": "Show sold / viewing-now row", "default": true },
     { "type": "text", "id": "sold_values", "label": "Sold counts (comma-separated, rotates)", "default": "8,12,15,18,22,26" },
     { "type": "range", "id": "viewing_min", "label": "Viewing now — min", "min": 0, "max": 100, "step": 1, "default": 8 },
-    { "type": "range", "id": "viewing_max", "label": "Viewing now — max", "min": 0, "max": 200, "step": 1, "default": 32 },
+    { "type": "range", "id": "viewing_max", "label": "Viewing now — max", "min": 0, "max": 200, "step": 2, "default": 32 },
 
     { "type": "header", "content": "Available offers (3 coupon cards)" },
     { "type": "text", "id": "offers_heading", "label": "Heading", "default": "Available offers" },
