@@ -195,14 +195,18 @@
     display: flex;
     flex-direction: column;
     background: var(--ed-snow, #FBFAF6);
-    border: 1.5px solid var(--ed-ink, #0A0B0E);
-    border-radius: 2px;
+    border: 1px solid var(--ed-border, #E0DBCF);
+    border-radius: 12px;
     overflow: hidden;
-    transition: border-width 120ms ease;
+    transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
     color: var(--ed-ink, #0A0B0E);
     height: 100%;
   }
-  .ed-product-card:hover { border-width: 2.5px; }
+  .ed-product-card:hover {
+    border-color: var(--ed-ink, #0A0B0E);
+    box-shadow: 0 6px 18px rgba(10,11,14,0.08);
+    transform: translateY(-2px);
+  }
   .ed-product-card__media-wrap { position: relative; }
   .ed-product-card__media-link {
     display: block;
@@ -214,7 +218,7 @@
     aspect-ratio: 1 / 1;
     background: var(--ed-paper, #F4F0E8);
     overflow: hidden;
-    border-bottom: 1.5px solid var(--ed-ink, #0A0B0E);
+    border-bottom: 1px solid var(--ed-border, #E0DBCF);
   }
   .ed-product-card__carousel {
     display: flex;
@@ -232,7 +236,7 @@
     object-fit: contain;
     display: block;
     scroll-snap-align: start;
-    padding: 12px;
+    padding: 6px;
     box-sizing: border-box;
     transition: transform 400ms ease;
   }
@@ -270,46 +274,48 @@
     opacity: 0.25;
   }
   .ed-product-card__sale-badge {
-    position: absolute; top: 12px; right: 12px;
+    position: absolute; top: 8px; right: 8px;
     background: var(--ed-electric, #1E5FFF);
     color: var(--ed-paper, #F4F0E8);
     font-family: "IBM Plex Mono", monospace;
-    font-size: 12px; font-weight: 700;
-    padding: 6px 10px;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 6px;
     letter-spacing: 0.02em;
   }
   .ed-product-card__new-badge {
-    position: absolute; top: 12px; left: 12px;
+    position: absolute; top: 8px; left: 8px;
     background: var(--ed-paper, #F4F0E8);
     color: var(--ed-electric, #1E5FFF);
     border: 1px solid var(--ed-electric, #1E5FFF);
     font-family: "Inter", sans-serif;
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 4px 10px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 6px;
   }
   .ed-product-card__stock {
-    position: absolute; bottom: 12px; left: 12px;
+    position: absolute; bottom: 8px; left: 8px;
   }
-  .ed-product-card__stock .ed-badge { background: var(--ed-paper, #F4F0E8); }
+  .ed-product-card__stock .ed-badge { background: var(--ed-paper, #F4F0E8); font-size: 10px; padding: 2px 6px; }
   .ed-product-card__body {
-    padding: 16px;
+    padding: 10px 12px 12px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    gap: 8px;
+    gap: 4px;
   }
   .ed-product-card__sku {
     margin: 0;
     font-family: "IBM Plex Mono", monospace;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--ed-text-mute, #5C6068);
     letter-spacing: 0.02em;
   }
   .ed-product-card__title {
     margin: 0;
     font-family: "Inter", sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
     line-height: 1.3;
     display: -webkit-box;
@@ -325,16 +331,16 @@
   .ed-product-card__spec {
     margin: 0;
     font-family: "IBM Plex Mono", monospace;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--ed-text-mute, #5C6068);
   }
   .ed-product-card__price-row {
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px;
     margin-top: auto;
-    padding-top: 4px;
+    padding-top: 2px;
   }
   .ed-product-card__price-prefix {
     font-family: "IBM Plex Mono", monospace;
@@ -345,24 +351,24 @@
   }
   .ed-product-card__price {
     font-family: "IBM Plex Mono", monospace;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--ed-ink, #0A0B0E);
   }
   .ed-product-card__compare {
     font-family: "IBM Plex Mono", monospace;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--ed-text-mute, #5C6068);
     text-decoration: line-through;
   }
   .ed-product-card__save {
     font-family: "Inter", sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--ed-success, #1E6B3A);
     background: rgba(30, 107, 58, 0.08);
-    padding: 2px 8px;
-    border-radius: 2px;
+    padding: 1px 6px;
+    border-radius: 6px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
@@ -381,9 +387,9 @@
     letter-spacing: 0.02em;
   }
   .ed-product-card__form {
-    margin-top: 12px;
+    margin-top: 8px;
     display: grid;
-    gap: 8px;
+    gap: 6px;
     align-items: stretch;
   }
   .ed-product-card__form--stepper { grid-template-columns: auto 1fr; }
@@ -397,12 +403,12 @@
   .ed-cqp__chip {
     flex: 1;
     min-width: 0;
-    height: 32px; padding: 0 4px;
+    height: 28px; padding: 0 4px;
     background: var(--ed-snow, #FBFAF6);
-    border: 1.5px solid var(--ed-ink, #0A0B0E);
-    border-radius: 2px;
+    border: 1px solid var(--ed-ink, #0A0B0E);
+    border-radius: 6px;
     font-family: "IBM Plex Mono", monospace;
-    font-size: 12px; font-weight: 600;
+    font-size: 11px; font-weight: 600;
     color: var(--ed-ink, #0A0B0E);
     cursor: pointer;
     transition: background 100ms, color 100ms;
@@ -414,11 +420,11 @@
     border-color: var(--ed-electric, #1E5FFF);
   }
   .ed-cqp__custom {
-    width: 52px; min-width: 52px; height: 32px;
+    width: 48px; min-width: 48px; height: 28px;
     padding: 0 6px;
     background: var(--ed-snow, #FBFAF6);
-    border: 1.5px solid var(--ed-ink, #0A0B0E);
-    border-radius: 2px;
+    border: 1px solid var(--ed-ink, #0A0B0E);
+    border-radius: 6px;
     font-family: "IBM Plex Mono", monospace;
     font-size: 12px; font-weight: 600;
     color: var(--ed-ink, #0A0B0E);
@@ -436,51 +442,68 @@
   .ed-product-card__qty {
     display: inline-flex;
     align-items: stretch;
-    border: 1.5px solid var(--ed-ink, #0A0B0E);
-    border-radius: 2px;
+    border: 1px solid var(--ed-ink, #0A0B0E);
+    border-radius: 8px;
     overflow: hidden;
-    height: 40px;
+    height: 32px;
   }
   .ed-qty-btn {
-    width: 30px;
+    width: 26px;
     background: transparent;
     border: 0;
     font-family: "Inter", sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     color: var(--ed-ink, #0A0B0E);
   }
   .ed-qty-btn:hover { background: var(--ed-ink, #0A0B0E); color: var(--ed-paper, #F4F0E8); }
   .ed-qty-input {
-    width: 36px;
+    width: 32px;
     border: 0;
     border-left: 1px solid var(--ed-border, #E0DBCF);
     border-right: 1px solid var(--ed-border, #E0DBCF);
     background: transparent;
     text-align: center;
     font-family: "IBM Plex Mono", monospace;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     -moz-appearance: textfield;
   }
   .ed-qty-input::-webkit-outer-spin-button,
   .ed-qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .ed-product-card__add {
-    height: 40px;
-    padding: 0 16px;
-    font-size: 13px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+    border-radius: 8px;
     justify-content: center;
     white-space: nowrap;
   }
-  @media (max-width: 599px) {
-    .ed-product-card__body { padding: 12px; gap: 6px; }
-    .ed-product-card__title { font-size: 14px; }
-    .ed-product-card__price { font-size: 16px; }
-    .ed-product-card__form { grid-template-columns: 1fr; gap: 6px; }
-    .ed-product-card__qty { width: 100%; justify-content: space-between; }
+  @media (max-width: 749px) {
+    .ed-product-card__body { padding: 8px 10px 10px; gap: 3px; }
+    .ed-product-card__title { font-size: 12px; line-height: 1.25; -webkit-line-clamp: 2; }
+    .ed-product-card__sku { font-size: 9px; }
+    .ed-product-card__spec { font-size: 10px; }
+    .ed-product-card__price { font-size: 13px; }
+    .ed-product-card__compare { font-size: 11px; }
+    .ed-product-card__save { font-size: 9px; padding: 1px 4px; }
+    .ed-product-card__sale-badge { font-size: 10px; padding: 2px 5px; top: 6px; right: 6px; }
+    .ed-product-card__new-badge { font-size: 9px; padding: 1px 5px; top: 6px; left: 6px; }
+    .ed-product-card__form { grid-template-columns: 1fr; gap: 5px; margin-top: 6px; }
+    .ed-product-card__qty { width: 100%; justify-content: space-between; height: 28px; }
     .ed-qty-input { flex: 1; }
-    .ed-product-card__add { font-size: 12px; padding: 0 10px; }
+    .ed-product-card__add { font-size: 11px; padding: 0 8px; height: 28px; }
+    .ed-cqp__chip { height: 26px; font-size: 10px; }
+    .ed-cqp__custom { height: 26px; font-size: 10px; }
+    .ed-product-card__stock { bottom: 6px; left: 6px; }
+    .ed-product-card__nav { display: none; }
+    .ed-product-card__img { padding: 4px; }
+  }
+  @media (max-width: 480px) {
+    .ed-product-card__body { padding: 6px 8px 8px; }
+    .ed-product-card__title { font-size: 11px; }
+    .ed-product-card__price { font-size: 12px; }
   }
 </style>
 

@@ -447,9 +447,33 @@
     .ed-pdp__media { position: sticky; top: 80px; align-self: start; }
   }
   @media (max-width: 989px) {
-    .ed-pdp-grid { grid-template-columns: 1fr !important; }
+    .ed-pdp-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
     .ed-pdp__info { position: static !important; }
     .ed-pdp__media { position: static !important; }
+  }
+  @media (max-width: 749px) {
+    .ed-pdp-grid { gap: 14px !important; }
+    .ed-rm__title { font-size: 18px !important; line-height: 1.2 !important; }
+    .ed-rm { gap: 10px; }
+    .ed-rm-card { padding: 12px !important; border-radius: 10px !important; }
+    .ed-rm-price-card__big { font-size: 22px !important; }
+    .ed-rm-price-card__compare { font-size: 13px; }
+    .ed-rm-price-card__meta { gap: 8px; font-size: 12px; }
+    .ed-rm-social { gap: 10px; font-size: 11px; }
+    .ed-offers__row { grid-template-columns: 1fr; gap: 8px; }
+    .ed-offer { padding: 10px 12px; }
+    .ed-offer__head { font-size: 13px; }
+    .ed-rm-buy { grid-template-columns: 1fr; gap: 8px; }
+    .ed-rm-buy__qty { flex-direction: row; align-items: center; gap: 8px; }
+    .ed-rm-qty { height: 44px; }
+    .ed-rm-buy__bar { height: 50px; padding: 0 14px; }
+    .ed-rm-buy__bar-total { font-size: 15px; }
+    .ed-rm-buy__bar-cta { font-size: 14px; }
+    .ed-rm-highlight { padding: 8px 12px; font-size: 12px; }
+    .ed-trust-grid { grid-template-columns: 1fr; gap: 10px; }
+    .ed-rm-policies { grid-template-columns: 1fr; }
+    .ed-pdp-tabs { margin-top: 28px; }
+    .ed-pdp-tabs__tab { padding: 10px 12px; font-size: 12px; }
   }
 
   /* Gallery — main stage */
