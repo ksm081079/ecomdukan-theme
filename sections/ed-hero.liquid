@@ -1,144 +1,298 @@
+{%- comment -%}
+  ED Hero — 11-may-style full-bleed slideshow carousel.
+  Each block = one slide with desktop image + mobile image + optional text overlay.
+  Autoplay + arrows + dots. Pure CSS/JS (no swiper).
+{%- endcomment -%}
+
 {%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-1'
-  assign layout = section.settings.layout | default: 'text-only'
-  assign align = section.settings.text_alignment | default: 'left'
+  assign dh = section.settings.desktop_height | default: 720
+  assign mh = section.settings.mobile_height | default: 480
+  assign autoplay = section.settings.autoplay
+  assign speed = section.settings.autoplay_speed | default: 6
+  assign show_arrows = section.settings.show_arrows
+  assign show_dots = section.settings.show_dots
+  assign id = section.id
 -%}
 
-<div class="color-{{ scheme }} ed-hero-wrap ed-hero-wrap--{{ layout }}" style="background: rgb(var(--color-background));">
-  <div class="ed-container ed-hero-inner ed-hero-inner--{{ align }}{% if layout == 'image-bg' %} ed-hero-inner--overlay{% endif %}">
-
-    {%- if layout == 'image-bg' and section.settings.image != blank -%}
-      <div class="ed-hero-bg">
-        {{ section.settings.image | image_url: width: 2400 | image_tag:
-          loading: 'eager', widths: '600, 900, 1200, 1800, 2400',
-          alt: section.settings.heading | default: 'Hero', class: 'ed-hero-bg__img'
-        }}
-        <div class="ed-hero-bg__scrim"></div>
-      </div>
-    {%- endif -%}
-
-    <div class="ed-hero-copy">
-      {%- if section.settings.eyebrow != blank -%}
-        <p class="ed-hero__eyebrow">{{ section.settings.eyebrow }}</p>
-      {%- endif -%}
-      {%- if section.settings.heading != blank -%}
-        <h1 class="ed-hero__h">{{ section.settings.heading }}</h1>
-      {%- endif -%}
-      {%- if section.settings.subhead != blank -%}
-        <p class="ed-hero__sub">{{ section.settings.subhead }}</p>
-      {%- endif -%}
-      {%- if section.settings.cta_1_label != blank or section.settings.cta_2_label != blank -%}
-        <div class="ed-hero__ctas">
-          {%- if section.settings.cta_1_label != blank -%}
-            <a href="{{ section.settings.cta_1_link | default: '#' }}" class="ed-btn ed-btn--primary ed-btn--lg" data-action="hero_cta" data-cta="1">{{ section.settings.cta_1_label }}</a>
+<div class="ed-hero ed-hero--slideshow color-{{ scheme }}" data-ed-hero data-autoplay="{{ autoplay }}" data-speed="{{ speed }}" style="--dh: {{ dh }}px; --mh: {{ mh }}px;">
+  {%- if section.blocks.size > 0 -%}
+    <div class="ed-hero__track" data-ed-hero-track>
+      {%- for block in section.blocks -%}
+        {%- assign desk = block.settings.image -%}
+        {%- assign mob = block.settings.image_mobile | default: block.settings.image -%}
+        {%- assign h = block.settings.heading | strip_newlines | escape -%}
+        <div class="ed-hero__slide{% if forloop.first %} is-active{% endif %}" data-ed-slide="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" class="ed-hero__link" data-action="hero_slide" data-slide="{{ forloop.index }}">
           {%- endif -%}
-          {%- if section.settings.cta_2_label != blank -%}
-            <a href="{{ section.settings.cta_2_link | default: '#' }}" class="ed-btn ed-btn--ghost ed-btn--lg" data-action="hero_cta" data-cta="2">{{ section.settings.cta_2_label }}</a>
+          <picture class="ed-hero__media">
+            {%- if mob != blank -%}
+              <source media="(max-width: 749px)" srcset="{{ mob | image_url: width: 900 }} 1x, {{ mob | image_url: width: 1400 }} 2x">
+            {%- endif -%}
+            {%- if desk != blank -%}
+              {{ desk | image_url: width: 2400 | image_tag:
+                loading: forloop.first | replace_first: 'true', 'eager' | replace_first: 'false', 'lazy',
+                widths: '900, 1400, 1800, 2400',
+                sizes: '100vw',
+                alt: h | default: 'Hero slide',
+                class: 'ed-hero__img' }}
+            {%- else -%}
+              <div class="ed-hero__placeholder">
+                <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" width="80">
+              </div>
+            {%- endif -%}
+          </picture>
+          {%- if block.settings.heading != blank or block.settings.subheading != blank or block.settings.cta_label != blank -%}
+            {%- assign content_pos = block.settings.content_position | default: 'bottom-left' -%}
+            <div class="ed-hero__content ed-hero__content--{{ content_pos }}">
+              {%- if block.settings.subheading != blank -%}
+                <p class="ed-hero__eyebrow">{{ block.settings.subheading }}</p>
+              {%- endif -%}
+              {%- if block.settings.heading != blank -%}
+                <h2 class="ed-hero__h">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+              {%- if block.settings.description != blank -%}
+                <p class="ed-hero__sub">{{ block.settings.description }}</p>
+              {%- endif -%}
+              {%- if block.settings.cta_label != blank -%}
+                <a href="{{ block.settings.cta_link | default: '#' }}" class="ed-btn ed-btn--primary ed-btn--lg ed-hero__cta" data-action="hero_cta" data-slide="{{ forloop.index }}">{{ block.settings.cta_label }}</a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          {%- if block.settings.link != blank -%}
+            </a>
           {%- endif -%}
         </div>
-      {%- endif -%}
-
-      {%- if section.settings.trust_text != blank and layout != 'image-bg' -%}
-        <p class="ed-hero__trust">{{ section.settings.trust_text }}</p>
-      {%- endif -%}
+      {%- endfor -%}
     </div>
 
-    {%- if layout == 'split' and section.settings.image != blank -%}
-      <div class="ed-hero-media">
-        {{ section.settings.image | image_url: width: 1200 | image_tag:
-          loading: 'eager', widths: '500, 800, 1200',
-          alt: section.settings.heading | default: 'Hero', class: 'ed-hero-media__img'
-        }}
-      </div>
+    {%- if section.blocks.size > 1 -%}
+      {%- if show_arrows -%}
+        <button type="button" class="ed-hero__nav ed-hero__nav--prev" aria-label="Previous slide" data-ed-hero-prev>‹</button>
+        <button type="button" class="ed-hero__nav ed-hero__nav--next" aria-label="Next slide" data-ed-hero-next>›</button>
+      {%- endif -%}
+      {%- if show_dots -%}
+        <div class="ed-hero__dots" role="tablist" aria-label="Slides">
+          {%- for block in section.blocks -%}
+            <button type="button" class="ed-hero__dot{% if forloop.first %} is-active{% endif %}" data-ed-hero-dot="{{ forloop.index0 }}" aria-label="Slide {{ forloop.index }}"></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     {%- endif -%}
-  </div>
+  {%- else -%}
+    <div class="ed-hero__empty">
+      <p>Add a slide block in the theme editor to populate the hero.</p>
+    </div>
+  {%- endif -%}
 </div>
 
 <style>
-  .ed-hero-wrap { padding-block: clamp(40px, 6vw, 96px); position: relative; }
-  .ed-hero-wrap--image-bg { padding-block: clamp(80px, 10vw, 160px); }
-
-  .ed-hero-inner { position: relative; z-index: 2; }
-  .ed-hero-inner--center { text-align: center; }
-  .ed-hero-inner--center .ed-hero__ctas { justify-content: center; }
-  .ed-hero-inner--right { text-align: right; }
-  .ed-hero-inner--right .ed-hero__ctas { justify-content: flex-end; }
-
-  /* Background image variant */
-  .ed-hero-bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
-  .ed-hero-bg__img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .ed-hero-bg__scrim {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(10,11,14,0.15) 0%, rgba(10,11,14,0.55) 100%);
-  }
-  .ed-hero-inner--overlay { color: var(--ed-paper, #F4F0E8); max-width: 720px; }
-  .ed-hero-inner--overlay .ed-hero__h { color: inherit; }
-  .ed-hero-inner--overlay .ed-hero__sub { color: rgba(244,240,232,0.92); }
-
-  /* Split (50/50) variant */
-  .ed-hero-wrap--split .ed-hero-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(24px, 5vw, 64px);
-    align-items: center;
-  }
-  .ed-hero-media {
-    aspect-ratio: 4 / 5;
-    border: 1.5px solid var(--ed-ink, #0A0B0E);
-    border-radius: 2px;
+  .ed-hero {
+    position: relative;
+    width: 100%;
+    height: var(--dh);
     overflow: hidden;
     background: var(--ed-paper, #F4F0E8);
   }
-  .ed-hero-media__img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
+  .ed-hero__track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .ed-hero__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 600ms ease;
+  }
+  .ed-hero__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+  }
+  .ed-hero__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+  .ed-hero__media {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .ed-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .ed-hero__placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--ed-snow, #FBFAF6);
+    opacity: 0.6;
   }
 
-  /* Type */
+  /* Content overlay */
+  .ed-hero__content {
+    position: absolute;
+    z-index: 2;
+    max-width: 600px;
+    padding: 24px;
+    color: #fff;
+    text-shadow: 0 2px 16px rgba(10,11,14,0.4);
+  }
+  .ed-hero__content--bottom-left   { left: 32px; bottom: 32px; }
+  .ed-hero__content--bottom-right  { right: 32px; bottom: 32px; text-align: right; }
+  .ed-hero__content--bottom-center { left: 50%; bottom: 32px; transform: translateX(-50%); text-align: center; }
+  .ed-hero__content--top-left      { left: 32px; top: 32px; }
+  .ed-hero__content--top-right     { right: 32px; top: 32px; text-align: right; }
+  .ed-hero__content--center        { left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; }
   .ed-hero__eyebrow {
-    margin: 0 0 12px;
+    margin: 0 0 8px;
     font-family: "IBM Plex Mono", monospace;
     font-size: 12px; font-weight: 500;
     letter-spacing: 0.08em; text-transform: uppercase;
-    color: rgba(var(--color-foreground), 0.65);
   }
   .ed-hero__h {
-    margin: 0 0 16px;
+    margin: 0 0 12px;
     font-family: "Poppins", sans-serif; font-weight: 700;
-    font-size: clamp(32px, 5.5vw, 64px);
-    letter-spacing: -0.045em; line-height: 1.05;
+    font-size: clamp(28px, 5vw, 64px);
+    letter-spacing: -0.025em; line-height: 1.05;
+    color: #fff;
   }
   .ed-hero__sub {
-    margin: 0 0 24px;
+    margin: 0 0 20px;
     font-family: "Inter", sans-serif;
-    font-size: clamp(15px, 1.4vw, 18px); line-height: 1.5;
-    color: rgba(var(--color-foreground), 0.78);
-    max-width: 56ch;
+    font-size: clamp(14px, 1.4vw, 18px); line-height: 1.5;
   }
-  .ed-hero-inner--center .ed-hero__sub { margin-left: auto; margin-right: auto; }
-  .ed-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-  .ed-hero__trust {
-    margin: 24px 0 0;
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 12px; font-weight: 500;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: rgba(var(--color-foreground), 0.55);
+  .ed-hero__cta { margin-top: 8px; }
+
+  /* Nav arrows */
+  .ed-hero__nav {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    border: 0;
+    color: var(--ed-ink, #0A0B0E);
+    font-size: 28px; line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(10,11,14,0.15);
+    z-index: 3;
+    transition: background 120ms;
+  }
+  .ed-hero__nav:hover { background: #fff; }
+  .ed-hero__nav--prev { left: 24px; }
+  .ed-hero__nav--next { right: 24px; }
+
+  /* Dots */
+  .ed-hero__dots {
+    position: absolute;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 8px;
+    z-index: 3;
+  }
+  .ed-hero__dot {
+    width: 8px; height: 8px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    border: 0;
+    cursor: pointer;
+    transition: background 120ms, width 120ms;
+  }
+  .ed-hero__dot.is-active {
+    background: #fff;
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  .ed-hero__empty {
+    padding: 80px 24px;
+    text-align: center;
+    color: var(--ed-text-mute, #5C6068);
   }
 
   /* Mobile */
   @media (max-width: 749px) {
-    .ed-hero-wrap--split .ed-hero-inner { grid-template-columns: 1fr; }
-    .ed-hero-media { aspect-ratio: 4 / 3; max-height: 380px; }
-    .ed-hero-wrap--image-bg { padding-block: 80px; }
-    .ed-hero__ctas .ed-btn { flex: 1; justify-content: center; }
+    .ed-hero { height: var(--mh); }
+    .ed-hero__content { padding: 16px; max-width: calc(100% - 32px); }
+    .ed-hero__content--bottom-left, .ed-hero__content--bottom-right, .ed-hero__content--bottom-center { bottom: 60px; }
+    .ed-hero__content--bottom-left { left: 16px; right: 16px; }
+    .ed-hero__content--bottom-right { right: 16px; left: 16px; }
+    .ed-hero__h { font-size: clamp(20px, 6vw, 32px); margin-bottom: 8px; }
+    .ed-hero__sub { font-size: 13px; margin-bottom: 12px; }
+    .ed-hero__nav { width: 36px; height: 36px; font-size: 22px; }
+    .ed-hero__nav--prev { left: 8px; }
+    .ed-hero__nav--next { right: 8px; }
+    .ed-hero__dots { bottom: 14px; }
   }
 </style>
 
 <script>
-  document.addEventListener('click', function(e) {
-    const el = e.target.closest('[data-action="hero_cta"]');
-    if (!el || !window.posthog) return;
-    try { posthog.capture('hero_cta_click', { cta: el.dataset.cta, label: el.textContent.trim(), href: el.getAttribute('href') }); } catch (err) {}
-  });
+  (function() {
+    const root = document.querySelector('[data-ed-hero]');
+    if (!root) return;
+    const slides = Array.from(root.querySelectorAll('.ed-hero__slide'));
+    if (slides.length < 2) return;
+    const dots = Array.from(root.querySelectorAll('[data-ed-hero-dot]'));
+    const prev = root.querySelector('[data-ed-hero-prev]');
+    const next = root.querySelector('[data-ed-hero-next]');
+    const autoplay = root.dataset.autoplay === 'true';
+    const speedMs = (parseFloat(root.dataset.speed) || 6) * 1000;
+    let current = 0;
+    let timer = null;
+    const show = function(i) {
+      if (i < 0) i = slides.length - 1;
+      if (i >= slides.length) i = 0;
+      current = i;
+      slides.forEach(function(s, idx) { s.classList.toggle('is-active', idx === i); });
+      dots.forEach(function(d, idx) { d.classList.toggle('is-active', idx === i); });
+    };
+    const start = function() {
+      if (!autoplay) return;
+      stop();
+      timer = setInterval(function() { show(current + 1); }, speedMs);
+    };
+    const stop = function() { if (timer) { clearInterval(timer); timer = null; } };
+    if (prev) prev.addEventListener('click', function() { show(current - 1); start(); });
+    if (next) next.addEventListener('click', function() { show(current + 1); start(); });
+    dots.forEach(function(d, i) { d.addEventListener('click', function() { show(i); start(); }); });
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+
+    // Touch swipe (mobile)
+    let touchX = null;
+    root.addEventListener('touchstart', function(e) { touchX = e.touches[0].clientX; stop(); }, { passive: true });
+    root.addEventListener('touchend', function(e) {
+      if (touchX == null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 50) show(dx < 0 ? current + 1 : current - 1);
+      touchX = null;
+      start();
+    }, { passive: true });
+
+    start();
+
+    // Tracking
+    document.addEventListener('click', function(e) {
+      const el = e.target.closest('[data-action="hero_cta"], [data-action="hero_slide"]');
+      if (!el || !window.posthog) return;
+      try { posthog.capture(el.dataset.action, { slide: el.dataset.slide, href: el.getAttribute('href') }); } catch (err) {}
+    });
+  })();
 </script>
 
 {% schema %}
@@ -147,20 +301,12 @@
   "tag": "section",
   "class": "ed-hero-section",
   "settings": [
-    { "type": "select", "id": "layout", "label": "Layout", "default": "split",
-      "options": [
-        { "value": "text-only", "label": "Text only (no image)" },
-        { "value": "split", "label": "50/50 split (text + image)" },
-        { "value": "image-bg", "label": "Full-bleed image background" }
-      ]
-    },
-    { "type": "select", "id": "text_alignment", "label": "Text alignment", "default": "left",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ]
-    },
+    { "type": "range", "id": "desktop_height", "label": "Desktop height (px)", "min": 360, "max": 1000, "step": 20, "default": 720 },
+    { "type": "range", "id": "mobile_height", "label": "Mobile height (px)", "min": 280, "max": 800, "step": 20, "default": 480 },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
+    { "type": "range", "id": "autoplay_speed", "label": "Autoplay speed (seconds)", "min": 3, "max": 12, "step": 1, "default": 6 },
+    { "type": "checkbox", "id": "show_arrows", "label": "Show arrows", "default": true },
+    { "type": "checkbox", "id": "show_dots", "label": "Show dots", "default": true },
     { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
       "options": [
         { "value": "scheme-1", "label": "Paper" },
@@ -168,23 +314,45 @@
         { "value": "scheme-3", "label": "Indigo" },
         { "value": "scheme-4", "label": "Ink" }
       ]
-    },
-
-    { "type": "header", "content": "Image (split / background layouts)" },
-    { "type": "image_picker", "id": "image", "label": "Hero image" },
-
-    { "type": "header", "content": "Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "दुकान, scaled · Made in India" },
-    { "type": "textarea", "id": "heading", "label": "Headline", "default": "Stationery & printer labels, in bulk, in stock." },
-    { "type": "textarea", "id": "subhead", "label": "Subhead", "default": "One supplier. One invoice. Three DCs — Mumbai, Bengaluru, Delhi." },
-    { "type": "text", "id": "trust_text", "label": "Trust line (under CTAs)", "default": "Same-day dispatch · GST invoice on every order" },
-
-    { "type": "header", "content": "CTAs" },
-    { "type": "text", "id": "cta_1_label", "label": "Primary CTA label", "default": "Shop labels" },
-    { "type": "url",  "id": "cta_1_link",  "label": "Primary CTA link" },
-    { "type": "text", "id": "cta_2_label", "label": "Secondary CTA label", "default": "Get bulk quote" },
-    { "type": "url",  "id": "cta_2_link",  "label": "Secondary CTA link" }
+    }
   ],
-  "presets": [{ "name": "ED Hero" }]
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Desktop image (use ~2400px wide)" },
+        { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (portrait, ~900px wide; falls back to desktop)" },
+        { "type": "url", "id": "link", "label": "Slide link" },
+        { "type": "header", "content": "Optional text overlay" },
+        { "type": "text", "id": "subheading", "label": "Eyebrow" },
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "textarea", "id": "description", "label": "Description" },
+        { "type": "text", "id": "cta_label", "label": "CTA label" },
+        { "type": "url", "id": "cta_link", "label": "CTA link" },
+        { "type": "select", "id": "content_position", "label": "Content position", "default": "bottom-left",
+          "options": [
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "bottom-right", "label": "Bottom right" },
+            { "value": "bottom-center", "label": "Bottom center" },
+            { "value": "top-left", "label": "Top left" },
+            { "value": "top-right", "label": "Top right" },
+            { "value": "center", "label": "Center" }
+          ]
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "ED Hero",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
 }
 {% endschema %}
