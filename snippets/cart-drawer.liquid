@@ -786,43 +786,7 @@
           </div>
 
           <small class="tax-note caption-large rte">
-            {%- if cart.duties_included and cart.taxes_included -%}
-              {%- if shop.shipping_policy.body == blank -%}
-                {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t }}
-              {%- else -%}
-                {{
-                  'sections.cart.duties_and_taxes_included_shipping_at_checkout_with_policy_html'
-                  | t: link: shop.shipping_policy.url
-                }}
-              {%- endif -%}
-            {%- elsif cart.duties_included == false and cart.taxes_included -%}
-              {%- if shop.shipping_policy.body == blank -%}
-                {{ 'sections.cart.taxes_included_shipping_at_checkout_without_policy' | t }}
-              {%- else -%}
-                {{
-                  'sections.cart.taxes_included_shipping_at_checkout_with_policy_html'
-                  | t: link: shop.shipping_policy.url
-                }}
-              {%- endif -%}
-            {%- elsif cart.duties_included and cart.taxes_included == false -%}
-              {%- if shop.shipping_policy.body == blank -%}
-                {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
-              {%- else -%}
-                {{
-                  'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html'
-                  | t: link: shop.shipping_policy.url
-                }}
-              {%- endif -%}
-            {%- elsif cart.duties_included == false and cart.taxes_included == false -%}
-              {%- if shop.shipping_policy.body == blank -%}
-                {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
-              {%- else -%}
-                {{
-                  'sections.cart.taxes_at_checkout_shipping_at_checkout_with_policy_html'
-                  | t: link: shop.shipping_policy.url
-                }}
-              {%- endif -%}
-            {%- endif -%}
+            Taxes included. Discounts and shipping calculated at checkout.
           </small>
         </div>
 
@@ -840,7 +804,7 @@
           </div>
 
           <div class="ed-cart-cta-row">
-            <a href="{{ routes.cart_url }}" class="ed-cart-cta-row__viewcart">{{ 'sections.cart.view_cart' | t | default: 'View cart' }}</a>
+            <a href="{{ routes.cart_url }}" class="ed-cart-cta-row__viewcart">View cart</a>
             <button
               type="submit"
               id="CartDrawer-Checkout"
@@ -1104,42 +1068,30 @@ document.addEventListener('cart:refresh', async () => {
 
   .cart-drawer__recommendations-grid {
     display: flex;
-    gap: 0.75rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 0.25rem 0;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
     margin: 0;
-    -ms-overflow-style: none;
-  }
-
-  .cart-drawer__recommendations-grid::-webkit-scrollbar {
-    display: none;
+    overflow: visible;
   }
 
   .cart-drawer__recommendation-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    padding: 0.5rem;
+    display: block;
+    padding: 8px 10px;
     border-radius: 10px;
-    background: rgb(var(--color-background));
-    border: 1px solid rgba(var(--color-foreground), 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 120px;
-    max-width: 120px;
+    background: var(--ed-snow, #FBFAF6);
+    border: 1px solid var(--ed-border, #E0DBCF);
+    transition: border-color 120ms;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     flex-shrink: 0;
-    scroll-snap-align: start;
     position: relative;
-    box-shadow: 0 1px 3px rgba(var(--color-foreground), 0.05);
   }
-
   .cart-drawer__recommendation-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(var(--color-foreground), 0.1);
-    border-color: rgba(var(--color-button), 0.3);
+    border-color: var(--ed-ink, #0A0B0E);
+    transform: none;
+    box-shadow: none;
   }
 
   .cart-drawer__recommendation-item--featured {
@@ -1170,116 +1122,89 @@ document.addEventListener('cart:refresh', async () => {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
 
+  /* Horizontal row: image (small left) + info (middle) + add button (right) */
   .cart-drawer__recommendation-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
-    flex: 1;
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+    gap: 10px;
     width: 100%;
   }
-
   .cart-drawer__recommendation-link {
+    display: contents;
     text-decoration: none;
     color: inherit;
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
     cursor: pointer;
-    flex: 1;
   }
-
-  .cart-drawer__recommendation-link:hover .cart-drawer__recommendation-image {
-    transform: scale(1.05);
-  }
-
   .cart-drawer__recommendation-link:hover .cart-drawer__recommendation-title {
-    color: rgb(var(--color-button));
+    color: var(--ed-electric, #1E5FFF);
   }
-
   .cart-drawer__recommendation-image-wrapper {
     position: relative;
-    width: 100%;
-    aspect-ratio: 1;
+    width: 56px; height: 56px;
     border-radius: 8px;
     overflow: hidden;
-    background: rgba(var(--color-foreground), 0.04);
-    margin-bottom: 0;
+    background: var(--ed-paper, #F4F0E8);
+    flex-shrink: 0;
   }
-
   .cart-drawer__recommendation-image {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: block;
   }
-
   .cart-drawer__recommendation-info {
     display: flex;
     flex-direction: column;
-    gap: 0.375rem;
-    flex: 1;
-    min-height: 0;
+    gap: 4px;
+    min-width: 0;
   }
-
   .cart-drawer__recommendation-title {
-    font-size: 0.75rem;
-    font-weight: 500;
-    margin: 0;
-    line-height: 1.4;
+    font-family: "Inter", sans-serif;
+    font-size: 13px; font-weight: 600;
+    margin: 0; line-height: 1.3;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    min-height: 2.1em;
-    transition: color 0.2s ease;
-    color: rgb(var(--color-foreground));
+    color: var(--ed-ink, #0A0B0E);
+    transition: color 120ms;
   }
-
   .cart-drawer__recommendation-price {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-    font-size: 0.8125rem;
-    margin-bottom: 0;
+    gap: 6px;
+    margin: 0;
   }
-
   .cart-drawer__recommendation-compare-price {
-    color: rgba(var(--color-foreground), 0.5);
-    font-size: 0.6875rem;
+    color: var(--ed-text-mute, #5C6068);
+    font-size: 11px;
     text-decoration: line-through;
     font-weight: 400;
+    font-family: "IBM Plex Mono", monospace;
   }
-
   .cart-drawer__recommendation-current-price {
-    font-weight: 700;
-    color: rgb(var(--color-foreground));
-    font-size: 0.875rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 700; font-size: 13px;
+    color: var(--ed-ink, #0A0B0E);
   }
-
   .cart-drawer__recommendation-add-btn {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.75rem;
+    padding: 6px 12px;
+    height: 32px;
     border-radius: 8px;
+    border: 1.5px solid var(--ed-ink, #0A0B0E);
+    background: transparent;
+    color: var(--ed-ink, #0A0B0E);
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 12px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
-    border: 1.5px solid rgb(var(--color-button));
-    background: rgb(var(--color-button));
-    color: rgb(var(--color-button-text));
-    font-weight: 600;
-    text-transform: none;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.375rem;
-    min-height: 32px;
-    margin-top: auto;
+    flex-shrink: 0;
+    transition: background 120ms, color 120ms;
+  }
+  .cart-drawer__recommendation-add-btn:hover {
+    background: var(--ed-ink, #0A0B0E);
+    color: var(--ed-paper, #F4F0E8);
   }
 
   .cart-drawer__recommendation-add-btn::before {
