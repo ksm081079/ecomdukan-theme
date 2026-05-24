@@ -23,42 +23,6 @@
       aria-label="{{ 'sections.cart.title' | t }}"
       tabindex="-1"
     >
-      {%- if cart == empty -%}
-        <div class="drawer__inner-empty">
-          <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
-            <div class="cart-drawer__empty-content">
-              <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
-              <button
-                class="drawer__close"
-                type="button"
-                onclick="this.closest('cart-drawer').close()"
-                aria-label="{{ 'accessibility.close' | t }}"
-              >
-                <span class="svg-wrapper">
-                  {{- 'icon-close.svg' | inline_asset_content -}}
-                </span>
-              </button>
-              <a href="{{ routes.all_products_collection_url }}" class="button">
-                {{ 'general.continue_shopping' | t }}
-              </a>
-
-              {%- if shop.customer_accounts_enabled and customer == null -%}
-                <p class="cart__login-title h3">{{ 'sections.cart.login.title' | t }}</p>
-                <p class="cart__login-paragraph">
-                  {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
-                </p>
-              {%- endif -%}
-              
-            </div>
-          </div>
-         
-          {%- if settings.cart_drawer_collection != blank -%}
-            <div class="cart-drawer__collection">
-              {% render 'card-collection', card_collection: settings.cart_drawer_collection, columns: 1 %}
-            </div>
-          {%- endif -%}
-        </div>
-      {%- endif -%}
       <div class="drawer__header">
         <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}
           {%- if cart.item_count > 0 -%}<span class="drawer__heading-count">({{ cart.item_count }})</span>{%- endif -%}
@@ -74,6 +38,28 @@
           </span>
         </button>
       </div>
+
+      {%- if cart == empty -%}
+        <div class="drawer__inner-empty">
+          <div class="cart-drawer__empty-content">
+            <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
+            <a href="{{ routes.all_products_collection_url }}" class="button">
+              {{ 'general.continue_shopping' | t }}
+            </a>
+            {%- if shop.customer_accounts_enabled and customer == null -%}
+              <p class="cart__login-title h3">{{ 'sections.cart.login.title' | t }}</p>
+              <p class="cart__login-paragraph">
+                {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
+              </p>
+            {%- endif -%}
+          </div>
+          {%- if settings.cart_drawer_collection != blank -%}
+            <div class="cart-drawer__collection">
+              {% render 'card-collection', card_collection: settings.cart_drawer_collection, columns: 1 %}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- else -%}
 
       {%- if settings.show_shipping_bar and settings.minimum_free_shipping > 0 and cart.item_count > 0 -%}
         {%- assign min_free_cents = settings.minimum_free_shipping | times: 100 -%}
@@ -331,7 +317,7 @@
                                     value="{{ item.quantity }}"
                                     {% # theme-check-disable %}
                                     data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
-                                    min="0"
+                                    min="1"
                                     data-min="{{ item.variant.quantity_rule.min }}"
                                     {% if item.variant.quantity_rule.max != null %}
                                       max="{{ item.variant.quantity_rule.max }}"
@@ -820,6 +806,7 @@
           </div>
         </div>
       </div>
+      {%- endif -%}
     </div>
   </div>
 </cart-drawer>
@@ -1068,30 +1055,34 @@ document.addEventListener('cart:refresh', async () => {
 
   .cart-drawer__recommendations-grid {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 0;
+    flex-direction: row;
+    gap: 10px;
+    padding: 4px 0 8px;
     margin: 0;
-    overflow: visible;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
+  .cart-drawer__recommendations-grid::-webkit-scrollbar { height: 4px; }
+  .cart-drawer__recommendations-grid::-webkit-scrollbar-thumb { background: var(--ed-border, #E0DBCF); border-radius: 999px; }
 
   .cart-drawer__recommendation-item {
-    display: block;
-    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 150px;
+    padding: 8px;
     border-radius: 10px;
     background: var(--ed-snow, #FBFAF6);
     border: 1px solid var(--ed-border, #E0DBCF);
     transition: border-color 120ms;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    flex-shrink: 0;
     position: relative;
+    scroll-snap-align: start;
   }
   .cart-drawer__recommendation-item:hover {
     border-color: var(--ed-ink, #0A0B0E);
-    transform: none;
-    box-shadow: none;
   }
 
   .cart-drawer__recommendation-item--featured {
@@ -1122,45 +1113,50 @@ document.addEventListener('cart:refresh', async () => {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
 
-  /* Horizontal row: image (small left) + info (middle) + add button (right) */
+  /* Vertical card: image on top, title+price below, add button at bottom */
   .cart-drawer__recommendation-content {
-    display: grid;
-    grid-template-columns: 56px 1fr auto;
-    align-items: center;
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     width: 100%;
+    height: 100%;
   }
   .cart-drawer__recommendation-link {
-    display: contents;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     text-decoration: none;
     color: inherit;
     cursor: pointer;
+    flex: 1 1 auto;
+    min-height: 0;
   }
   .cart-drawer__recommendation-link:hover .cart-drawer__recommendation-title {
     color: var(--ed-electric, #1E5FFF);
   }
   .cart-drawer__recommendation-image-wrapper {
     position: relative;
-    width: 56px; height: 56px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     border-radius: 8px;
     overflow: hidden;
     background: var(--ed-paper, #F4F0E8);
-    flex-shrink: 0;
   }
   .cart-drawer__recommendation-image {
     width: 100%; height: 100%;
     object-fit: cover;
     display: block;
+    pointer-events: none;
   }
   .cart-drawer__recommendation-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     min-width: 0;
   }
   .cart-drawer__recommendation-title {
     font-family: "Inter", sans-serif;
-    font-size: 13px; font-weight: 600;
+    font-size: 11px; font-weight: 600;
     margin: 0; line-height: 1.3;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1171,35 +1167,36 @@ document.addEventListener('cart:refresh', async () => {
     transition: color 120ms;
   }
   .cart-drawer__recommendation-price {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
     margin: 0;
   }
   .cart-drawer__recommendation-compare-price {
     color: var(--ed-text-mute, #5C6068);
-    font-size: 11px;
+    font-size: 10px;
     text-decoration: line-through;
     font-weight: 400;
     font-family: "IBM Plex Mono", monospace;
   }
   .cart-drawer__recommendation-current-price {
     font-family: "IBM Plex Mono", monospace;
-    font-weight: 700; font-size: 13px;
+    font-weight: 700; font-size: 12px;
     color: var(--ed-ink, #0A0B0E);
   }
   .cart-drawer__recommendation-add-btn {
-    padding: 6px 12px;
-    height: 32px;
+    position: relative;
+    padding: 6px 8px;
+    height: 30px;
     border-radius: 8px;
     border: 1.5px solid var(--ed-ink, #0A0B0E);
     background: transparent;
     color: var(--ed-ink, #0A0B0E);
     font-family: "Inter", sans-serif;
-    font-weight: 600; font-size: 12px;
+    font-weight: 600; font-size: 11px;
     cursor: pointer;
     white-space: nowrap;
-    flex-shrink: 0;
+    width: 100%;
     transition: background 120ms, color 120ms;
   }
   .cart-drawer__recommendation-add-btn:hover {
