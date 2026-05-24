@@ -27,6 +27,8 @@
 </div>
 
 <style>
+  /* Kill the global .section + .section { margin-top: 96px } rule for any section flagged ed-section-flush */
+  .section.ed-section-flush, .shopify-section.ed-section-flush { margin-top: 0 !important; }
   .ed-marquee { overflow: hidden; }
   .ed-marquee__track {
     display: flex;
@@ -62,6 +64,7 @@
 {
   "name": "ED Marquee",
   "tag": "section",
+  "class": "ed-section-flush",
   "settings": [
     { "type": "range", "id": "speed", "label": "Speed (seconds per loop)", "min": 10, "max": 60, "step": 5, "default": 30 },
     { "type": "checkbox", "id": "reverse", "label": "Reverse direction", "default": false },
