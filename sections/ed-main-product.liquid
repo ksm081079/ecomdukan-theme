@@ -331,8 +331,10 @@
                   {%- endif -%}
                 {%- when 'faq' -%}
                   {%- for i in (1..6) -%}
-                    {%- assign q = block.settings['q' | append: i] -%}
-                    {%- assign a = block.settings['a' | append: i] -%}
+                    {%- assign q_key = 'q' | append: i -%}
+                    {%- assign a_key = 'a' | append: i -%}
+                    {%- assign q = block.settings[q_key] -%}
+                    {%- assign a = block.settings[a_key] -%}
                     {%- if q != blank -%}
                       <details class="ed-faq-item">
                         <summary>{{ q }}<span class="ed-faq-item__chev">+</span></summary>
