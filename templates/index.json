@@ -204,14 +204,6 @@
     "logos": {
       "type": "ed-customer-logos",
       "blocks": {
-        "l1": {
-          "type": "logo",
-          "settings": {
-            "logo": "shopify://shop_images/mark-electric-512.png",
-            "name": "Brand 1",
-            "link": ""
-          }
-        },
         "l7": {
           "type": "logo",
           "settings": {
@@ -227,12 +219,65 @@
             "name": "Brand",
             "link": ""
           }
+        },
+        "logo_E3yC4x": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/coloured_logo_ai_2.avif",
+            "name": "Brand 7",
+            "link": ""
+          }
+        },
+        "logo_qAHARn": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Dawbu_Combination_Mark_Logo_Png.avif",
+            "name": "Brand",
+            "link": ""
+          }
+        },
+        "logo_VcKNxa": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/coloured_logo_ai_2.avif",
+            "name": "Brand 7",
+            "link": ""
+          }
+        },
+        "logo_fcDRhw": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Dawbu_Combination_Mark_Logo_Png.avif",
+            "name": "Brand",
+            "link": ""
+          }
+        },
+        "logo_didYxU": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/coloured_logo_ai_2.avif",
+            "name": "Brand 7",
+            "link": ""
+          }
+        },
+        "logo_8gCLEB": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Dawbu_Combination_Mark_Logo_Png.avif",
+            "name": "Brand",
+            "link": ""
+          }
         }
       },
       "block_order": [
-        "l1",
         "l7",
-        "logo_EYTKGa"
+        "logo_EYTKGa",
+        "logo_E3yC4x",
+        "logo_qAHARn",
+        "logo_VcKNxa",
+        "logo_fcDRhw",
+        "logo_didYxU",
+        "logo_8gCLEB"
       ],
       "settings": {
         "heading": "Trusted by D2C brands across India",
