@@ -105,16 +105,9 @@ h4, .h4 { font-size: var(--t-title);     letter-spacing: -0.02em; font-weight: 6
 .ed-surface-electric { background: var(--ed-electric); color: var(--ed-paper); }
 
 /* ===== FLUSH: kill ALL inherited spacing around home top sections ===== */
-#MainContent { margin: 0 !important; padding: 0 !important; }
-#MainContent > .shopify-section:first-child,
-#MainContent > .shopify-section:first-child > section,
-#MainContent > .shopify-section:first-child > .ed-hero-section,
-#MainContent > .shopify-section:nth-child(2),
-#MainContent > .shopify-section:nth-child(2) > section {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-/* Hero section itself + its inner wrapper edge-to-edge, no gaps */
+body, #MainContent { margin: 0 !important; padding: 0 !important; }
+
+/* Hero wrapper + its section tag: zero margin/padding everywhere */
 .shopify-section:has(.ed-hero),
 .shopify-section:has(.ed-marquee),
 .shopify-section:has(.ed-pdp-banner),
@@ -122,10 +115,35 @@ h4, .h4 { font-size: var(--t-title);     letter-spacing: -0.02em; font-weight: 6
 .ed-hero-section, .ed-marquee, .ed-pdp-banner {
   margin: 0 !important;
   padding: 0 !important;
+  line-height: 0;
 }
-.shopify-section:has(.ed-hero) + .shopify-section,
-.shopify-section:has(.ed-marquee) + .shopify-section {
+
+/* The FIRST two shopify-section children of MainContent — hero + whatever comes next.
+   Force zero margin AND strip the inner section's padding-block too. */
+#MainContent > .shopify-section:first-child,
+#MainContent > .shopify-section:first-child > *,
+#MainContent > .shopify-section:nth-child(2),
+#MainContent > .shopify-section:nth-child(2) > *,
+#MainContent > .shopify-section:has(.ed-hero),
+#MainContent > .shopify-section:has(.ed-hero) + .shopify-section {
   margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Reduced default section padding so sections sit closer together */
+.ed-section { padding-block: 24px; }
+.ed-section + .ed-section { padding-top: 0; }
+@media (max-width: 749px) {
+  .ed-section { padding-block: 16px; }
+}
+
+/* The section RIGHT AFTER the hero gets zero top padding so it butts against the hero bottom */
+#MainContent > .shopify-section:has(.ed-hero) + .shopify-section .ed-section,
+#MainContent > .shopify-section:has(.ed-hero) + .shopify-section > section,
+#MainContent > .shopify-section:has(.ed-hero) + .shopify-section .ed-cat-wrap {
+  padding-top: 0 !important;
 }
 
 /* Container — wide with small gutters (Alibaba-style edge-to-edge) */
