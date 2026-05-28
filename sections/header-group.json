@@ -48,8 +48,8 @@
     "header": {
       "type": "header",
       "settings": {
-        "logo_position": "middle-left",
-        "mobile_logo_position": "left",
+        "logo_position": "middle-center",
+        "mobile_logo_position": "center",
         "menu": "main-menu",
         "menu_type_desktop": "drawer",
         "sticky_header_type": "on-scroll-up",
