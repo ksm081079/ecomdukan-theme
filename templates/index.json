@@ -214,6 +214,7 @@
         "logo_didYxU",
         "logo_8gCLEB"
       ],
+      "disabled": true,
       "settings": {
         "heading": "Trusted by D2C brands across India",
         "color_scheme": "scheme-1"
@@ -221,6 +222,7 @@
     },
     "testimonial": {
       "type": "ed-testimonial",
+      "disabled": true,
       "settings": {
         "quote": "Reorder went from a half-day spreadsheet to one tap. Their tier pricing pays for itself by the second case.",
         "attribution": "Riya Mehta",
@@ -230,42 +232,7 @@
     },
     "usp": {
       "type": "ed-usp-strip",
-      "blocks": {
-        "p1": {
-          "type": "promise",
-          "settings": {
-            "heading": "In stock, in spec.",
-            "sub": "What's on the page is in the warehouse, today."
-          }
-        },
-        "p2": {
-          "type": "promise",
-          "settings": {
-            "heading": "Made for the line.",
-            "sub": "Engineered for thermal printers and packing tables."
-          }
-        },
-        "p3": {
-          "type": "promise",
-          "settings": {
-            "heading": "Receipts you'd frame.",
-            "sub": "Invoices and packaging that match your brand."
-          }
-        },
-        "p4": {
-          "type": "promise",
-          "settings": {
-            "heading": "Reorder in one tap.",
-            "sub": "Procurement should not be project work."
-          }
-        }
-      },
-      "block_order": [
-        "p1",
-        "p2",
-        "p3",
-        "p4"
-      ],
+      "disabled": true,
       "settings": {
         "color_scheme": "scheme-1"
       }
@@ -283,6 +250,7 @@
     },
     "resources": {
       "type": "ed-resource-teaser",
+      "disabled": true,
       "settings": {
         "heading": "From the blog",
         "blog": "",
