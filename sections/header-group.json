@@ -20,10 +20,18 @@
             "text": "Reorder in one tap — Mumbai · Bengaluru · Delhi DCs",
             "link": "shopify://pages/bulk-pricing"
           }
+        },
+        "announcement_TygRpf": {
+          "type": "announcement",
+          "settings": {
+            "text": "Welcome to our store",
+            "link": ""
+          }
         }
       },
       "block_order": [
-        "msg_3"
+        "msg_3",
+        "announcement_TygRpf"
       ],
       "settings": {
         "auto_rotate": true,

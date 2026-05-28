@@ -62,9 +62,9 @@
       ],
       "settings": {
         "heading": "Shop by category",
-        "link_label": "All categories",
+        "link_label": "",
         "link_url": "shopify://collections/thermal-labels",
-        "layout": "circles",
+        "layout": "tiles",
         "circle_size": 84,
         "color_scheme": "scheme-2"
       }
