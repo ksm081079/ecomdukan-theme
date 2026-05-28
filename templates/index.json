@@ -12,23 +12,21 @@
     "hero": {
       "type": "ed-hero",
       "blocks": {
-        "slide_jxVLJ4": {
+        "slide_8WCiVD": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/shipping-label.jpg",
-            "image_mobile": "shopify://shop_images/labels.png",
             "link": "",
-            "subheading": "",
-            "heading": "",
-            "description": "",
-            "cta_label": "",
-            "cta_link": "",
+            "subheading": "Trusted by e-commerce sellers across India",
+            "heading": "Premium Thermal Labels & Packaging Tapes",
+            "description": "Direct thermal rolls for shipping, barcodes and retail use. No ink required. GST invoice on every order.",
+            "cta_label": "Shop Now",
+            "cta_link": "/collections/all",
             "content_position": "bottom-left"
           }
         }
       },
       "block_order": [
-        "slide_jxVLJ4"
+        "slide_8WCiVD"
       ],
       "settings": {
         "desktop_height": 720,
@@ -56,80 +54,16 @@
             "title": "Branded labels",
             "link": "shopify://collections/branded-labels"
           }
-        },
-        "c3": {
-          "type": "category",
-          "settings": {
-            "title": "Office paper",
-            "link": "shopify://collections/office-paper"
-          }
-        },
-        "category_8Qzt3E": {
-          "type": "category",
-          "settings": {
-            "title": "Office paper",
-            "link": "shopify://collections/office-paper"
-          }
-        },
-        "category_Wi9qjG": {
-          "type": "category",
-          "settings": {
-            "title": "Office paper",
-            "link": "shopify://collections/office-paper"
-          }
-        },
-        "category_dpmgHC": {
-          "type": "category",
-          "settings": {
-            "title": "Office paper",
-            "link": "shopify://collections/office-paper"
-          }
-        },
-        "c4": {
-          "type": "category",
-          "settings": {
-            "title": "Packing supplies",
-            "link": "shopify://collections/packing-supplies"
-          }
-        },
-        "category_m6494X": {
-          "type": "category",
-          "settings": {
-            "title": "Packing supplies",
-            "link": "shopify://collections/packing-supplies"
-          }
-        },
-        "category_zPERK9": {
-          "type": "category",
-          "settings": {
-            "title": "Packing supplies",
-            "link": "shopify://collections/packing-supplies"
-          }
-        },
-        "category_GEWbpK": {
-          "type": "category",
-          "settings": {
-            "title": "Packing supplies",
-            "link": "shopify://collections/packing-supplies"
-          }
         }
       },
       "block_order": [
         "c1",
-        "c2",
-        "c3",
-        "category_8Qzt3E",
-        "category_Wi9qjG",
-        "category_dpmgHC",
-        "c4",
-        "category_m6494X",
-        "category_zPERK9",
-        "category_GEWbpK"
+        "c2"
       ],
       "settings": {
         "heading": "Shop by category",
         "link_label": "All categories",
-        "link_url": "shopify://collections",
+        "link_url": "shopify://collections/thermal-labels",
         "layout": "circles",
         "circle_size": 84,
         "color_scheme": "scheme-2"
@@ -138,9 +72,9 @@
     "bestsellers": {
       "type": "ed-bestsellers",
       "settings": {
-        "eyebrow": "Best-sellers",
-        "heading": "Moving fast this week",
-        "collection": "",
+        "eyebrow": "Our Products",
+        "heading": "Thermal Labels & Packaging Tapes",
+        "collection": "thermal-labels",
         "product_count": 8,
         "show_view_all": true,
         "show_view_all_bottom": true,

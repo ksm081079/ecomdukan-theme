@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "name": "t:sections.header.name",
   "type": "header",
@@ -5,20 +14,6 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
-        "msg_1": {
-          "type": "announcement",
-          "settings": {
-            "text": "Free shipping on orders above ₹2,500",
-            "link": ""
-          }
-        },
-        "msg_2": {
-          "type": "announcement",
-          "settings": {
-            "text": "GST invoice on every order",
-            "link": ""
-          }
-        },
         "msg_3": {
           "type": "announcement",
           "settings": {
@@ -27,7 +22,9 @@
           }
         }
       },
-      "block_order": ["msg_1", "msg_2", "msg_3"],
+      "block_order": [
+        "msg_3"
+      ],
       "settings": {
         "auto_rotate": true,
         "enable_scrolling_ticker": false,
@@ -44,7 +41,7 @@
       "type": "header",
       "settings": {
         "logo_position": "middle-left",
-        "mobile_logo_position": "center",
+        "mobile_logo_position": "left",
         "menu": "main-menu",
         "menu_type_desktop": "mega",
         "sticky_header_type": "on-scroll-up",
@@ -54,11 +51,17 @@
         "enable_country_selector": false,
         "enable_language_selector": false,
         "enable_customer_avatar": true,
+        "show_quote_cta": true,
+        "quote_label": "Contact Us",
+        "quote_link": "/pages/request-quote",
         "margin_bottom": 0,
         "padding_top": 12,
         "padding_bottom": 12
       }
     }
   },
-  "order": ["announcement-bar", "header"]
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
 }
