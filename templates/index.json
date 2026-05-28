@@ -123,6 +123,7 @@
         "s3",
         "s4"
       ],
+      "disabled": true,
       "settings": {
         "image": "shopify://shop_images/printer.png",
         "eyebrow": "The bulk story",
