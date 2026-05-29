@@ -15,13 +15,11 @@
         "slide_8WCiVD": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/EcomDukan_Home_Page_Banner.png",
-            "image_mobile": "shopify://shop_images/EcomDukan_Home_Page_Banner_Mobile.png",
             "link": "",
-            "subheading": "Trusted by e-commerce sellers across India",
-            "heading": "Premium Thermal Labels & Packaging Tapes",
-            "description": "Direct thermal rolls for shipping, barcodes and retail use. No ink required. GST invoice on every order.",
-            "cta_label": "Shop Now",
+            "subheading": "",
+            "heading": "",
+            "description": "",
+            "cta_label": "",
             "cta_link": "/collections/all",
             "content_position": "bottom-left"
           }
