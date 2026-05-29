@@ -15,6 +15,7 @@
         "slide_8WCiVD": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/EcomDukan_Home_Page_Banner.png",
             "link": "",
             "subheading": "Trusted by e-commerce sellers across India",
             "heading": "Premium Thermal Labels & Packaging Tapes",
@@ -35,7 +36,9 @@
         "autoplay_speed": 6,
         "show_arrows": true,
         "show_dots": true,
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "categories": {
@@ -66,7 +69,9 @@
         "link_url": "shopify://collections/thermal-labels",
         "layout": "tiles",
         "circle_size": 84,
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-2",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "bestsellers": {
@@ -82,7 +87,9 @@
         "layout": "carousel",
         "columns_desktop": 4,
         "columns_mobile": "2",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "bulk_story": {
@@ -133,7 +140,9 @@
         "cta_1_link": "shopify://pages/bulk-pricing",
         "cta_2_label": "Request a sample",
         "cta_2_link": "shopify://pages/sample-pack",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-2",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "logos": {
@@ -217,7 +226,9 @@
       "disabled": true,
       "settings": {
         "heading": "Trusted by D2C brands across India",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "testimonial": {
@@ -227,14 +238,18 @@
         "quote": "Reorder went from a half-day spreadsheet to one tap. Their tier pricing pays for itself by the second case.",
         "attribution": "Riya Mehta",
         "role": "Ops Lead, FreshFold (Mumbai)",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-2",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "usp": {
       "type": "ed-usp-strip",
       "disabled": true,
       "settings": {
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "custom_print_cta": {
@@ -245,7 +260,9 @@
         "body": "Send us a brief — dimensions, material, finish. We quote in 2 business hours.",
         "cta_label": "Start a custom job",
         "cta_link": "shopify://pages/custom-print",
-        "color_scheme": "scheme-3"
+        "color_scheme": "scheme-3",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "resources": {
@@ -255,7 +272,9 @@
         "heading": "From the blog",
         "blog": "",
         "post_count": 3,
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "email": {
@@ -266,7 +285,9 @@
         "body": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff.",
         "cta_label": "Subscribe",
         "disclaimer": "We never share your email. Unsubscribe anytime.",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-2",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     }
   },
