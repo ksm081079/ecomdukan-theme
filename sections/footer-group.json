@@ -13,6 +13,18 @@
   "sections": {
     "ed_footer": {
       "type": "ed-footer",
+      "blocks": {
+        "text_dFCzpp": {
+          "type": "text",
+          "settings": {
+            "heading": "Address",
+            "body": "<p>3-100/252, Tunk Vishnu, 2nd Floor, Above Dhanalakshmi Store, Jayabheri Park Road, Kompally, Hyderabad, 500100<br/><br/></p>"
+          }
+        }
+      },
+      "block_order": [
+        "text_dFCzpp"
+      ],
       "settings": {
         "color_scheme": "scheme-4",
         "brand_logo": "shopify://shop_images/EcomDukan_Backg_2_crop.png",
