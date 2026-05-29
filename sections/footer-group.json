@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "name": "t:sections.footer.name",
   "type": "footer",
@@ -7,27 +16,44 @@
       "blocks": {
         "shop": {
           "type": "menu",
-          "settings": { "heading": "Shop", "menu": "footer-shop" }
+          "settings": {
+            "heading": "Shop",
+            "menu": ""
+          }
         },
         "business": {
           "type": "menu",
-          "settings": { "heading": "For business", "menu": "footer-business" }
+          "settings": {
+            "heading": "For business",
+            "menu": ""
+          }
         },
         "help": {
           "type": "menu",
-          "settings": { "heading": "Help", "menu": "footer-help" }
+          "settings": {
+            "heading": "Help",
+            "menu": ""
+          }
         },
         "company": {
           "type": "menu",
-          "settings": { "heading": "Ecomdukan", "menu": "footer-company" }
+          "settings": {
+            "heading": "Ecomdukan",
+            "menu": ""
+          }
         }
       },
-      "block_order": ["shop", "business", "help", "company"],
+      "block_order": [
+        "shop",
+        "business",
+        "help",
+        "company"
+      ],
       "settings": {
         "color_scheme": "scheme-4",
         "brand_tagline": "Stationery & printer labels, in bulk, in stock — for the brands building modern India.",
         "support_email": "hello@ecomdukan.in",
-        "support_phone": "+91 78426 80660",
+        "support_phone": "",
         "support_hours": "Mon–Sat · 9 AM – 7 PM IST",
         "show_newsletter": false,
         "newsletter_eyebrow": "Newsletter",
@@ -45,5 +71,7 @@
       }
     }
   },
-  "order": ["ed_footer"]
+  "order": [
+    "ed_footer"
+  ]
 }
