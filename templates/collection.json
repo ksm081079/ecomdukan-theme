@@ -15,6 +15,7 @@
         "category_F7PKjG": {
           "type": "category",
           "settings": {
+            "image": "shopify://shop_images/toa9dqiwr5rdwa6snak0.webp",
             "title": "Thermal labels",
             "link": ""
           }
@@ -22,62 +23,15 @@
         "category_MgVDcY": {
           "type": "category",
           "settings": {
-            "title": "Branded labels",
-            "link": ""
-          }
-        },
-        "category_mXJPP3": {
-          "type": "category",
-          "settings": {
-            "title": "Office paper",
-            "link": ""
-          }
-        },
-        "category_MxnFmz": {
-          "type": "category",
-          "settings": {
-            "title": "Packing supplies",
-            "link": ""
-          }
-        },
-        "category_NWqJzi": {
-          "type": "category",
-          "settings": {
-            "title": "Mailers",
-            "link": ""
-          }
-        },
-        "category_tq8HXR": {
-          "type": "category",
-          "settings": {
-            "title": "Tissue & kraft",
-            "link": ""
-          }
-        },
-        "category_K6JAmY": {
-          "type": "category",
-          "settings": {
-            "title": "Tags & tape",
-            "link": ""
-          }
-        },
-        "category_KiDwph": {
-          "type": "category",
-          "settings": {
-            "title": "Custom print",
+            "image": "shopify://shop_images/wswbxdhnrsvj8te9lnht.webp",
+            "title": "Packaging Tapes",
             "link": ""
           }
         }
       },
       "block_order": [
         "category_F7PKjG",
-        "category_MgVDcY",
-        "category_mXJPP3",
-        "category_MxnFmz",
-        "category_NWqJzi",
-        "category_tq8HXR",
-        "category_K6JAmY",
-        "category_KiDwph"
+        "category_MgVDcY"
       ],
       "name": "ED Categories (circles)",
       "settings": {
@@ -86,7 +40,9 @@
         "link_url": "",
         "layout": "circles",
         "circle_size": 84,
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "banner": {
@@ -97,7 +53,9 @@
         "circle_size": 96,
         "show_quote_cta": true,
         "quote_url": "",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-2",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "grid": {
@@ -107,7 +65,9 @@
         "in_stock_default": true,
         "columns_desktop": 4,
         "columns_mobile": "2",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     },
     "cta": {
@@ -118,7 +78,9 @@
         "body": "Custom dimensions, materials, finishes — minimum 5,000 units. Quote in 2 business hours.",
         "cta_label": "Send a brief",
         "cta_link": "shopify://pages/custom-print",
-        "color_scheme": "scheme-3"
+        "color_scheme": "scheme-3",
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     }
   },
