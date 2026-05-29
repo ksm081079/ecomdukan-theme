@@ -20,7 +20,7 @@
   assign sample = product.metafields.lead.sample_available.value
 -%}
 
-<div class="color-{{ section.settings.color_scheme | default: 'scheme-1' }} ed-section" style="background: rgb(var(--color-background)); padding-block: var(--sp-5);">
+<div class="color-{{ section.settings.color_scheme | default: 'scheme-1' }} ed-section" style="background: rgb(var(--color-background)); padding-top: {{ section.settings.padding_top | default: 24 }}px; padding-bottom: {{ section.settings.padding_bottom | default: 24 }}px;">
   <div class="ed-container">
     {%- comment -%} Breadcrumb {%- endcomment -%}
     {%- if section.settings.show_breadcrumb -%}
@@ -848,7 +848,10 @@
         { "value": "scheme-1", "label": "Paper" },
         { "value": "scheme-2", "label": "Snow" }
       ]
-    }
+    },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px)", "min": 0, "max": 200, "step": 4, "default": 24, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px)", "min": 0, "max": 200, "step": 4, "default": 24, "unit": "px" }
   ],
   "blocks": [
     {

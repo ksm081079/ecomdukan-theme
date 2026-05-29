@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-2'
   assign sub_menu = linklists[section.settings.sub_nav]
   assign circle_size = section.settings.circle_size | default: 96
@@ -184,25 +191,100 @@
   "name": "ED Collection banner",
   "tag": "section",
   "settings": [
-    { "type": "checkbox", "id": "show_breadcrumb", "label": "Show breadcrumb", "default": true },
-
-    { "type": "header", "content": "Sub-category navigator (Rentmojo-style circles)" },
-    { "type": "link_list", "id": "sub_nav", "label": "Menu to use as sub-category strip", "info": "Pick a navigation menu in Online Store → Navigation. Each link becomes a circle. Active item = matches the current collection URL." },
-    { "type": "range", "id": "circle_size", "label": "Circle size (px)", "min": 64, "max": 128, "step": 4, "default": 96 },
-
-    { "type": "header", "content": "Quote CTA" },
-    { "type": "checkbox", "id": "show_quote_cta", "label": "Show 'Get bulk quote' link", "default": true },
-    { "type": "url", "id": "quote_url", "label": "Quote page URL" },
-
-    { "type": "header", "content": "Color scheme" },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2",
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Sub-category navigator (Rentmojo-style circles)"
+    },
+    {
+      "type": "link_list",
+      "id": "sub_nav",
+      "label": "Menu to use as sub-category strip",
+      "info": "Pick a navigation menu in Online Store \u2192 Navigation. Each link becomes a circle. Active item = matches the current collection URL."
+    },
+    {
+      "type": "range",
+      "id": "circle_size",
+      "label": "Circle size (px)",
+      "min": 64,
+      "max": 128,
+      "step": 4,
+      "default": 96
+    },
+    {
+      "type": "header",
+      "content": "Quote CTA"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quote_cta",
+      "label": "Show 'Get bulk quote' link",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "quote_url",
+      "label": "Quote page URL"
+    },
+    {
+      "type": "header",
+      "content": "Color scheme"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
     }
   ],
-  "enabled_on": { "templates": ["collection"] },
-  "presets": [{ "name": "ED Collection banner" }]
+  "enabled_on": {
+    "templates": [
+      "collection"
+    ]
+  },
+  "presets": [
+    {
+      "name": "ED Collection banner"
+    }
+  ]
 }
 {% endschema %}

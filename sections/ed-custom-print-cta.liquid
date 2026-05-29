@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-3'
 -%}
 <div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
@@ -24,19 +31,84 @@
   "name": "ED Custom-print CTA",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Custom print" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Need it printed your way?" },
-    { "type": "textarea", "id": "body", "label": "Body", "default": "Send us a brief — dimensions, material, finish. We quote in 2 business hours, Mon–Sat, 9 AM – 7 PM IST." },
-    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Start a custom job" },
-    { "type": "url",  "id": "cta_link",  "label": "CTA link" },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3",
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Custom print"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Need it printed your way?"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Send us a brief \u2014 dimensions, material, finish. We quote in 2 business hours, Mon\u2013Sat, 9 AM \u2013 7 PM IST."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "Start a custom job"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3",
       "options": [
-        { "value": "scheme-3", "label": "Indigo (full-width band)" },
-        { "value": "scheme-4", "label": "Ink" },
-        { "value": "scheme-5", "label": "Electric" }
+        {
+          "value": "scheme-3",
+          "label": "Indigo (full-width band)"
+        },
+        {
+          "value": "scheme-4",
+          "label": "Ink"
+        },
+        {
+          "value": "scheme-5",
+          "label": "Electric"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
     }
   ],
-  "presets": [{ "name": "ED Custom-print CTA" }]
+  "presets": [
+    {
+      "name": "ED Custom-print CTA"
+    }
+  ]
 }
 {% endschema %}

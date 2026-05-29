@@ -1,3 +1,10 @@
+{%- liquid
+  assign _pt = section.settings.padding_top | default: 0
+  assign _pb = section.settings.padding_bottom | default: 0
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
 {%- comment -%}
   ED Hero — 11-may-style full-bleed slideshow carousel.
   Each block = one slide with desktop image + mobile image + optional text overlay.
@@ -353,19 +360,98 @@
   "tag": "section",
   "class": "ed-hero-section ed-section-flush",
   "settings": [
-    { "type": "range", "id": "desktop_height", "label": "Desktop height (px)", "min": 360, "max": 1000, "step": 20, "default": 720 },
-    { "type": "range", "id": "mobile_height", "label": "Mobile height (px)", "min": 280, "max": 800, "step": 20, "default": 480 },
-    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
-    { "type": "range", "id": "autoplay_speed", "label": "Autoplay speed (seconds)", "min": 3, "max": 12, "step": 1, "default": 6 },
-    { "type": "checkbox", "id": "show_arrows", "label": "Show arrows", "default": true },
-    { "type": "checkbox", "id": "show_dots", "label": "Show dots", "default": true },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop height (px)",
+      "min": 360,
+      "max": 1000,
+      "step": 20,
+      "default": 720
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile height (px)",
+      "min": 280,
+      "max": 800,
+      "step": 20,
+      "default": 480
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed (seconds)",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" },
-        { "value": "scheme-3", "label": "Indigo" },
-        { "value": "scheme-4", "label": "Ink" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        },
+        {
+          "value": "scheme-3",
+          "label": "Indigo"
+        },
+        {
+          "value": "scheme-4",
+          "label": "Ink"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
     }
   ],
   "blocks": [
@@ -373,23 +459,80 @@
       "type": "slide",
       "name": "Slide",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Desktop image (use ~2400px wide)" },
-        { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (portrait, ~900px wide; falls back to desktop)" },
-        { "type": "url", "id": "link", "label": "Slide link" },
-        { "type": "header", "content": "Optional text overlay" },
-        { "type": "text", "id": "subheading", "label": "Eyebrow" },
-        { "type": "text", "id": "heading", "label": "Heading" },
-        { "type": "textarea", "id": "description", "label": "Description" },
-        { "type": "text", "id": "cta_label", "label": "CTA label" },
-        { "type": "url", "id": "cta_link", "label": "CTA link" },
-        { "type": "select", "id": "content_position", "label": "Content position", "default": "bottom-left",
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image (use ~2400px wide)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image (portrait, ~900px wide; falls back to desktop)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Slide link"
+        },
+        {
+          "type": "header",
+          "content": "Optional text overlay"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA label"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "CTA link"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position",
+          "default": "bottom-left",
           "options": [
-            { "value": "bottom-left", "label": "Bottom left" },
-            { "value": "bottom-right", "label": "Bottom right" },
-            { "value": "bottom-center", "label": "Bottom center" },
-            { "value": "top-left", "label": "Top left" },
-            { "value": "top-right", "label": "Top right" },
-            { "value": "center", "label": "Center" }
+            {
+              "value": "bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom right"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "top-left",
+              "label": "Top left"
+            },
+            {
+              "value": "top-right",
+              "label": "Top right"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            }
           ]
         }
       ]
@@ -400,9 +543,15 @@
     {
       "name": "ED Hero",
       "blocks": [
-        { "type": "slide" },
-        { "type": "slide" },
-        { "type": "slide" }
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
       ]
     }
   ]

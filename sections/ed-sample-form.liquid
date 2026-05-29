@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-1'
 -%}
 <div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
@@ -69,16 +76,69 @@
   "name": "ED Sample-pack form",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Sample pack · free" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Try before you commit" },
-    { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Pick up to 3 SKUs you'd like to feel and test. We ship a sample pack — free, in 2 business days.</p>" },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Sample pack \u00b7 free"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Try before you commit"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Pick up to 3 SKUs you'd like to feel and test. We ship a sample pack \u2014 free, in 2 business days.</p>"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
     }
   ],
-  "presets": [{ "name": "ED Sample-pack form" }]
+  "presets": [
+    {
+      "name": "ED Sample-pack form"
+    }
+  ]
 }
 {% endschema %}

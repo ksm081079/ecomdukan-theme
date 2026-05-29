@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-2'
   assign accent = section.settings.accent_color | default: '#1E5FFF'
   assign total = section.settings.total_count
@@ -148,22 +155,92 @@
   "name": "ED Reviews grid",
   "tag": "section",
   "settings": [
-    { "type": "header", "content": "Heading" },
-    { "type": "text", "id": "heading_lead", "label": "Heading (black part)", "default": "Built on" },
-    { "type": "text", "id": "heading_accent", "label": "Heading (accent part)", "default": "real reviews" },
-    { "type": "textarea", "id": "subhead", "label": "Subhead", "default": "Here's what D2C brands, packers and printers say about Ecomdukan." },
-    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#1E5FFF" },
-
-    { "type": "header", "content": "View all CTA" },
-    { "type": "url", "id": "view_all_url", "label": "Link to full reviews page" },
-    { "type": "text", "id": "total_count", "label": "Total review count (display only)", "default": "" },
-
-    { "type": "header", "content": "Color scheme" },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2",
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "Heading (black part)",
+      "default": "Built on"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading (accent part)",
+      "default": "real reviews"
+    },
+    {
+      "type": "textarea",
+      "id": "subhead",
+      "label": "Subhead",
+      "default": "Here's what D2C brands, packers and printers say about Ecomdukan."
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#1E5FFF"
+    },
+    {
+      "type": "header",
+      "content": "View all CTA"
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "Link to full reviews page"
+    },
+    {
+      "type": "text",
+      "id": "total_count",
+      "label": "Total review count (display only)",
+      "default": ""
+    },
+    {
+      "type": "header",
+      "content": "Color scheme"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
     }
   ],
   "blocks": [
@@ -171,9 +248,27 @@
       "type": "review",
       "name": "Review",
       "settings": [
-        { "type": "text", "id": "name", "label": "Reviewer name", "default": "Anurag" },
-        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 0.5, "default": 5 },
-        { "type": "textarea", "id": "body", "label": "Review body", "default": "Procurement used to be a half-day spreadsheet. Now it's one tap. The tier pricing pays for itself by the second case." }
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Reviewer name",
+          "default": "Anurag"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 0.5,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review body",
+          "default": "Procurement used to be a half-day spreadsheet. Now it's one tap. The tier pricing pays for itself by the second case."
+        }
       ]
     }
   ],
@@ -182,15 +277,78 @@
     {
       "name": "ED Reviews grid",
       "blocks": [
-        { "type": "review", "settings": { "name": "Riya Mehta", "rating": 5, "body": "Reorder went from a half-day spreadsheet to one tap. Their tier pricing pays for itself by the second case." } },
-        { "type": "review", "settings": { "name": "Vikas Bhatia", "rating": 5, "body": "Same-day dispatch from Mumbai DC is the real deal. GST invoice attached every time — no chasing." } },
-        { "type": "review", "settings": { "name": "Anjali R.", "rating": 5, "body": "Solid quality." } },
-        { "type": "review", "settings": { "name": "Sahil Mathur", "rating": 5, "body": "We tried 3 label suppliers in 2025. Ecomdukan was the only one that actually shipped what was on the page, in the spec listed." } },
-        { "type": "review", "settings": { "name": "Pooja N.", "rating": 5, "body": "Custom print turnaround beat the quote by a day." } },
-        { "type": "review", "settings": { "name": "Karan S.", "rating": 5, "body": "Highly recommend for D2C ops teams." } },
-        { "type": "review", "settings": { "name": "Tushar G.", "rating": 5, "body": "Free sample pack closed the deal for our buyer. Cases were exactly as sampled." } },
-        { "type": "review", "settings": { "name": "Meera D.", "rating": 5, "body": "Helpful WhatsApp support." } },
-        { "type": "review", "settings": { "name": "Rohit V.", "rating": 5, "body": "Excellent." } }
+        {
+          "type": "review",
+          "settings": {
+            "name": "Riya Mehta",
+            "rating": 5,
+            "body": "Reorder went from a half-day spreadsheet to one tap. Their tier pricing pays for itself by the second case."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Vikas Bhatia",
+            "rating": 5,
+            "body": "Same-day dispatch from Mumbai DC is the real deal. GST invoice attached every time \u2014 no chasing."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Anjali R.",
+            "rating": 5,
+            "body": "Solid quality."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Sahil Mathur",
+            "rating": 5,
+            "body": "We tried 3 label suppliers in 2025. Ecomdukan was the only one that actually shipped what was on the page, in the spec listed."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Pooja N.",
+            "rating": 5,
+            "body": "Custom print turnaround beat the quote by a day."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Karan S.",
+            "rating": 5,
+            "body": "Highly recommend for D2C ops teams."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Tushar G.",
+            "rating": 5,
+            "body": "Free sample pack closed the deal for our buyer. Cases were exactly as sampled."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Meera D.",
+            "rating": 5,
+            "body": "Helpful WhatsApp support."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Rohit V.",
+            "rating": 5,
+            "body": "Excellent."
+          }
+        }
       ]
     }
   ]

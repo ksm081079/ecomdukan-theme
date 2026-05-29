@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-4'
   assign show_newsletter = section.settings.show_newsletter
   assign show_payment = section.settings.show_payment
@@ -421,58 +428,217 @@
   "tag": "footer",
   "class": "ed-footer-section",
   "settings": [
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-4",
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-4",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" },
-        { "value": "scheme-3", "label": "Indigo" },
-        { "value": "scheme-4", "label": "Ink" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        },
+        {
+          "value": "scheme-3",
+          "label": "Indigo"
+        },
+        {
+          "value": "scheme-4",
+          "label": "Ink"
+        }
       ]
     },
-
-    { "type": "header", "content": "Brand block" },
-    { "type": "image_picker", "id": "brand_logo", "label": "Logo (light version for dark bg)" },
-    { "type": "textarea", "id": "brand_tagline", "label": "Tagline", "default": "Stationery & printer labels, in bulk, in stock — for the brands building modern India." },
-    { "type": "text", "id": "support_email", "label": "Support email", "default": "hello@ecomdukan.in" },
-    { "type": "text", "id": "support_phone", "label": "WhatsApp number (with country code)", "default": "+91 78426 80660" },
-    { "type": "text", "id": "support_hours", "label": "Support hours", "default": "Mon–Sat · 9 AM – 7 PM IST" },
-
-    { "type": "header", "content": "Newsletter strip" },
-    { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter", "default": true },
-    { "type": "text", "id": "newsletter_eyebrow", "label": "Eyebrow", "default": "Newsletter" },
-    { "type": "text", "id": "newsletter_heading", "label": "Heading", "default": "Restock & price-drop alerts" },
-    { "type": "textarea", "id": "newsletter_body", "label": "Body", "default": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff." },
-    { "type": "text", "id": "placeholder", "label": "Email placeholder", "default": "you@company.in" },
-    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Subscribe" },
-    { "type": "text", "id": "disclaimer", "label": "Disclaimer", "default": "We never share your email. Unsubscribe anytime." },
-
-    { "type": "header", "content": "Trust / payments" },
-    { "type": "text", "id": "trust_text", "label": "Trust line", "default": "Trusted by D2C brands across India · GST invoicing on every order · Same-day dispatch from Mumbai, Bengaluru, Delhi" },
-    { "type": "checkbox", "id": "show_payment", "label": "Show payment icons", "default": true },
-    { "type": "checkbox", "id": "show_social", "label": "Show social icons", "default": true },
-
-    { "type": "header", "content": "Bottom strip" },
-    { "type": "checkbox", "id": "show_policies", "label": "Show policy links", "default": true },
-    { "type": "checkbox", "id": "show_made_in_india", "label": "Show 'Made in India'", "default": true },
-
-    { "type": "header", "content": "Extras" },
-    { "type": "checkbox", "id": "show_back_to_top", "label": "Show back-to-top button", "default": true }
+    {
+      "type": "header",
+      "content": "Brand block"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Logo (light version for dark bg)"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_tagline",
+      "label": "Tagline",
+      "default": "Stationery & printer labels, in bulk, in stock \u2014 for the brands building modern India."
+    },
+    {
+      "type": "text",
+      "id": "support_email",
+      "label": "Support email",
+      "default": "hello@ecomdukan.in"
+    },
+    {
+      "type": "text",
+      "id": "support_phone",
+      "label": "WhatsApp number (with country code)",
+      "default": "+91 78426 80660"
+    },
+    {
+      "type": "text",
+      "id": "support_hours",
+      "label": "Support hours",
+      "default": "Mon\u2013Sat \u00b7 9 AM \u2013 7 PM IST"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter strip"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_eyebrow",
+      "label": "Eyebrow",
+      "default": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Heading",
+      "default": "Restock & price-drop alerts"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_body",
+      "label": "Body",
+      "default": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "you@company.in"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "We never share your email. Unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "Trust / payments"
+    },
+    {
+      "type": "text",
+      "id": "trust_text",
+      "label": "Trust line",
+      "default": "Trusted by D2C brands across India \u00b7 GST invoicing on every order \u00b7 Same-day dispatch from Mumbai, Bengaluru, Delhi"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Bottom strip"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policies",
+      "label": "Show policy links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_made_in_india",
+      "label": "Show 'Made in India'",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Extras"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_back_to_top",
+      "label": "Show back-to-top button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    }
   ],
   "blocks": [
     {
       "type": "menu",
       "name": "Menu column",
       "settings": [
-        { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" },
-        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
       ]
     },
     {
       "type": "text",
       "name": "Text column",
       "settings": [
-        { "type": "text", "id": "heading", "label": "Heading", "default": "About" },
-        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Tell your customers about your brand.</p>" }
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "About"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body",
+          "default": "<p>Tell your customers about your brand.</p>"
+        }
       ]
     }
   ],
@@ -481,13 +647,41 @@
     {
       "name": "ED Footer",
       "blocks": [
-        { "type": "menu", "settings": { "heading": "Shop", "menu": "footer-shop" } },
-        { "type": "menu", "settings": { "heading": "For business", "menu": "footer-business" } },
-        { "type": "menu", "settings": { "heading": "Help", "menu": "footer-help" } },
-        { "type": "menu", "settings": { "heading": "Ecomdukan", "menu": "footer-company" } }
+        {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer-shop"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "heading": "For business",
+            "menu": "footer-business"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "heading": "Help",
+            "menu": "footer-help"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "heading": "Ecomdukan",
+            "menu": "footer-company"
+          }
+        }
       ]
     }
   ],
-  "enabled_on": { "groups": ["footer"] }
+  "enabled_on": {
+    "groups": [
+      "footer"
+    ]
+  }
 }
 {% endschema %}

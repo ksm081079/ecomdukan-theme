@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-1'
   assign per_page = section.settings.products_per_page | default: 24
   assign cols_desktop = section.settings.columns_desktop | default: 4
@@ -147,24 +154,100 @@
   "name": "ED Collection grid",
   "tag": "section",
   "settings": [
-    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
-    { "type": "checkbox", "id": "in_stock_default", "label": "Default 'In stock only' toggle on", "default": true },
-    { "type": "range", "id": "columns_desktop", "label": "Desktop columns", "min": 2, "max": 6, "step": 1, "default": 4 },
-    { "type": "select", "id": "columns_mobile", "label": "Mobile columns", "default": "2",
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "in_stock_default",
+      "label": "Default 'In stock only' toggle on",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Mobile columns",
+      "default": "2",
       "options": [
-        { "value": "1", "label": "1 per row" },
-        { "value": "2", "label": "2 per row" },
-        { "value": "3", "label": "3 per row" }
+        {
+          "value": "1",
+          "label": "1 per row"
+        },
+        {
+          "value": "2",
+          "label": "2 per row"
+        },
+        {
+          "value": "3",
+          "label": "3 per row"
+        }
       ]
     },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
     }
   ],
-  "enabled_on": { "templates": ["collection"] },
-  "presets": [{ "name": "ED Collection grid" }]
+  "enabled_on": {
+    "templates": [
+      "collection"
+    ]
+  },
+  "presets": [
+    {
+      "name": "ED Collection grid"
+    }
+  ]
 }
 {% endschema %}

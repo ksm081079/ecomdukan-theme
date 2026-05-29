@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-2'
 -%}
 <div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
@@ -40,12 +47,51 @@
   "name": "ED Use cases",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Use cases" },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2",
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Use cases"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
     }
   ],
   "blocks": [
@@ -53,10 +99,28 @@
       "type": "case",
       "name": "Case",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shipping" },
-        { "type": "text", "id": "title", "label": "Title", "default": "On the warehouse line" },
-        { "type": "textarea", "id": "body", "label": "Body" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Shipping"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "On the warehouse line"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body"
+        }
       ]
     }
   ],
@@ -65,10 +129,38 @@
     {
       "name": "ED Use cases",
       "blocks": [
-        { "type": "case", "settings": { "eyebrow": "Shipping", "title": "Outbound dispatch", "body": "Stick, scan, ship. Mid-volume warehouses use these for 500–5,000 daily orders." } },
-        { "type": "case", "settings": { "eyebrow": "Branding", "title": "Custom-print labels", "body": "Two-color print on cream stock for D2C unboxing." } },
-        { "type": "case", "settings": { "eyebrow": "Packing", "title": "Invoice pouches", "body": "Pasted to outer boxes so couriers don't lose the bill." } },
-        { "type": "case", "settings": { "eyebrow": "Warning", "title": "Fragile & hazmat", "body": "Pre-printed warning labels — fragile, this side up, do not stack." } }
+        {
+          "type": "case",
+          "settings": {
+            "eyebrow": "Shipping",
+            "title": "Outbound dispatch",
+            "body": "Stick, scan, ship. Mid-volume warehouses use these for 500\u20135,000 daily orders."
+          }
+        },
+        {
+          "type": "case",
+          "settings": {
+            "eyebrow": "Branding",
+            "title": "Custom-print labels",
+            "body": "Two-color print on cream stock for D2C unboxing."
+          }
+        },
+        {
+          "type": "case",
+          "settings": {
+            "eyebrow": "Packing",
+            "title": "Invoice pouches",
+            "body": "Pasted to outer boxes so couriers don't lose the bill."
+          }
+        },
+        {
+          "type": "case",
+          "settings": {
+            "eyebrow": "Warning",
+            "title": "Fragile & hazmat",
+            "body": "Pre-printed warning labels \u2014 fragile, this side up, do not stack."
+          }
+        }
       ]
     }
   ]

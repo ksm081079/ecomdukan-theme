@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-2'
 -%}
 <div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
@@ -53,19 +60,90 @@
   "name": "ED Bulk story (split)",
   "tag": "section",
   "settings": [
-    { "type": "image_picker", "id": "image", "label": "Image" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The bulk story" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Built for the packing table. Priced for the spreadsheet." },
-    { "type": "richtext", "id": "body", "label": "Body", "default": "<p>From 100 labels to 100,000. Same-day dispatch from three DCs. One GST invoice per order, every order.</p>" },
-    { "type": "text", "id": "cta_1_label", "label": "Primary CTA", "default": "See bulk pricing" },
-    { "type": "url",  "id": "cta_1_link",  "label": "Primary CTA link" },
-    { "type": "text", "id": "cta_2_label", "label": "Secondary CTA", "default": "Request a sample" },
-    { "type": "url",  "id": "cta_2_link",  "label": "Secondary CTA link" },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2",
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The bulk story"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Built for the packing table. Priced for the spreadsheet."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>From 100 labels to 100,000. Same-day dispatch from three DCs. One GST invoice per order, every order.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_1_label",
+      "label": "Primary CTA",
+      "default": "See bulk pricing"
+    },
+    {
+      "type": "url",
+      "id": "cta_1_link",
+      "label": "Primary CTA link"
+    },
+    {
+      "type": "text",
+      "id": "cta_2_label",
+      "label": "Secondary CTA",
+      "default": "Request a sample"
+    },
+    {
+      "type": "url",
+      "id": "cta_2_link",
+      "label": "Secondary CTA link"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
     }
   ],
   "blocks": [
@@ -73,8 +151,18 @@
       "type": "spec",
       "name": "Spec row",
       "settings": [
-        { "type": "text", "id": "label", "label": "Label", "default": "Min order" },
-        { "type": "text", "id": "value", "label": "Value", "default": "1 case · 1,000 labels" }
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Min order"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "1 case \u00b7 1,000 labels"
+        }
       ]
     }
   ],
@@ -83,10 +171,34 @@
     {
       "name": "ED Bulk story",
       "blocks": [
-        { "type": "spec", "settings": { "label": "Min order", "value": "1 case (1,000 labels)" } },
-        { "type": "spec", "settings": { "label": "Lead time", "value": "Same day · in-stock SKUs" } },
-        { "type": "spec", "settings": { "label": "GST invoice", "value": "Included on every order" } },
-        { "type": "spec", "settings": { "label": "Tier discounts", "value": "5% @ 5+ cases · 11% @ 20+" } }
+        {
+          "type": "spec",
+          "settings": {
+            "label": "Min order",
+            "value": "1 case (1,000 labels)"
+          }
+        },
+        {
+          "type": "spec",
+          "settings": {
+            "label": "Lead time",
+            "value": "Same day \u00b7 in-stock SKUs"
+          }
+        },
+        {
+          "type": "spec",
+          "settings": {
+            "label": "GST invoice",
+            "value": "Included on every order"
+          }
+        },
+        {
+          "type": "spec",
+          "settings": {
+            "label": "Tier discounts",
+            "value": "5% @ 5+ cases \u00b7 11% @ 20+"
+          }
+        }
       ]
     }
   ]

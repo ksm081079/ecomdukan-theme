@@ -1,3 +1,10 @@
+{%- liquid
+  assign _pt = section.settings.padding_top | default: 0
+  assign _pb = section.settings.padding_bottom | default: 0
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
 {%- comment -%} ED Marquee — infinite-scroll text strip (11-may style) {%- endcomment -%}
 
 {%- liquid
@@ -66,16 +73,77 @@
   "tag": "section",
   "class": "ed-section-flush",
   "settings": [
-    { "type": "range", "id": "speed", "label": "Speed (seconds per loop)", "min": 10, "max": 60, "step": 5, "default": 30 },
-    { "type": "checkbox", "id": "reverse", "label": "Reverse direction", "default": false },
-    { "type": "range", "id": "padding_y", "label": "Vertical padding (px)", "min": 6, "max": 40, "step": 2, "default": 14 },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-4",
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Speed (seconds per loop)",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Reverse direction",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding (px)",
+      "min": 6,
+      "max": 40,
+      "step": 2,
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-4",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" },
-        { "value": "scheme-3", "label": "Indigo" },
-        { "value": "scheme-4", "label": "Ink" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        },
+        {
+          "value": "scheme-3",
+          "label": "Indigo"
+        },
+        {
+          "value": "scheme-4",
+          "label": "Ink"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
     }
   ],
   "blocks": [
@@ -83,8 +151,18 @@
       "type": "item",
       "name": "Item",
       "settings": [
-        { "type": "text", "id": "icon", "label": "Icon (emoji)", "default": "🚚" },
-        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping above ₹2,500" }
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (emoji)",
+          "default": "\ud83d\ude9a"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free shipping above \u20b92,500"
+        }
       ]
     }
   ],
@@ -93,10 +171,34 @@
     {
       "name": "ED Marquee",
       "blocks": [
-        { "type": "item", "settings": { "icon": "🚚", "text": "Free shipping above ₹2,500" } },
-        { "type": "item", "settings": { "icon": "🧾", "text": "GST invoice on every order" } },
-        { "type": "item", "settings": { "icon": "⚡", "text": "Same-day dispatch — Mumbai · Bengaluru · Delhi" } },
-        { "type": "item", "settings": { "icon": "↩️", "text": "7-day easy returns" } }
+        {
+          "type": "item",
+          "settings": {
+            "icon": "\ud83d\ude9a",
+            "text": "Free shipping above \u20b92,500"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "\ud83e\uddfe",
+            "text": "GST invoice on every order"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "\u26a1",
+            "text": "Same-day dispatch \u2014 Mumbai \u00b7 Bengaluru \u00b7 Delhi"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "\u21a9\ufe0f",
+            "text": "7-day easy returns"
+          }
+        }
       ]
     }
   ]

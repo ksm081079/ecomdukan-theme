@@ -1,4 +1,11 @@
 {%- liquid
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-1'
   assign blog = blogs[section.settings.blog]
   assign post_count = section.settings.post_count | default: 3
@@ -52,16 +59,71 @@
   "name": "ED Resource teaser (blog)",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "From the blog" },
-    { "type": "blog", "id": "blog", "label": "Blog" },
-    { "type": "range", "id": "post_count", "label": "Posts to show", "min": 2, "max": 4, "step": 1, "default": 3 },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "From the blog"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "post_count",
+      "label": "Posts to show",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
     }
   ],
-  "presets": [{ "name": "ED Resource teaser" }]
+  "presets": [
+    {
+      "name": "ED Resource teaser"
+    }
+  ]
 }
 {% endschema %}
