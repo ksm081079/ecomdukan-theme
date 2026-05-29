@@ -13,26 +13,65 @@
       "type": "ed-main-product",
       "settings": {
         "show_breadcrumb": true,
+        "price_unit_label": "case",
+        "delivery_promise": "Same-day dispatch",
+        "show_social_proof": true,
+        "sold_values": "8,12,15,18,22,26",
+        "viewing_min": 8,
+        "viewing_max": 32,
+        "offers_heading": "Available offers",
+        "offer_1": "Get ₹100 off",
+        "offer_1_tagline": "On carts above ₹899",
+        "offer_1_code": "SAVE100",
+        "offer_2": "Get 9% off",
+        "offer_2_tagline": "On carts above ₹1,200",
+        "offer_2_code": "SAVE09",
+        "offer_3": "Get 15% off",
+        "offer_3_tagline": "On carts above ₹2,400",
+        "offer_3_code": "SAVE15",
+        "highlight_icon": "⏰",
+        "highlight_text": "Order before 2:30 PM IST for same-day dispatch",
         "show_quote_cta": true,
+        "quote_cta_label": "Need 50+ cases? Request a custom quote →",
         "quote_url": "shopify://pages/request-quote",
         "sample_url": "shopify://pages/sample-pack",
+        "upsell_icon": "💎",
+        "upsell_heading": "Bulk savings unlock at 20+ cases",
+        "upsell_sub": "Save up to 11% per case. See the full tier table.",
+        "upsell_link": "/pages/bulk-pricing",
+        "promise_icon": "🚚",
+        "promise_text": "Order by 2 PM IST · Ships same day from Mumbai DC",
+        "policy_1_icon": "↩️",
+        "policy_1_label": "Returns & exchanges",
+        "policy_1_url": "",
+        "policy_2_icon": "🧾",
+        "policy_2_label": "GST invoicing info",
+        "policy_2_url": "",
+        "show_pincode_check": true,
+        "trust_1_icon": "🚚",
+        "trust_1_label": "Free shipping",
+        "trust_1_sub": "On orders above ₹2,500",
+        "trust_2_icon": "🧾",
+        "trust_2_label": "GST invoice",
+        "trust_2_sub": "Included on every order",
+        "trust_3_icon": "⚡",
+        "trust_3_label": "Same-day dispatch",
+        "trust_3_sub": "Mumbai · Bengaluru · Delhi",
+        "trust_4_icon": "↩️",
+        "trust_4_label": "Easy returns",
+        "trust_4_sub": "7-day return window",
         "usp_1": "Free shipping on orders above ₹2,500",
         "usp_2": "GST invoice included on every order",
         "color_scheme": "scheme-1"
       }
     },
-    "compatibility": {
-      "type": "ed-compatibility-checker",
-      "settings": {
-        "eyebrow": "Compatibility",
-        "heading": "Will it fit your printer?",
-        "body": "Type your printer model. We check against the verified compatibility list set on this product.",
-        "color_scheme": "scheme-2"
-      }
-    },
     "pdp_banner": {
       "type": "ed-pdp-banner",
       "settings": {
+        "alt_1": "",
+        "link_1": "",
+        "alt_2": "",
+        "link_2": "",
         "color_scheme": "scheme-1",
         "padding_top": 0,
         "padding_bottom": 40
@@ -41,7 +80,16 @@
     "bundles": {
       "type": "ed-bestsellers",
       "settings": {
+        "eyebrow": "Best-sellers",
         "heading": "Ready-to-buy combos",
+        "collection": "",
+        "product_count": 8,
+        "show_view_all": true,
+        "show_view_all_bottom": true,
+        "view_all_label": "View all",
+        "layout": "grid",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
         "color_scheme": "scheme-2"
       }
     },
@@ -98,19 +146,25 @@
         "c1": {
           "type": "card",
           "settings": {
-            "caption": "Same-day dispatch from Mumbai DC"
+            "alt": "",
+            "caption": "Same-day dispatch from Mumbai DC",
+            "link": ""
           }
         },
         "c2": {
           "type": "card",
           "settings": {
-            "caption": "GST invoice on every order"
+            "alt": "",
+            "caption": "GST invoice on every order",
+            "link": ""
           }
         },
         "c3": {
           "type": "card",
           "settings": {
-            "caption": "Bulk savings unlock at 20+ cases"
+            "alt": "",
+            "caption": "Bulk savings unlock at 20+ cases",
+            "link": ""
           }
         }
       },
@@ -132,6 +186,7 @@
       "type": "ed-pairs-well",
       "settings": {
         "heading": "Similar picks",
+        "collection": "",
         "product_count": 4,
         "color_scheme": "scheme-2"
       }
@@ -177,13 +232,13 @@
       "settings": {
         "eyebrow": "FAQ",
         "heading": "Questions, answered",
+        "body": "",
         "color_scheme": "scheme-1"
       }
     }
   },
   "order": [
     "main",
-    "compatibility",
     "pdp_banner",
     "bundles",
     "use_cases",
