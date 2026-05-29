@@ -1,3 +1,50 @@
+  /* ===== Gallery v2 (scratch rebuild — minimal, foolproof) ===== */
+  .edg2 { display: flex; flex-direction: column; gap: 10px; }
+  .edg2__main {
+    width: 100%;
+    background: #FBFAF6;
+    border: 1px solid #E0DBCF;
+    border-radius: 12px;
+    overflow: hidden;
+    line-height: 0;
+  }
+  .edg2__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  .edg2__video-wrap { width: 100%; }
+  .edg2__video-wrap video, .edg2__video-wrap iframe { display: block; width: 100%; height: auto; }
+  .edg2__thumbs {
+    display: flex; gap: 8px;
+    overflow-x: auto;
+    padding: 2px 0 4px;
+    scrollbar-width: thin;
+  }
+  .edg2__thumb {
+    flex: 0 0 auto;
+    width: 64px; height: 64px;
+    padding: 0;
+    background: #FBFAF6;
+    border: 1.5px solid #E0DBCF;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .edg2__thumb img {
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .edg2__thumb.is-active { border-color: #1E5FFF; box-shadow: 0 0 0 1px #1E5FFF; }
+  .edg2__thumb:hover { border-color: #0A0B0E; }
+  @media (max-width: 749px) {
+    .edg2__thumb { width: 54px; height: 54px; }
+  }
+  /* ===== /Gallery v2 ===== */
+
   /* PDP grid (media left sticky / info right) */
   .ed-pdp-grid {
     display: grid;

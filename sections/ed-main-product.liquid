@@ -36,52 +36,28 @@
     {%- endif -%}
 
     <div class="ed-pdp-grid">
-      {%- comment -%} Media gallery — left vertical thumb rail + main stage (11-may "thumbnail_left" layout) {%- endcomment -%}
-      <div class="ed-pdp__media ed-gallery" data-ed-gallery>
-        {%- if product.media.size > 0 -%}
-          {%- assign featured = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
-          <div class="ed-gallery__inner">
-            {%- if product.media.size > 1 -%}
-              <div class="ed-gallery__thumbs" data-ed-gallery-thumbs role="tablist" aria-label="Product images">
-                {%- for media in product.media -%}
-                  <button type="button" class="ed-gallery__thumb{% if media.id == featured.id %} is-active{% endif %}" data-ed-thumb="{{ media.id }}" role="tab" aria-selected="{% if media.id == featured.id %}true{% else %}false{% endif %}" aria-label="View image {{ forloop.index }}">
-                    {{ media.preview_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 200, 240', sizes: '80px', alt: media.alt | default: product.title, class: 'ed-gallery__thumb-img' }}
-                    {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
-                      <span class="ed-gallery__thumb-badge" aria-hidden="true">▶</span>
-                    {%- elsif media.media_type == 'model' -%}
-                      <span class="ed-gallery__thumb-badge" aria-hidden="true">3D</span>
-                    {%- endif -%}
-                  </button>
-                {%- endfor -%}
-              </div>
-            {%- endif -%}
-            <div class="ed-gallery__stage" data-ed-gallery-stage>
-              {%- for media in product.media -%}
-                <div class="ed-gallery__slide{% if media.id == featured.id %} is-active{% endif %}" data-ed-media-id="{{ media.id }}" data-media-type="{{ media.media_type }}">
-                  {%- case media.media_type -%}
-                    {%- when 'image' -%}
-                      {{ media | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200, 1600', sizes: '(min-width: 990px) 600px, 100vw', alt: media.alt | default: product.title, class: 'ed-gallery__img' }}
-                    {%- when 'video', 'external_video' -%}
-                      {{ media | media_tag: image_size: '1600x', autoplay: false, loop: false, controls: true, preload: 'metadata' }}
-                    {%- when 'model' -%}
-                      {{ media | media_tag: image_size: '1600x', toggleable: true }}
-                    {%- else -%}
-                      {{ media | media_tag }}
-                  {%- endcase -%}
-                </div>
-              {%- endfor -%}
-              {%- if product.media.size > 1 -%}
-                <button type="button" class="ed-gallery__nav ed-gallery__nav--prev" aria-label="Previous image" data-ed-gallery-prev>‹</button>
-                <button type="button" class="ed-gallery__nav ed-gallery__nav--next" aria-label="Next image" data-ed-gallery-next>›</button>
-                <span class="ed-gallery__counter" aria-live="polite"><span data-ed-gallery-current>1</span> / {{ product.media.size }}</span>
-              {%- endif -%}
-            </div>
-          </div>
-        {%- else -%}
-          <div class="ed-gallery__inner">
-            <div class="ed-gallery__stage ed-gallery__placeholder">
-              <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" class="ed-gallery__placeholder-img">
-            </div>
+      {%- comment -%} Media gallery — scratch rebuild. Main image + thumb strip below. {%- endcomment -%}
+      <div class="ed-pdp__media edg2">
+        {%- assign featured = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+        <div class="edg2__main">
+          {%- if featured.media_type == 'image' or featured.media_type == nil -%}
+            <img class="edg2__img" id="edg2-main" src="{{ featured | image_url: width: 1200 }}" alt="{{ featured.alt | default: product.title | escape }}">
+          {%- elsif featured.media_type == 'video' or featured.media_type == 'external_video' -%}
+            <div class="edg2__video-wrap">{{ featured | media_tag: image_size: '1200x', controls: true, preload: 'metadata' }}</div>
+          {%- else -%}
+            <img class="edg2__img" id="edg2-main" src="{{ 'ed-mark.svg' | asset_url }}" alt="">
+          {%- endif -%}
+        </div>
+        {%- if product.media.size > 1 -%}
+          <div class="edg2__thumbs">
+            {%- for media in product.media -%}
+              <button type="button" class="edg2__thumb{% if media.id == featured.id %} is-active{% endif %}"
+                      data-edg2-src="{{ media | image_url: width: 1200 }}"
+                      data-edg2-alt="{{ media.alt | default: product.title | escape }}"
+                      aria-label="View image {{ forloop.index }}">
+                <img src="{{ media.preview_image | image_url: width: 180 }}" alt="" loading="lazy">
+              </button>
+            {%- endfor -%}
           </div>
         {%- endif -%}
       </div>
@@ -466,36 +442,6 @@
       });
     });
 
-    // Brute-force gallery image fill — sets inline styles JS-style so nothing else can win
-    (function() {
-      const apply = function() {
-        document.querySelectorAll('.ed-gallery__img').forEach(function(img) {
-          img.removeAttribute('width');
-          img.removeAttribute('height');
-          img.style.setProperty('position', 'absolute', 'important');
-          img.style.setProperty('top', '0', 'important');
-          img.style.setProperty('left', '0', 'important');
-          img.style.setProperty('right', '0', 'important');
-          img.style.setProperty('bottom', '0', 'important');
-          img.style.setProperty('width', '100%', 'important');
-          img.style.setProperty('height', '100%', 'important');
-          img.style.setProperty('object-fit', 'cover', 'important');
-          img.style.setProperty('display', 'block', 'important');
-        });
-        document.querySelectorAll('.ed-gallery__slide').forEach(function(s) {
-          s.style.setProperty('position', 'absolute', 'important');
-          s.style.setProperty('top', '0', 'important');
-          s.style.setProperty('left', '0', 'important');
-          s.style.setProperty('right', '0', 'important');
-          s.style.setProperty('bottom', '0', 'important');
-          s.style.setProperty('width', '100%', 'important');
-          s.style.setProperty('height', '100%', 'important');
-        });
-      };
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
-      else apply();
-    })();
-
     // Sync sticky-bar qty display with ed-qty input
     (function() {
       const stickyQty = document.querySelector('[data-ed-stickybar-qty]');
@@ -789,56 +735,21 @@
       setInterval(tick, rand(22000, 45000));
     })();
 
-    // Gallery — thumb click + arrows + variant featured-image swap
+    // Gallery v2 — thumb click swaps main image src
     (function() {
-      const root = document.querySelector('[data-ed-gallery]');
-      if (!root) return;
-      const slides = Array.from(root.querySelectorAll('.ed-gallery__slide'));
-      const thumbs = Array.from(root.querySelectorAll('[data-ed-thumb]'));
-      const counter = root.querySelector('[data-ed-gallery-current]');
-      const prev = root.querySelector('[data-ed-gallery-prev]');
-      const next = root.querySelector('[data-ed-gallery-next]');
-      if (!slides.length) return;
-      const indexOfId = function(id) {
-        for (let i = 0; i < slides.length; i++) if (slides[i].dataset.edMediaId === String(id)) return i;
-        return -1;
-      };
-      const show = function(i) {
-        if (i < 0) i = slides.length - 1;
-        if (i >= slides.length) i = 0;
-        slides.forEach(function(s, idx) { s.classList.toggle('is-active', idx === i); });
-        thumbs.forEach(function(t, idx) {
-          const active = idx === i;
-          t.classList.toggle('is-active', active);
-          t.setAttribute('aria-selected', active ? 'true' : 'false');
-          if (active) t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const main = document.getElementById('edg2-main');
+      if (!main) return;
+      const thumbs = document.querySelectorAll('.edg2__thumb');
+      thumbs.forEach(function(t) {
+        t.addEventListener('click', function() {
+          const src = t.dataset.edg2Src;
+          const alt = t.dataset.edg2Alt || '';
+          if (!src) return;
+          main.src = src;
+          main.alt = alt;
+          thumbs.forEach(function(x) { x.classList.toggle('is-active', x === t); });
+          ph('gallery_thumb_click', meta);
         });
-        if (counter) counter.textContent = (i + 1);
-      };
-      const current = function() { return slides.findIndex(function(s) { return s.classList.contains('is-active'); }); };
-      thumbs.forEach(function(t, i) { t.addEventListener('click', function() { show(i); ph('gallery_thumb_click', Object.assign({}, meta, { index: i })); }); });
-      if (prev) prev.addEventListener('click', function() { show(current() - 1); });
-      if (next) next.addEventListener('click', function() { show(current() + 1); });
-      // keyboard nav
-      root.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowLeft') { e.preventDefault(); show(current() - 1); }
-        if (e.key === 'ArrowRight') { e.preventDefault(); show(current() + 1); }
-      });
-      root.setAttribute('tabindex', '0');
-      // Variant change → swap featured media if variant has featured_media
-      document.addEventListener('change', function(e) {
-        if (!e.target.matches('input[name^="options["]') && !e.target.matches('.ed-form select')) return;
-        // ask the form's variant_id input post-shopify-update; fallback: re-poll selected variant via name="id"
-        const idInput = document.querySelector('#product-form input[name="id"]');
-        if (!idInput) return;
-        const variantId = idInput.value;
-        // Variant data sits in product.variants — embedded below for client use
-        const variants = window.__edProductVariants || [];
-        const variant = variants.find(function(v) { return String(v.id) === String(variantId); });
-        if (variant && variant.featured_media && variant.featured_media.id) {
-          const idx = indexOfId(variant.featured_media.id);
-          if (idx >= 0) show(idx);
-        }
       });
     })();
     // expose variant featured-media map for gallery
