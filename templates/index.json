@@ -16,6 +16,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/EcomDukan_Home_Page_Banner.png",
+            "image_mobile": "shopify://shop_images/EcomDukan_Home_Page_Banner_Mobile.png",
             "link": "",
             "subheading": "Trusted by e-commerce sellers across India",
             "heading": "Premium Thermal Labels & Packaging Tapes",
