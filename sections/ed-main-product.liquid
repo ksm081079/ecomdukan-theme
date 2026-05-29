@@ -466,6 +466,36 @@
       });
     });
 
+    // Brute-force gallery image fill — sets inline styles JS-style so nothing else can win
+    (function() {
+      const apply = function() {
+        document.querySelectorAll('.ed-gallery__img').forEach(function(img) {
+          img.removeAttribute('width');
+          img.removeAttribute('height');
+          img.style.setProperty('position', 'absolute', 'important');
+          img.style.setProperty('top', '0', 'important');
+          img.style.setProperty('left', '0', 'important');
+          img.style.setProperty('right', '0', 'important');
+          img.style.setProperty('bottom', '0', 'important');
+          img.style.setProperty('width', '100%', 'important');
+          img.style.setProperty('height', '100%', 'important');
+          img.style.setProperty('object-fit', 'cover', 'important');
+          img.style.setProperty('display', 'block', 'important');
+        });
+        document.querySelectorAll('.ed-gallery__slide').forEach(function(s) {
+          s.style.setProperty('position', 'absolute', 'important');
+          s.style.setProperty('top', '0', 'important');
+          s.style.setProperty('left', '0', 'important');
+          s.style.setProperty('right', '0', 'important');
+          s.style.setProperty('bottom', '0', 'important');
+          s.style.setProperty('width', '100%', 'important');
+          s.style.setProperty('height', '100%', 'important');
+        });
+      };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
+      else apply();
+    })();
+
     // Sync sticky-bar qty display with ed-qty input
     (function() {
       const stickyQty = document.querySelector('[data-ed-stickybar-qty]');
