@@ -435,8 +435,13 @@
   {%- if product.available -%}
     <div class="ed-pdp-stickybar" id="ed-pdp-stickybar" aria-hidden="true">
       <div class="ed-pdp-stickybar__info">
-        <p class="ed-pdp-stickybar__title">{{ product.title | truncate: 38 }}</p>
+        <p class="ed-pdp-stickybar__title">{{ product.title | truncate: 32 }}</p>
         <p class="ed-pdp-stickybar__price" data-ed-stickybar-price>{{ variant.price | money }}</p>
+      </div>
+      <div class="ed-pdp-stickybar__qty">
+        <button type="button" aria-label="Decrease" data-ed-qty-step="-1">−</button>
+        <span data-ed-stickybar-qty>1</span>
+        <button type="button" aria-label="Increase" data-ed-qty-step="1">+</button>
       </div>
       <button type="submit" form="product-form" class="ed-btn ed-btn--primary ed-pdp-stickybar__btn" data-action="pdp_sticky_add">Add to cart</button>
     </div>
@@ -449,16 +454,28 @@
     const ph = function(name, props) { if (window.posthog) try { posthog.capture(name, props || {}); } catch (e) {} };
     const meta = { product_id: '{{ product.id }}', product_handle: '{{ product.handle }}', product_title: {{ product.title | json }} };
 
-    // Qty stepper
+    // Qty stepper — works on PDP form stepper + sticky bar buttons
     document.querySelectorAll('[data-ed-qty-step]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         const step = parseInt(btn.dataset.edQtyStep, 10);
-        const input = btn.parentElement.querySelector('input[type="number"]');
+        const input = btn.parentElement.querySelector('input[type="number"]') || document.getElementById('ed-qty');
+        if (!input) return;
         const v = Math.max(1, (parseInt(input.value, 10) || 1) + step);
         input.value = v;
         input.dispatchEvent(new Event('change', { bubbles: true }));
       });
     });
+
+    // Sync sticky-bar qty display with ed-qty input
+    (function() {
+      const stickyQty = document.querySelector('[data-ed-stickybar-qty]');
+      const input = document.getElementById('ed-qty');
+      if (!stickyQty || !input) return;
+      const sync = function() { stickyQty.textContent = input.value || '1'; };
+      input.addEventListener('change', sync);
+      input.addEventListener('input', sync);
+      sync();
+    })();
 
     // Multi-qty chip picker (1 / 2 / 5 / 10)
     document.querySelectorAll('[data-ed-qchip]').forEach(function(chip) {
