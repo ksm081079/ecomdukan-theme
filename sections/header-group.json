@@ -14,10 +14,17 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
+        "announcement_XNicm9": {
+          "type": "announcement",
+          "settings": {
+            "text": "Lowest bulk prices — No hidden charges · GST excluded",
+            "link": ""
+          }
+        },
         "msg_3": {
           "type": "announcement",
           "settings": {
-            "text": "Reorder in one tap — Mumbai · Bengaluru · Delhi DCs",
+            "text": "Custom label sizes & printed designs available — Request a quote",
             "link": "shopify://pages/bulk-pricing"
           }
         },
@@ -30,6 +37,7 @@
         }
       },
       "block_order": [
+        "announcement_XNicm9",
         "msg_3",
         "announcement_TygRpf"
       ],
