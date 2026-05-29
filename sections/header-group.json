@@ -27,19 +27,11 @@
             "text": "Custom label sizes & printed designs available — Request a quote",
             "link": "shopify://pages/bulk-pricing"
           }
-        },
-        "announcement_TygRpf": {
-          "type": "announcement",
-          "settings": {
-            "text": "Welcome to our store",
-            "link": ""
-          }
         }
       },
       "block_order": [
         "announcement_XNicm9",
-        "msg_3",
-        "announcement_TygRpf"
+        "msg_3"
       ],
       "settings": {
         "auto_rotate": true,
@@ -56,10 +48,10 @@
     "header": {
       "type": "header",
       "settings": {
-        "logo_position": "middle-center",
+        "logo_position": "middle-left",
         "mobile_logo_position": "center",
         "menu": "main-menu",
-        "menu_type_desktop": "drawer",
+        "menu_type_desktop": "dropdown",
         "sticky_header_type": "on-scroll-up",
         "show_line_separator": true,
         "color_scheme": "scheme-1",
