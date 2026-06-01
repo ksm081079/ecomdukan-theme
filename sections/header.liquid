@@ -173,6 +173,23 @@
   .header__active-menu-item { font-weight: 600 !important; }
   .header__menu-item:hover { color: var(--ed-electric, #1E5FFF); }
 
+  /* Dropdown caret arrow — fixed size + gap so it never overlaps the label on hover */
+  .header__menu-item svg,
+  .header__menu-item .icon-caret,
+  summary.list-menu__item svg {
+    width: 10px !important;
+    height: 10px !important;
+    margin-left: 6px !important;
+    flex-shrink: 0;
+    transform: none !important;
+    transition: transform 120ms;
+  }
+  details[open] > summary.list-menu__item svg,
+  details[open] > summary.header__menu-item svg {
+    transform: rotate(180deg) !important;
+  }
+  .header__menu-item { display: inline-flex !important; align-items: center !important; }
+
   /* Mega menu typography */
   .mega-menu__list .mega-menu__link {
     font-family: "Inter", sans-serif !important;
