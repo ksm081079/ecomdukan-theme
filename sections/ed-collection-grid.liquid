@@ -114,12 +114,13 @@
                   else if (mode === 'price-desc') { key = 'ppl';  dir = -1; }
                   else return;
                   arr.sort(function(a, b) {
-                    const va = parseFloat(a.dataset[key]);
-                    const vb = parseFloat(b.dataset[key]);
-                    // Treat unset / NaN as 0 — they sort to the bottom on desc, top on asc.
-                    const aa = isNaN(va) ? 0 : va;
-                    const bb = isNaN(vb) ? 0 : vb;
-                    return (aa - bb) * dir;
+                    let va = parseFloat(a.dataset[key]);
+                    let vb = parseFloat(b.dataset[key]);
+                    // Missing / 0 values float to the END for BOTH asc and desc
+                    // so untagged products never break the visible order.
+                    if (!va || isNaN(va)) va = dir === 1 ? Infinity : -Infinity;
+                    if (!vb || isNaN(vb)) vb = dir === 1 ? Infinity : -Infinity;
+                    return (va - vb) * dir;
                   });
                   arr.forEach(function(c) { grid.appendChild(c); });
                 };
