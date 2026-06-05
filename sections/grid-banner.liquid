@@ -1,0 +1,386 @@
+<style>
+    .grow-well-heading {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .grow-well-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 10px;
+    }
+
+    .grow-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .grow-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .grow-card--left {
+      height: 100%;
+    }
+
+    .grow-right {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 10px;
+    }
+
+    .grow-card--top {
+      height: 100%;
+    }
+
+    .grow-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grow-title {
+      color: #fff;
+      font-size: 24px;
+      font-weight: 500;
+      font-family: 'Poppins';
+      text-decoration: underline;
+      margin: 0;
+    }
+
+    .grow-title--top {
+      top: 14px;
+      right: 14px;
+      left: auto;
+    }
+
+    .grow-plus {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fff;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 26px;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .grow-card-content {
+        position: absolute;
+        left: 25px;
+        right: 25px;
+        bottom: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+.grow-expand {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.grow-card.active .grow-expand {
+  max-height: 250px;
+  opacity: 1;
+}
+
+  .grow-toggle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    color: #000;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .icon-minus {
+    display: none;
+  }
+
+  .grow-card.active .icon-plus {
+    display: none;
+  }
+
+  .grow-card.active .icon-minus {
+    display: inline;
+  }
+.grow-expand ul{
+    padding: 0;
+    margin-bottom: 0;
+}
+.grow-expand ul li{
+    list-style: none;
+    color: #fff;
+}
+
+/* Title */
+.grow-card--top-right .grow-title {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+/* Expandable content */
+.grow-card--top-right .grow-expand {
+  text-align: right;
+}
+
+/* Plus / minus icon */
+.grow-card--top-right .grow-card-content {
+    top: 20px;
+    right: 20px;
+    left: auto;
+    bottom: auto;
+    height: 100%;
+    max-height: 90%;
+    align-items: flex-end;
+}
+.grow-well-section{
+    margin-bottom: 80px;
+}
+.grow-well-grid .swiper-wrapper{
+  display: contents;
+}
+.grow-card.mobile-only{
+  display: none;
+}
+.grow-bottom .grow-card:nth-child(1),
+.grow-bottom .grow-card:nth-child(2){
+  display: none;
+}
+@media (max-width: 768px) {
+  .grow-bottom .grow-card:nth-child(1),
+.grow-bottom .grow-card:nth-child(2){
+  display: block;
+}
+.grow-card--top-right{
+  display: none;
+}
+.grow-card--left {
+  display: none;
+}
+    .grow-well-grid {
+    grid-template-columns: 1fr;
+    }
+
+    .grow-bottom {
+    grid-template-columns: 1fr;
+    }
+  .grow-well-grid {
+    display: block;
+  }
+
+  .grow-right,
+  .grow-bottom {
+    display: flex;
+  }
+  .grow-card-content{
+    left: 20px;
+    right: 20px;
+    bottom: 16px;
+  }
+.grow-title{
+  font-size: 20px;
+}
+.grow-toggle{
+  width: 30px;
+  height: 30px;
+  font-size: 21px;
+}
+  .grow-card {
+    height: 420px;
+  }
+
+  .swiper {
+    overflow: hidden;
+  }
+.grow-well-grid .swiper-wrapper{
+  display: flex;
+}
+.grow-card.mobile-only{
+  display: block;
+}
+.grow-right.desktop-only{
+  display: none;
+}
+}
+</style>
+<div class="section grow-well-section">
+  <div class="fluid_container">
+    {% if section.settings.heading != blank %}
+      <h2 class="section__header-heading heading-letter-spacing  mt-0 mb-0 grow-well-heading">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    <div class="grow-well-grid">
+
+      <!-- Left big card -->
+      {% assign left = section.blocks | where: 'type', 'left' | first %}
+      {% if left %}
+        <div class="grow-card grow-card--left">
+          <img src="{{ left.settings.image | image_url }}" alt="">
+          <div class="grow-card-content">
+            <a href="{{ left.settings.link }}">
+            <h3 class="grow-title">{{ left.settings.title }}</h3>
+            </a>
+            <div class="grow-expand">
+              {{ left.settings.details }}
+            </div>
+
+            <button class="grow-toggle grow-toggle--corner" aria-label="Toggle content">
+              <span class="icon-plus">+</span>
+              <span class="icon-minus">−</span>
+            </button>
+          </div>
+        </div>
+      {% endif %}
+      <!-- Right side -->
+      <div class="grow-right">
+        {% assign top = section.blocks | where: 'type', 'top' | first %}
+        {% if top %}
+          <div class="grow-card grow-card--top grow-card--top-right">
+            <img src="{{ top.settings.image | image_url }}" alt="">
+            <div class="grow-card-content">
+              <a href="{{ top.settings.link }}">
+              <h3 class="grow-title">{{ top.settings.title }}</h3>
+              </a>
+              <div class="grow-expand">
+                {{ top.settings.details }}
+              </div>
+
+              <button class="grow-toggle grow-toggle--corner" aria-label="Toggle content">
+                <span class="icon-plus">+</span>
+                <span class="icon-minus">−</span>
+              </button>
+            </div>
+          </div>
+        {% endif %}
+        <div class="grow-bottom  swiper grow-well-mobile-slider">
+          <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == 'bottom' %}
+              <div class="grow-card grow-card--small swiper-slide">
+                <img src="{{ block.settings.image | image_url }}" alt="">
+                <div class="grow-card-content">
+                  <a href="{{ block.settings.link }}">
+                    <h3 class="grow-title">{{ block.settings.title }}</h3>
+                  </a>
+                  <div class="grow-expand">
+                    {{ block.settings.details }}
+                  </div>
+
+                  <button class="grow-toggle grow-toggle--corner" aria-label="Toggle content">
+                    <span class="icon-plus">+</span>
+                    <span class="icon-minus">−</span>
+                  </button>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('click', function (e) {
+    const toggle = e.target.closest('.grow-toggle');
+    if (!toggle) return;
+
+    const card = toggle.closest('.grow-card');
+    card.classList.toggle('active');
+  });
+   document.addEventListener('DOMContentLoaded', function () {
+    if (window.innerWidth <= 768) {
+      new Swiper('.grow-well-mobile-slider', {
+        slidesPerView: 1.2,
+        spaceBetween: 12,
+        loop: false,
+        grabCursor: true
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Grow Well Plants Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Grow Well Year-Round in India"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "left",
+      "name": "Left Large Card",
+      "limit": 1,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "url", "id": "link", "label": "Link" },
+        {
+          "type": "richtext",
+          "id": "details",
+          "label": "Popup Content"
+        }
+      ]
+    },
+    {
+      "type": "top",
+      "name": "Top Right Wide Card",
+      "limit": 1,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "url", "id": "link", "label": "Link" },
+        {
+          "type": "richtext",
+          "id": "details",
+          "label": "Popup Content"
+        }
+      ]
+    },
+    {
+      "type": "bottom",
+      "name": "Bottom Small Card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "url", "id": "link", "label": "Link" },
+        {
+          "type": "richtext",
+          "id": "details",
+          "label": "Popup Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Grow Well Plants Grid"
+    }
+  ]
+}
+{% endschema %}

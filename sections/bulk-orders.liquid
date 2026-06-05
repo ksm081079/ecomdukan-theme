@@ -1,0 +1,1191 @@
+{%- comment -%}
+  Section: Bulk Orders — BYOB-styled bulk picker with tier discounts + GF fallback.
+  Customer picks any combination of products. Discount tiers apply by total quantity.
+  Visual language matches /pages/buy-* BYOB pages (purple card + slot tiles).
+  Click anywhere on a product card → "shadow PDP" modal opens (variant + qty + tier progress + add).
+{%- endcomment -%}
+
+{%- liquid
+  assign top_collection = section.settings.top_collection
+  assign top_limit = section.settings.top_grid_limit | default: 30
+  assign max_qty = section.settings.max_qty | default: 100
+-%}
+
+<style>
+.bo-section{
+  --clr-purple-bg:#e8e0f5;
+  --clr-green:#0e855b;
+  --clr-green-dark:#0a6747;
+  --clr-green-soft:#e6f3ec;
+  --clr-green-border:#b8d8c9;
+  --clr-cream:#faf8f3;
+  --clr-cream-border:#ebebeb;
+  --clr-text:#111111;
+  --clr-heading:#111111;
+  --clr-body:#444444;
+  --clr-muted:#888888;
+  --clr-red:#e63946;
+  --clr-red-dark:#c9202d;
+  --clr-red-soft:#fdecee;
+  --radius-card:10px;
+  --radius-btn:6px;
+  max-width:1560px;margin:0 auto;padding:24px 16px 60px;
+  font-family:inherit;color:var(--clr-text)
+}
+.bo-section *{box-sizing:border-box}
+
+.bo-hero{text-align:center;margin-bottom:18px;max-width:760px;margin-left:auto;margin-right:auto}
+.bo-hero h1{font-size:32px;font-weight:800;color:var(--clr-text);margin:0 0 8px;letter-spacing:-.015em;line-height:1.15}
+.bo-hero p{font-size:15px;color:var(--clr-muted);margin:0;line-height:1.5}
+.bo-hero p strong{color:var(--clr-green-dark);font-weight:800}
+@media(max-width:600px){.bo-hero h1{font-size:24px}.bo-hero p{font-size:13.5px}}
+
+.bo-box{background:var(--clr-purple-bg);border-radius:20px;padding:36px 24px 28px;margin-bottom:32px;text-align:center;position:relative}
+.bo-box__count{font-size:14px;font-weight:700;color:var(--clr-green-dark);margin-bottom:20px;letter-spacing:.02em}
+.bo-box__count strong{font-size:18px;font-variant-numeric:tabular-nums}
+
+.bo-slots{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:0 auto 22px;max-width:100%}
+.bo-slot{width:84px;height:84px;border-radius:var(--radius-card);background:rgba(255,255,255,.6);border:2px dashed var(--clr-green-border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:border-color .2s,transform .15s}
+.bo-slot.empty .bo-slot__plus{font-size:32px;color:var(--clr-green-border);font-weight:300;line-height:1}
+.bo-slot.filled{border-style:solid;border-color:var(--clr-green);background:#fff}
+.bo-slot.filled:hover{transform:scale(1.04)}
+.bo-slot.filled .bo-slot__plus{display:none}
+.bo-slot__img{width:100%;height:100%;object-fit:cover;border-radius:calc(var(--radius-card) - 2px);display:none}
+.bo-slot.filled .bo-slot__img{display:block}
+.bo-slot__qty{position:absolute;bottom:4px;right:4px;background:var(--clr-green);color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;line-height:1;letter-spacing:.02em;display:none;z-index:2}
+.bo-slot.filled .bo-slot__qty{display:inline-block}
+.bo-slot__rm{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1;padding:0;z-index:3;transition:background .15s}
+.bo-slot.filled .bo-slot__rm{display:flex}
+.bo-slot__rm:hover{background:rgba(0,0,0,.8)}
+.bo-slot.oos{border-color:var(--clr-red);opacity:.7}
+.bo-slot.oos::after{content:'OUT';position:absolute;bottom:4px;left:4px;background:var(--clr-red);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;letter-spacing:.04em;line-height:1.2;z-index:2}
+@media(max-width:600px){.bo-box{padding:24px 16px 22px}.bo-slot{width:64px;height:64px}.bo-slots{gap:10px}}
+
+.bo-progress{margin:0 auto 18px;max-width:480px}
+.bo-progress__msg{font-size:14px;font-weight:600;color:var(--clr-text);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;line-height:1.4}
+.bo-progress__msg strong{color:var(--clr-green-dark);font-weight:800}
+.bo-progress__msg .badge-near{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--clr-red-soft);color:var(--clr-red);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;animation:bo-pulse 1.4s ease-in-out infinite}
+@keyframes bo-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.78;transform:scale(1.05)}}
+.bo-progress__bar{height:8px;background:rgba(255,255,255,.6);border-radius:999px;overflow:hidden;margin-bottom:10px}
+.bo-progress__bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2d6a4f,#1b4332);border-radius:999px;transition:width .55s cubic-bezier(.4,1.4,.6,1)}
+.bo-box.celebrating .bo-progress__bar i{animation:bo-celebrate 1.4s ease}
+@keyframes bo-celebrate{0%{box-shadow:0 0 0 0 rgba(45,106,79,.45)}60%{box-shadow:0 0 0 10px rgba(45,106,79,0)}100%{box-shadow:0 0 0 0 rgba(45,106,79,0)}}
+
+.bo-tiers{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;font-size:11px}
+.bo-tier-pill{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;background:#fff;color:var(--clr-muted);border:1px solid rgba(0,0,0,.05);border-radius:999px;font-weight:700;letter-spacing:.02em;line-height:1;white-space:nowrap;transition:all .2s}
+.bo-tier-pill.hit{background:var(--clr-green);color:#fff;border-color:var(--clr-green)}
+.bo-tier-pill.hit::before{content:'\2713\00a0';font-weight:800}
+.bo-tier-pill.next{background:var(--clr-green-soft);color:var(--clr-green-dark);border-color:var(--clr-green-border)}
+.bo-tier-pill.next::before{content:'\2192\00a0';font-weight:800}
+.bo-tier-pill.quote{background:#fff;color:var(--clr-red);border:1px dashed var(--clr-red);font-weight:800}
+.bo-tier-pill.quote::before{content:'\2605\00a0'}
+
+.bo-footer{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,.4)}
+.bo-price-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.bo-price-label{font-size:13px;color:var(--clr-muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.bo-price-value{font-size:26px;font-weight:800;color:var(--clr-text);line-height:1.1;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.bo-price-value s{font-size:15px;font-weight:500;color:var(--clr-muted);text-decoration:line-through;text-decoration-color:var(--clr-red);text-decoration-thickness:1.5px}
+.bo-price-saved{font-size:13px;font-weight:700;color:var(--clr-green-dark)}
+.bo-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 32px;border:0;border-radius:6px;background:var(--clr-green);color:#fff;font-size:14px;font-weight:600;letter-spacing:.01em;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(14,133,91,.22);transition:background .15s,transform .08s,box-shadow .15s;text-decoration:none;min-height:48px}
+.bo-cta:hover{background:var(--clr-green-dark);box-shadow:0 6px 18px rgba(14,133,91,.32)}
+.bo-cta:active{transform:scale(.97)}
+.bo-cta:disabled,.bo-cta.disabled{background:#bdb9a8;cursor:not-allowed;box-shadow:none}
+.bo-cta.quote{background:var(--clr-red);box-shadow:0 6px 18px rgba(214,48,68,.3)}
+.bo-cta.quote:hover{background:#b8232f}
+.bo-cta .icon-load{width:14px;height:14px;display:none}
+.bo-cta.loading .arrow,.bo-cta.loading .label{display:none}
+.bo-cta.loading .icon-load{display:inline-block;animation:bo-spin 1s linear infinite}
+@keyframes bo-spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){.bo-footer{flex-direction:column;gap:16px;align-items:stretch}.bo-price-wrap{align-items:center;text-align:center}.bo-cta{width:100%}}
+
+/* ─── SEARCH ─── */
+.bo-search{background:var(--clr-cream);border:1px solid var(--clr-cream-border);border-radius:12px;padding:22px;margin-bottom:32px}
+.bo-search h2{font-size:18px;font-weight:600;color:var(--clr-heading);margin:0 0 14px;letter-spacing:-.005em;text-align:center}
+.bo-search__wrap{position:relative;max-width:560px;margin:0 auto}
+.bo-search__input{width:100%;height:50px;padding:0 20px 0 62px;border:1.5px solid var(--clr-cream-border);background:#fff;border-radius:999px;font-size:15px;font-weight:500;color:var(--clr-text);outline:none;font-family:inherit;-webkit-appearance:none;transition:border-color .15s,box-shadow .15s}
+.bo-search__input:focus{border-color:var(--clr-green);box-shadow:0 0 0 4px rgba(14,133,91,.12)}
+.bo-search__input::placeholder{color:var(--clr-muted);font-weight:500}
+.bo-search__icon{position:absolute;left:0;top:0;bottom:0;width:50px;display:flex;align-items:center;justify-content:center;font-size:17px;line-height:1;color:var(--clr-muted);pointer-events:none}
+.bo-search__icon svg{width:18px;height:18px}
+.bo-search__results{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:760px;margin-left:auto;margin-right:auto}
+.bo-search__hint{font-size:13px;color:var(--clr-muted);text-align:center;padding:14px 0}
+
+.bo-result{display:flex;gap:14px;align-items:center;padding:12px 14px;background:#fff;border:1px solid var(--clr-cream-border);border-radius:var(--radius-card);transition:border-color .15s,box-shadow .15s,transform .12s;cursor:pointer}
+.bo-result:hover{border-color:var(--clr-green-border);box-shadow:0 4px 12px -2px rgba(0,0,0,.08);transform:translateY(-1px)}
+.bo-result__img{flex-shrink:0;width:64px;height:64px;border-radius:10px;background:var(--clr-cream);overflow:hidden}
+.bo-result__img img{width:100%;height:100%;object-fit:cover}
+.bo-result__info{flex:1;min-width:0}
+.bo-result__name{font-size:14px;font-weight:700;color:var(--clr-text);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
+.bo-result__price{font-size:13px;font-weight:800;color:var(--clr-text);font-variant-numeric:tabular-nums}
+.bo-result__price s{color:var(--clr-muted);font-weight:500;font-size:11.5px;margin-left:4px;text-decoration:line-through;text-decoration-color:var(--clr-red)}
+.bo-result__cta{flex-shrink:0;font-size:11.5px;color:var(--clr-green-dark);font-weight:800;letter-spacing:.04em;padding:9px 16px;border:1.5px solid var(--clr-green);border-radius:999px;background:#fff;transition:all .12s;text-transform:uppercase}
+.bo-result:hover .bo-result__cta{background:var(--clr-green);color:#fff}
+
+/* ─── TOP COLLECTION GRID ─── */
+.bo-grid-wrap h2{font-size:22px;font-weight:600;color:var(--clr-heading);margin:0 0 6px;letter-spacing:-.01em;text-align:center}
+.bo-grid-sub{font-size:14px;color:var(--clr-muted);text-align:center;margin:0 0 20px}
+.bo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+@media(max-width:600px){.bo-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
+
+.bo-card{background:#fff;border:1px solid var(--clr-cream-border);border-radius:8px;padding:12px;display:flex;flex-direction:column;transition:border-color .15s,box-shadow .15s}
+.bo-card:hover{border-color:#d4d4d4;box-shadow:0 2px 8px -2px rgba(0,0,0,.06)}
+.bo-card__img{width:100%;aspect-ratio:1/1;border-radius:6px;overflow:hidden;background:#f5f5f5;margin-bottom:10px;cursor:zoom-in}
+.bo-card__img img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.bo-card__img:hover img{transform:scale(1.04)}
+.bo-card__name{font-size:14px;font-weight:600;color:var(--clr-heading);line-height:1.35;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px}
+.bo-card__price{font-size:15px;font-weight:700;color:var(--clr-heading);font-variant-numeric:tabular-nums;margin-bottom:10px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.bo-card__price s{color:var(--clr-muted);font-weight:500;font-size:13px;text-decoration:line-through;text-decoration-color:var(--clr-red);text-decoration-thickness:1.2px}
+.bo-card__cta{margin-top:auto;width:100%;height:40px;padding:0;border:1px solid var(--clr-heading);background:#fff;color:var(--clr-heading);border-radius:6px;font-size:13px;font-weight:600;letter-spacing:.01em;cursor:pointer;font-family:inherit;transition:background .15s,color .15s,border-color .15s}
+.bo-card:hover .bo-card__cta,.bo-card__cta:hover{background:var(--clr-green);color:#fff;border-color:var(--clr-green)}
+
+/* ─── PDP POPUP (custom modal — fetches theme's quickview HTML into body) ── */
+.bo-pdp{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9998;display:none;align-items:flex-end;justify-content:center;padding:0;backdrop-filter:blur(2px)}
+.bo-pdp.open{display:flex;animation:bo-fade .14s ease}
+@keyframes bo-fade{from{opacity:0}to{opacity:1}}
+.bo-pdp__card{position:relative;width:100%;max-width:540px;max-height:85vh;max-height:85svh;max-height:85dvh;background:#fff;border-radius:18px 18px 0 0;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 32px rgba(0,0,0,.2);animation:bo-rise .18s ease;font-family:inherit;color:var(--clr-text);display:flex;flex-direction:column;overflow:hidden;padding-bottom:env(safe-area-inset-bottom,0px)}
+@keyframes bo-rise{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+.bo-pdp__close{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.95);color:#111;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10}
+.bo-pdp__close:hover{background:#fff;transform:scale(1.05)}
+.bo-pdp__body{flex:1 1 auto;padding:18px;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
+.bo-pdp__loading{padding:60px 20px;text-align:center;font-size:14px;color:var(--clr-muted);font-weight:600}
+.bo-pdp__body .hidden{display:block !important}
+.bo-pdp__body img{max-width:100%;height:auto}
+.bo-pdp__body .product-quickview__content{padding:0 !important;margin:0 !important}
+body.bo-pdp-open{overflow:hidden}
+/* Hide floating widgets (Reward, chat, etc) while the popup is open so they don't cover the CTA */
+body.bo-pdp-open .bloy-popup,
+body.bo-pdp-open [class*="bloy-launcher"],
+body.bo-pdp-open .bloy-button,
+body.bo-pdp-open #shopify-block-bloy,
+body.bo-pdp-open [class*="reward-launcher"],
+body.bo-pdp-open .essential-upsell,
+body.bo-pdp-open .whatmore-floating,
+body.bo-pdp-open [class*="whatmore"],
+body.bo-pdp-open [data-glozin-element]{display:none !important;visibility:hidden !important}
+@media(min-width:600px){
+  .bo-pdp{align-items:center;padding:20px}
+  .bo-pdp__card{border-radius:14px;max-width:780px;max-height:88vh;max-height:88svh;max-height:88dvh}
+}
+
+/* Bulk overlay inside .bo-pdp — sticky to the bottom of the modal viewport */
+.bo-pdp__overlay{flex:0 0 auto;margin:0;padding:14px 18px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid #eee;background:var(--clr-purple-bg);font-family:inherit;color:var(--clr-text);position:relative;z-index:2;box-shadow:0 -8px 16px -8px rgba(0,0,0,.12)}
+.bo-pdp__overlay .bo-qv__head{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--clr-green-dark);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.bo-pdp__overlay .bo-qv__head::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--clr-green);display:inline-block}
+.bo-pdp__overlay .bo-qv__chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.bo-pdp__overlay .bo-qty-chip{height:38px;min-width:54px;padding:0 14px;border:1.5px solid #fff;background:#fff;color:var(--clr-text);border-radius:999px;font-size:13.5px;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums;font-family:inherit;transition:all .12s;display:inline-flex;align-items:center;justify-content:center}
+.bo-pdp__overlay .bo-qty-chip:hover{border-color:var(--clr-green);color:var(--clr-green)}
+.bo-pdp__overlay .bo-qty-chip.active{background:var(--clr-green);color:#fff;border-color:var(--clr-green)}
+.bo-pdp__overlay .bo-qty-custom{height:38px;width:84px;padding:0 12px;border:1.5px dashed #c8b8d8;background:#fff;color:var(--clr-text);border-radius:999px;font-size:13.5px;font-weight:700;text-align:center;outline:none;font-variant-numeric:tabular-nums;font-family:inherit;-moz-appearance:textfield}
+.bo-pdp__overlay .bo-qty-custom::-webkit-inner-spin-button,
+.bo-pdp__overlay .bo-qty-custom::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.bo-pdp__overlay .bo-qty-custom:focus{border-color:var(--clr-green);border-style:solid}
+.bo-pdp__overlay .bo-qv__progress{margin-bottom:14px}
+.bo-pdp__overlay .bo-qv__progress .msg{font-size:13px;font-weight:600;color:var(--clr-text);margin-bottom:8px;line-height:1.5}
+.bo-pdp__overlay .bo-qv__progress .msg strong{color:var(--clr-green-dark);font-weight:800}
+.bo-pdp__overlay .bo-qv__count{display:inline-block;color:var(--clr-green-dark);font-weight:700;margin-right:4px}
+.bo-pdp__overlay .bo-qv__count strong{color:var(--clr-green-dark)}
+.bo-pdp__overlay .bo-qv__progress .bar{height:6px;background:rgba(255,255,255,.75);border-radius:999px;overflow:hidden;margin-bottom:8px}
+.bo-pdp__overlay .bo-qv__progress .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--clr-green),var(--clr-green-dark));border-radius:999px;transition:width .4s cubic-bezier(.4,1.4,.6,1)}
+.bo-pdp__overlay .bo-qv__progress .tiers-line{display:flex;flex-wrap:wrap;gap:4px;font-size:10.5px}
+.bo-pdp__overlay .bo-qv__progress .tiers-line span{padding:3px 8px;border-radius:999px;background:#fff;color:var(--clr-muted);font-weight:700;border:1px solid rgba(0,0,0,.04);letter-spacing:.02em}
+.bo-pdp__overlay .bo-qv__progress .tiers-line span.hit{background:var(--clr-green);color:#fff;border-color:var(--clr-green)}
+.bo-pdp__overlay .bo-qv__progress .tiers-line span.next{background:var(--clr-red-soft);color:var(--clr-red);border-color:var(--clr-red)}
+.bo-pdp__overlay .bo-qv__add{width:100%;height:50px;border:0;border-radius:8px;background:var(--clr-green);color:#fff;font-size:14px;font-weight:700;letter-spacing:.01em;cursor:pointer;font-family:inherit;box-shadow:0 6px 18px rgba(14,133,91,.28);transition:background .15s,transform .08s}
+.bo-pdp__overlay .bo-qv__add:hover{background:var(--clr-green-dark)}
+.bo-pdp__overlay .bo-qv__add:active{transform:scale(.98)}
+.bo-pdp__overlay .bo-qv__add:disabled{background:#bdb9a8;cursor:not-allowed;box-shadow:none}
+
+/* card chips + add button (single-variant grid cards) */
+.bo-card__chips{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:6px}
+.bo-card__chips .bo-qty-chip{height:30px;padding:0 4px;border:1px solid var(--clr-cream-border);background:#fff;color:var(--clr-body);border-radius:6px;font-size:12.5px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums;font-family:inherit;transition:all .12s;display:inline-flex;align-items:center;justify-content:center}
+.bo-card__chips .bo-qty-chip:hover{border-color:var(--clr-green);color:var(--clr-green)}
+.bo-card__chips .bo-qty-chip.active{background:var(--clr-green);color:#fff;border-color:var(--clr-green)}
+.bo-card__custom-wrap{margin-bottom:8px}
+.bo-card__custom-wrap .bo-qty-custom{width:100%;height:30px;padding:0 10px;border:1px dashed var(--clr-cream-border);background:#fff;color:var(--clr-body);border-radius:6px;font-size:12.5px;font-weight:600;text-align:center;outline:none;font-variant-numeric:tabular-nums;font-family:inherit;-moz-appearance:textfield}
+.bo-card__custom-wrap .bo-qty-custom::-webkit-inner-spin-button,
+.bo-card__custom-wrap .bo-qty-custom::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.bo-card__custom-wrap .bo-qty-custom:focus{border-color:var(--clr-green);border-style:solid;color:var(--clr-heading)}
+.bo-card__add{margin-top:auto;width:100%;height:40px;padding:0;border:0;background:var(--clr-green);color:#fff;border-radius:6px;font-size:13px;font-weight:600;letter-spacing:.01em;cursor:pointer;font-family:inherit;transition:background .15s,transform .08s}
+.bo-card__add:hover{background:var(--clr-green-dark)}
+.bo-card__add:active{transform:scale(.98)}
+@media(max-width:600px){.bo-card{padding:10px}.bo-card__chips{gap:3px}.bo-card__chips .bo-qty-chip{font-size:12px;height:28px}.bo-card__name{font-size:13px}.bo-card__price{font-size:14px}}
+
+/* cap state — grey everything when MAX_QTY is reached */
+.bo-section.is-capped .bo-card__add,
+.bo-section.is-capped .bo-card__cta,
+.bo-section.is-capped .bo-result__cta,
+.bo-section.is-capped .bo-pdp__overlay .bo-qv__add{background:#bdb9a8 !important;color:#fff !important;border-color:#bdb9a8 !important;cursor:not-allowed !important;box-shadow:none !important;pointer-events:none}
+.bo-section.is-capped .bo-card__chips .bo-qty-chip{opacity:.45;pointer-events:none}
+.bo-section.is-capped .bo-card__custom-wrap{opacity:.45;pointer-events:none}
+.bo-cap-msg{background:#fff8e1;border:1px solid #f5d68a;color:#8a6d1a;font-size:13px;font-weight:700;text-align:center;padding:10px 14px;border-radius:10px;margin:14px auto 0;max-width:520px;display:none}
+.bo-section.is-capped .bo-cap-msg{display:block}
+
+.bo-quote-link{display:inline-block;margin-top:14px;color:var(--clr-red);font-size:13px;font-weight:700;text-decoration:underline;cursor:pointer;background:none;border:0;padding:4px 10px;font-family:inherit}
+.bo-quote-link:hover{color:#b8232f}
+
+/* inline quote form */
+.bo-quote{background:#fff7f7;border:1px dashed var(--clr-red);border-radius:12px;padding:28px 22px;margin-top:32px;scroll-margin-top:80px}
+.bo-quote h2{font-size:22px;font-weight:600;color:var(--clr-heading);margin:0 0 6px;letter-spacing:-.005em;text-align:center}
+.bo-quote .lead{font-size:14px;color:var(--clr-muted);text-align:center;margin:0 auto 22px;max-width:600px;line-height:1.5}
+.bo-quote.flash{animation:bo-flash 1.4s ease}
+@keyframes bo-flash{0%{box-shadow:0 0 0 0 rgba(230,57,70,.45)}60%{box-shadow:0 0 0 14px rgba(230,57,70,0)}100%{box-shadow:0 0 0 0 rgba(230,57,70,0)}}
+.bo-quote__cta-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:260px;height:54px;padding:0 28px;margin:8px auto 0;background:var(--clr-red);color:#fff !important;font-size:15px;font-weight:700;letter-spacing:.01em;text-decoration:none;border-radius:8px;box-shadow:0 6px 20px rgba(230,57,70,.32);transition:background .15s,transform .08s,box-shadow .15s}
+.bo-quote__cta-link:hover{background:var(--clr-red-dark);box-shadow:0 8px 24px rgba(230,57,70,.42);color:#fff}
+.bo-quote__cta-link:active{transform:scale(.98)}
+.bo-quote__hint{text-align:center;font-size:12.5px;color:var(--clr-muted);margin:14px 0 0;letter-spacing:.01em}
+.bo-quote{text-align:center}
+@media(max-width:600px){.bo-quote{padding:22px 16px}.bo-quote__cta-link{width:100%;min-width:0}}
+
+.bo-toast{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(120%);background:var(--clr-text);color:#fff;padding:12px 20px;border-radius:999px;font-size:13.5px;font-weight:700;box-shadow:0 10px 28px rgba(0,0,0,.22);transition:transform .25s cubic-bezier(.4,1.4,.6,1);z-index:9999;pointer-events:none;display:flex;align-items:center;gap:8px;letter-spacing:.02em;max-width:90vw}
+@media(min-width:600px){.bo-toast{bottom:24px}}
+.bo-toast.show{transform:translateX(-50%) translateY(0)}
+.bo-toast .ok{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--clr-green);border-radius:50%;font-size:12px;font-weight:800}
+.bo-toast.error .ok{background:var(--clr-red)}
+</style>
+
+<section class="bo-section" data-bo-root data-max-qty="{{ max_qty }}">
+  <header class="bo-hero">
+    <h1>{{ section.settings.title | default: "Bulk Orders" }}</h1>
+    <div>{{ section.settings.subtitle | default: "<p>Mix any products. Tier discounts apply automatically at <strong>50, 80, and 100</strong> plants. Above 100 we send a custom quote.</p>" }}</div>
+  </header>
+
+  <div class="bo-box" data-bo-box>
+    <div class="bo-box__count"><strong data-bo-qty>0</strong> of {{ max_qty }} plants picked</div>
+    <div class="bo-slots" data-bo-slots>
+      <div class="bo-slot empty"><span class="bo-slot__plus">+</span></div>
+      <div class="bo-slot empty"><span class="bo-slot__plus">+</span></div>
+      <div class="bo-slot empty"><span class="bo-slot__plus">+</span></div>
+      <div class="bo-slot empty"><span class="bo-slot__plus">+</span></div>
+      <div class="bo-slot empty"><span class="bo-slot__plus">+</span></div>
+    </div>
+    <div class="bo-progress">
+      <div class="bo-progress__msg" data-bo-msg>Add at least <strong>1 plant</strong> to start.</div>
+      <div class="bo-progress__bar"><i data-bo-bar></i></div>
+      <div class="bo-tiers" data-bo-tiers></div>
+    </div>
+    <div class="bo-footer">
+      <div class="bo-price-wrap">
+        <span class="bo-price-label">Subtotal</span>
+        <span class="bo-price-value">
+          <span data-bo-subtotal>{{ 0 | money }}</span>
+          <s data-bo-subtotal-orig hidden></s>
+        </span>
+        <span class="bo-price-saved" data-bo-saved hidden></span>
+      </div>
+      <button type="button" class="bo-cta disabled" data-bo-cta disabled>
+        <span class="label">Add bulk order to cart</span>
+        <span class="arrow">→</span>
+        <svg class="icon-load" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="20 12"/></svg>
+      </button>
+    </div>
+    <div class="bo-cap-msg" data-bo-cap-msg>Max {{ max_qty }} plants reached. Submit your order or remove items to add more.</div>
+    <div style="text-align:center"><button type="button" class="bo-quote-link" data-bo-quote-scroll>Need {{ max_qty }}+ plants? Get a custom quote ↓</button></div>
+  </div>
+
+  <div class="bo-search">
+    <h2>Search &amp; add any product</h2>
+    <div class="bo-search__wrap">
+      <span class="bo-search__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></span>
+      <input type="search" class="bo-search__input" data-bo-search placeholder="Search for plants, seeds, pots…" autocomplete="off" inputmode="search">
+    </div>
+    <div class="bo-search__results" data-bo-search-results>
+      <div class="bo-search__hint">Type 2+ characters to see matching products.</div>
+    </div>
+  </div>
+
+  {%- if top_collection and top_collection.products.size > 0 -%}
+    <div class="bo-grid-wrap">
+      <h2>Most ordered in bulk</h2>
+      <p class="bo-grid-sub">Pick a qty &amp; tap Add. Tap the image to see full details.</p>
+      <div class="bo-grid">
+        {%- for product in top_collection.products limit: top_limit -%}
+          {%- liquid
+            assign v = product.selected_or_first_available_variant
+            assign multi_variant = false
+            if product.variants.size > 1
+              assign multi_variant = true
+            endif
+            assign card_img = product.featured_image
+            if v.featured_image
+              assign card_img = v.featured_image
+            endif
+            assign card_img_url = ''
+            if card_img
+              assign card_img_url = card_img | image_url: width: 280
+            endif
+            assign compare_cents = 0
+            if v.compare_at_price
+              assign compare_cents = v.compare_at_price
+            endif
+          -%}
+          <div class="bo-card" data-bo-product-card
+               data-product-id="{{ product.id }}"
+               data-variant-id="{{ v.id }}"
+               data-handle="{{ product.handle }}"
+               data-title="{{ product.title | escape }}"
+               data-price="{{ v.price }}"
+               data-compare-at="{{ compare_cents }}"
+               data-image="{{ card_img_url }}"
+               data-available="{{ v.available }}"
+               data-multi-variant="{{ multi_variant }}">
+            <div class="bo-card__img" data-bo-card-img>
+              {%- if card_img_url != '' -%}
+                <img src="{{ card_img_url }}" alt="{{ product.title | escape }}" loading="lazy" width="280" height="280">
+              {%- endif -%}
+            </div>
+            <div class="bo-card__name">{{ product.title }}</div>
+            <div class="bo-card__price">
+              {{ v.price | money }}
+              {%- if v.compare_at_price and v.compare_at_price > v.price -%}<s>{{ v.compare_at_price | money }}</s>{%- endif -%}
+            </div>
+            {%- if multi_variant -%}
+              <button type="button" class="bo-card__cta" data-bo-card-cta>Select options →</button>
+            {%- else -%}
+              <div class="bo-card__chips">
+                <button type="button" class="bo-qty-chip active" data-qty="10">10</button>
+                <button type="button" class="bo-qty-chip" data-qty="20">20</button>
+                <button type="button" class="bo-qty-chip" data-qty="30">30</button>
+                <button type="button" class="bo-qty-chip" data-qty="50">50</button>
+              </div>
+              <div class="bo-card__custom-wrap">
+                <input type="number" class="bo-qty-custom" min="1" max="{{ max_qty }}" placeholder="Other" inputmode="numeric">
+              </div>
+              <button type="button" class="bo-add-btn bo-card__add" data-bo-card-add>+ Add to order</button>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="bo-toast" data-bo-toast><span class="ok">✓</span> <span data-bo-toast-text>Added</span></div>
+
+  {%- comment -%} Product detail popup: fetches /products/HANDLE?section_id=product-quickview&ajax=1
+      and injects the rendered PDP HTML into the modal body. Our bulk controls (qty chips,
+      tier progress, "Add to bulk order") are appended at the bottom. {%- endcomment -%}
+  <div class="bo-pdp" data-bo-pdp aria-hidden="true">
+    <div class="bo-pdp__card" role="dialog" aria-modal="true">
+      <button class="bo-pdp__close" type="button" data-bo-pdp-close aria-label="Close">×</button>
+      <div class="bo-pdp__body" data-bo-pdp-body>
+        <div class="bo-pdp__loading" data-bo-pdp-loading>Loading…</div>
+      </div>
+      <div class="bo-pdp__overlay" data-bo-pdp-overlay hidden>
+        <div class="bo-qv__head">Add to your bulk order</div>
+        <div class="bo-qv__chips" data-bo-qv-chips>
+          <button type="button" class="bo-qty-chip active" data-qty="10">10</button>
+          <button type="button" class="bo-qty-chip" data-qty="20">20</button>
+          <button type="button" class="bo-qty-chip" data-qty="30">30</button>
+          <button type="button" class="bo-qty-chip" data-qty="50">50</button>
+          <input type="number" class="bo-qty-custom" min="1" max="{{ max_qty }}" placeholder="Other" inputmode="numeric">
+        </div>
+        <div class="bo-qv__progress">
+          <div class="msg" data-bo-qv-msg></div>
+          <div class="bar"><i data-bo-qv-bar></i></div>
+          <div class="tiers-line" data-bo-qv-tiers></div>
+        </div>
+        <button type="button" class="bo-qv__add" data-bo-qv-add>+ Add to bulk order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUOTE CTA — opens the Google Form in a new tab, pre-filled with the user's current bulk-order state -->
+  <section class="bo-quote" data-bo-quote id="bulk-quote-form">
+    <h2>Need {{ max_qty }}+ plants? Get a custom quote</h2>
+    <p class="lead">Tap below to open our wholesale quote form in a new tab. Your current bulk-order list is pre-filled — just add your name, email &amp; phone, and we'll reply within 1 business day.</p>
+    <a class="bo-quote__cta-link" data-bo-quote-link href="#" target="_blank" rel="noopener">Open quote form →</a>
+    <p class="bo-quote__hint">Opens in a new tab • Volume pricing • Lead times &amp; logistics included</p>
+  </section>
+</section>
+
+<script>
+(function(){
+  'use strict';
+  var root = document.querySelector('[data-bo-root]');
+  if (!root) return;
+
+  var MAX_QTY = parseInt(root.getAttribute('data-max-qty'), 10) || 100;
+  var TIERS = [
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'tier' -%}
+        { threshold: {{ block.settings.qty_threshold }}, pct: {{ block.settings.discount_pct }}, code: {{ block.settings.discount_code | default: '' | json }}, label: {{ block.settings.label | default: 'Bulk tier' | json }} }{% unless forloop.last %},{% endunless %}
+      {%- endif -%}
+    {%- endfor -%}
+  ].sort(function(a,b){ return a.threshold - b.threshold; });
+
+  var GF = {
+    url:      {{ section.settings.gf_url      | default: '' | json }},
+    name:     {{ section.settings.gf_entry_name     | default: '' | json }},
+    email:    {{ section.settings.gf_entry_email    | default: '' | json }},
+    phone:    {{ section.settings.gf_entry_phone    | default: '' | json }},
+    products: {{ section.settings.gf_entry_products | default: '' | json }},
+    qty:      {{ section.settings.gf_entry_qty      | default: '' | json }}
+  };
+
+  var MONEY_FORMAT = {{ shop.money_format | json }};
+  function fmt(cents){
+    if (window.Shopify && Shopify.formatMoney){ try { return Shopify.formatMoney(cents, MONEY_FORMAT); } catch(_){} }
+    return 'Rs.' + Math.round(cents/100);
+  }
+
+  var state = { items: {}, lastTier: 0 };
+  function totalQty(){ var t=0; for (var k in state.items) t += state.items[k].qty; return t; }
+  function totalSubtotal(){ var t=0; for (var k in state.items){ var it=state.items[k]; if (it.available) t += it.qty * it.price; } return t; }
+  function totalOriginal(){ var t=0; for (var k in state.items){ var it=state.items[k]; if (it.available) t += it.qty * (it.compareAt > it.price ? it.compareAt : it.price); } return t; }
+  function activeTier(q){ var best=null; for (var i=0;i<TIERS.length;i++) if (q>=TIERS[i].threshold) best=TIERS[i]; return best; }
+  function nextTier(q){ for (var i=0;i<TIERS.length;i++) if (q<TIERS[i].threshold) return TIERS[i]; return null; }
+  function fire(name, data){
+    try { document.dispatchEvent(new CustomEvent('tao:'+name, { detail: data || {} })); } catch(_){}
+    if (window.dataLayer && window.dataLayer.push) window.dataLayer.push(Object.assign({ event: 'tao_'+name }, data || {}));
+  }
+
+  // Toast
+  var toastEl  = root.querySelector('[data-bo-toast]');
+  var toastTxt = root.querySelector('[data-bo-toast-text]');
+  var toastTimer = null;
+  function toast(msg, isError){
+    toastTxt.textContent = msg;
+    toastEl.classList.toggle('error', !!isError);
+    toastEl.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2400);
+  }
+
+  function addItem(opts){
+    var vid = opts.variantId ? String(opts.variantId) : '';
+    if (!vid){ toast('Could not add — variant not found.', true); return; }
+    var currentTotal = totalQty();
+    if (currentTotal >= MAX_QTY){
+      toast('Max ' + MAX_QTY + ' plants reached — use the custom quote form below for larger orders.', true);
+      _openQuoteForm();
+      return;
+    }
+    var requested = Math.max(1, parseInt(opts.qty, 10) || 1);
+    var headroom = MAX_QTY - currentTotal;
+    var qty = Math.min(headroom, requested);
+    var clamped = qty < requested;
+    var existing = state.items[vid];
+    if (existing){
+      existing.qty = Math.min(MAX_QTY, existing.qty + qty);
+    } else {
+      state.items[vid] = {
+        variantId: vid, productId: String(opts.productId || ''), handle: opts.handle || '',
+        title: opts.title || 'Product', price: parseInt(opts.price,10)||0,
+        compareAt: parseInt(opts.compareAt,10)||0, image: opts.image||'',
+        qty: qty, available: opts.available !== false
+      };
+    }
+    fire('bulk_product_added', { variant_id: vid, product_id: opts.productId, qty: qty, total_qty: totalQty() });
+    render();
+    // Visual feedback is the slot tiles filling + subtotal updating — no toast needed.
+    // Only surface a toast when something was clamped so the user knows we didn't add the full amount.
+    if (clamped){ toast('Capped at ' + MAX_QTY + ' (' + qty + ' × ' + (opts.title || 'item') + ' added)'); }
+  }
+  function removeItem(vid){
+    var it = state.items[vid]; if (!it) return;
+    delete state.items[vid];
+    fire('bulk_product_removed', { variant_id: vid, product_id: it.productId });
+    render();
+  }
+
+  var els = {
+    qty: root.querySelector('[data-bo-qty]'), slots: root.querySelector('[data-bo-slots]'),
+    msg: root.querySelector('[data-bo-msg]'), bar: root.querySelector('[data-bo-bar]'),
+    tiers: root.querySelector('[data-bo-tiers]'),
+    subtotal: root.querySelector('[data-bo-subtotal]'), subOrig: root.querySelector('[data-bo-subtotal-orig]'),
+    saved: root.querySelector('[data-bo-saved]'),
+    cta: root.querySelector('[data-bo-cta]'), box: root.querySelector('[data-bo-box]')
+  };
+
+  function render(){
+    var q = totalQty();
+    els.qty.textContent = q;
+    root.classList.toggle('is-capped', q >= MAX_QTY);
+
+    var keys = Object.keys(state.items);
+    var html = '';
+    keys.forEach(function(k){
+      var it = state.items[k];
+      var oosCls = it.available ? '' : ' oos';
+      var safeTitle = (it.title || 'Item').replace(/"/g,'&quot;');
+      var qtyNum = parseInt(it.qty, 10) || 0;
+      html += '<div class="bo-slot filled' + oosCls + '" data-vid="' + k + '" title="' + safeTitle + '">' +
+        (it.image ? '<img class="bo-slot__img" src="' + it.image + '" alt="' + safeTitle + '" width="84" height="84" loading="lazy">' : '<span class="bo-slot__plus">' + safeTitle.charAt(0) + '</span>') +
+        '<span class="bo-slot__qty">×' + qtyNum + '</span>' +
+        '<button class="bo-slot__rm" type="button" aria-label="Remove">✕</button>' +
+      '</div>';
+    });
+    // Always render at least one empty placeholder when nothing's added.
+    // No artificial 5-slot cap — combinations can go up to MAX_QTY.
+    if (keys.length === 0){
+      html = '<div class="bo-slot empty"><span class="bo-slot__plus">+</span></div>' +
+             '<div class="bo-slot empty"><span class="bo-slot__plus">+</span></div>' +
+             '<div class="bo-slot empty"><span class="bo-slot__plus">+</span></div>';
+    }
+    els.slots.innerHTML = html;
+
+    var cur = activeTier(q), nxt = nextTier(q), pct = 0, msg = '', near = '';
+    if (q === 0) msg = 'Add at least <strong>1 plant</strong> to start.';
+    else if (q > MAX_QTY){ msg = 'Above ' + MAX_QTY + ' plants — let\'s set up a <strong>custom quote</strong>.'; pct = 100; }
+    else if (nxt){
+      var need = nxt.threshold - q;
+      msg = 'Add <strong>' + need + ' more</strong> &rarr; unlock <strong>' + nxt.pct + '% off</strong>';
+      pct = Math.min(100, Math.round((q / nxt.threshold) * 100));
+      if (need <= 5) near = ' <span class="badge-near">So close!</span>';
+    } else if (cur){
+      if (q >= MAX_QTY){
+        msg = '<strong>' + cur.pct + '% off applied!</strong> Max plants picked &mdash; submit your order or use the quote form for larger volumes.';
+      } else {
+        msg = '<strong>' + cur.pct + '% off applied at checkout.</strong> Add up to ' + (MAX_QTY - q) + ' more.';
+      }
+      pct = 100;
+    } else {
+      msg = 'Pick the plants you need below.';
+    }
+    els.msg.innerHTML = (msg || '') + (near || '');
+    els.bar.style.width = pct + '%';
+
+    var pills = TIERS.map(function(t){
+      var cls = q >= t.threshold ? 'hit' : (nxt && nxt.threshold === t.threshold ? 'next' : '');
+      return '<span class="bo-tier-pill ' + cls + '">' + t.threshold + ' &rarr; ' + t.pct + '%</span>';
+    }).join('');
+    pills += '<span class="bo-tier-pill quote">' + (MAX_QTY+1) + '+ quote</span>';
+    els.tiers.innerHTML = pills;
+
+    if (cur && cur.threshold > state.lastTier){
+      els.box.classList.add('celebrating');
+      setTimeout(function(){ els.box.classList.remove('celebrating'); }, 1500);
+      fire('bulk_tier_crossed', { from: state.lastTier, to: cur.threshold, pct: cur.pct, total_qty: q });
+      state.lastTier = cur.threshold;
+    } else if (!cur){ state.lastTier = 0; }
+
+    var sub = totalSubtotal(), orig = totalOriginal(), discounted = cur ? Math.round(sub*(1 - cur.pct/100)) : sub;
+    els.subtotal.textContent = fmt(discounted);
+    if (cur && discounted < sub){
+      els.subOrig.textContent = fmt(sub); els.subOrig.hidden = false;
+      els.saved.hidden = false; els.saved.innerHTML = 'You save ' + fmt(sub-discounted) + ' (' + cur.pct + '% off)';
+    } else if (orig > sub){
+      els.subOrig.textContent = fmt(orig); els.subOrig.hidden = false; els.saved.hidden = true;
+    } else { els.subOrig.hidden = true; els.saved.hidden = true; }
+
+    var labelEl = els.cta.querySelector('.label');
+    if (q === 0){ els.cta.disabled = true; els.cta.classList.add('disabled'); els.cta.classList.remove('quote'); labelEl.textContent = 'Add bulk order to cart'; }
+    else if (q > MAX_QTY){ els.cta.disabled = !GF.url; els.cta.classList.remove('disabled'); els.cta.classList.add('quote'); labelEl.textContent = GF.url ? 'Get a custom quote' : 'Custom quote form not configured'; }
+    else { els.cta.disabled = false; els.cta.classList.remove('disabled', 'quote'); labelEl.textContent = 'Add bulk order to cart'; }
+
+    // Re-render any open quickview overlay (listens for this event)
+    try { root.dispatchEvent(new CustomEvent('tao:bo-state-changed')); } catch(_){}
+  }
+
+  // Slot remove
+  els.slots.addEventListener('click', function(e){
+    var btn = e.target.closest('.bo-slot__rm');
+    if (!btn) return;
+    var slot = btn.closest('.bo-slot[data-vid]');
+    var vid = slot && slot.getAttribute('data-vid');
+    if (vid) removeItem(vid);
+  });
+
+  // ─── PRODUCT-DETAIL POPUP — fetches the theme's quickview HTML and injects it ──
+  var pdpEl       = root.querySelector('[data-bo-pdp]');
+  var pdpBody     = root.querySelector('[data-bo-pdp-body]');
+  var pdpLoading  = root.querySelector('[data-bo-pdp-loading]');
+  var pdpOverlay  = root.querySelector('[data-bo-pdp-overlay]');
+  var pdpClose    = root.querySelector('[data-bo-pdp-close]');
+  var pdpChipsWrap= root.querySelector('[data-bo-qv-chips]');
+  var pdpCustom   = pdpChipsWrap ? pdpChipsWrap.querySelector('.bo-qty-custom') : null;
+  var pdpMsg      = root.querySelector('[data-bo-qv-msg]');
+  var pdpBar      = root.querySelector('[data-bo-qv-bar]');
+  var pdpTiers    = root.querySelector('[data-bo-qv-tiers]');
+  var pdpAdd      = root.querySelector('[data-bo-qv-add]');
+
+  var pdpState = { handle: null, qty: 10, productJson: null };
+  var pdpCache = {};
+
+  function _pdpProductJson(handle){
+    if (!handle) return Promise.resolve(null);
+    if (pdpCache[handle]) return Promise.resolve(pdpCache[handle]);
+    return fetch('/products/' + encodeURIComponent(handle) + '.js', { headers: { 'Accept':'application/json' } })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(p){ if (p) pdpCache[handle] = p; return p; });
+  }
+
+  function _renderPdpProgress(){
+    var qNow = totalQty();
+    var qty = pdpState.qty || 1;
+    var qWithThis = Math.min(MAX_QTY, qNow + qty);
+    var cur = activeTier(qNow), nxt = nextTier(qNow), futureCur = activeTier(qWithThis);
+    var lead = qNow > 0
+      ? '<span class="bo-qv__count">You have <strong>' + qNow + '</strong> in your bulk order.</span> '
+      : '<span class="bo-qv__count">Your bulk order is empty.</span> ';
+    var tail = '', pct = 0;
+    if (TIERS.length === 0){
+      tail = 'Add ' + qty + ' to start.';
+    } else if (nxt){
+      var needAfter = Math.max(0, nxt.threshold - qWithThis);
+      if (needAfter === 0){
+        tail = 'Adding ' + qty + ' <strong>unlocks ' + nxt.pct + '% off</strong> on your whole order!';
+      } else {
+        tail = 'Add ' + qty + ' + <strong>' + needAfter + ' more</strong> &rarr; <strong>' + nxt.pct + '% off</strong>.';
+      }
+      pct = Math.min(100, Math.round((qWithThis / nxt.threshold) * 100));
+    } else if (cur){
+      var sub = totalSubtotal();
+      var saved = Math.round(sub * cur.pct / 100);
+      tail = '<strong>' + cur.pct + '% off</strong> applied — saving ' + fmt(saved) + '.';
+      pct = 100;
+    } else if (futureCur){
+      tail = 'Adding ' + qty + ' <strong>unlocks ' + futureCur.pct + '% off</strong>!';
+      pct = Math.min(100, Math.round((qWithThis / futureCur.threshold) * 100));
+    } else {
+      tail = 'Add ' + qty + ' to your bulk order.';
+    }
+    if (pdpMsg) pdpMsg.innerHTML = lead + tail;
+    if (pdpBar) pdpBar.style.width = pct + '%';
+    if (pdpTiers){
+      pdpTiers.innerHTML = TIERS.map(function(t){
+        var cls = qNow >= t.threshold ? 'hit' : (nxt && nxt.threshold === t.threshold ? 'next' : '');
+        return '<span class="' + cls + '">' + t.threshold + ' = ' + t.pct + '%</span>';
+      }).join('');
+    }
+  }
+
+  function _setPdpQty(q){
+    pdpState.qty = q;
+    if (pdpChipsWrap){
+      pdpChipsWrap.querySelectorAll('.bo-qty-chip').forEach(function(c){
+        c.classList.toggle('active', parseInt(c.getAttribute('data-qty'),10) === q);
+      });
+      var matched = !!pdpChipsWrap.querySelector('.bo-qty-chip.active');
+      if (matched && pdpCustom) pdpCustom.value = '';
+    }
+    _renderPdpProgress();
+  }
+
+  function _readVariantFromPdp(){
+    if (!pdpBody) return null;
+    var idInput = pdpBody.querySelector('product-form input[name="id"], form[action*="/cart"] input[name="id"]');
+    if (idInput && idInput.value) return parseInt(idInput.value, 10);
+    var radio = pdpBody.querySelector('input[name="id"]:checked, fieldset[name="id"] input:checked');
+    if (radio && radio.value) return parseInt(radio.value, 10);
+    return null;
+  }
+
+  function closePdp(){
+    if (!pdpEl) return;
+    pdpEl.classList.remove('open');
+    document.body.classList.remove('bo-pdp-open');
+    pdpBody.innerHTML = '<div class="bo-pdp__loading" data-bo-pdp-loading>Loading…</div>';
+    pdpLoading = pdpBody.querySelector('[data-bo-pdp-loading]');
+    if (pdpOverlay) pdpOverlay.hidden = true;
+    pdpState.handle = null;
+    pdpState.productJson = null;
+  }
+
+  function openPdp(handle){
+    if (!handle || !pdpEl) return;
+    pdpState.handle = handle;
+    pdpState.productJson = null;
+    pdpEl.classList.add('open');
+    document.body.classList.add('bo-pdp-open');
+    fire('bulk_product_modal_open', { handle: handle });
+    if (pdpOverlay) pdpOverlay.hidden = false;
+    _setPdpQty(10);
+    _renderPdpProgress();
+    pdpBody.innerHTML = '<div class="bo-pdp__loading">Loading…</div>';
+
+    // Prefetch product JSON for the Add path
+    _pdpProductJson(handle).then(function(p){ pdpState.productJson = p; });
+
+    // Fetch the quickview HTML — that's the theme's full PDP layout, ready to render
+    fetch('/products/' + encodeURIComponent(handle) + '?section_id=product-quickview&ajax=1', {
+      headers: { 'Accept': 'text/html' }
+    })
+      .then(function(r){ return r.ok ? r.text() : ''; })
+      .then(function(html){
+        if (!html){ pdpBody.innerHTML = '<div class="bo-pdp__loading">Could not load product.</div>'; return; }
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var content = doc.querySelector('#shopify-section-product-quickview .product-quickview__content')
+                  || doc.querySelector('.product-quickview__content')
+                  || doc.querySelector('#shopify-section-product-quickview');
+        if (!content){ pdpBody.innerHTML = '<div class="bo-pdp__loading">Product unavailable.</div>'; return; }
+        content.classList.remove('hidden');
+        pdpBody.innerHTML = '';
+        pdpBody.appendChild(content);
+        // Hide the theme's add-to-cart / buy-now buttons inside the injected PDP
+        pdpBody.querySelectorAll('.product-form__buttons, .product__add-cart, .shopify-payment-button, .btn-checkout-dynamic, .product-form__cart-submit, .product__buy-buttons')
+          .forEach(function(el){ el.style.display = 'none'; });
+        // Re-run any inline scripts the quickview content carries (variant pickers, swatches, gallery)
+        pdpBody.querySelectorAll('script').forEach(function(oldScript){
+          var s = document.createElement('script');
+          if (oldScript.src) s.src = oldScript.src; else s.textContent = oldScript.textContent;
+          oldScript.parentNode.replaceChild(s, oldScript);
+        });
+        // Refresh progress when the user picks a different variant inside the injected PDP
+        if (pdpVariantObserver) pdpVariantObserver.disconnect();
+        pdpVariantObserver = new MutationObserver(function(){ _renderPdpProgress(); });
+        pdpVariantObserver.observe(pdpBody, { subtree:true, attributes:true, attributeFilter:['value','checked','selected','aria-checked'], childList:true });
+      })
+      .catch(function(){
+        pdpBody.innerHTML = '<div class="bo-pdp__loading">Could not load product.</div>';
+      });
+  }
+
+  var pdpVariantObserver = null;
+
+  if (pdpChipsWrap){
+    pdpChipsWrap.addEventListener('click', function(e){
+      var c = e.target.closest('.bo-qty-chip');
+      if (!c) return;
+      var v = parseInt(c.getAttribute('data-qty'), 10);
+      if (v) _setPdpQty(v);
+    });
+    if (pdpCustom){
+      pdpCustom.addEventListener('input', function(){
+        var raw = pdpCustom.value.replace(/[^0-9]/g, '');
+        if (raw === ''){ pdpState.qty = 1; pdpChipsWrap.querySelectorAll('.bo-qty-chip').forEach(function(c){ c.classList.remove('active'); }); _renderPdpProgress(); return; }
+        var v = parseInt(raw, 10);
+        if (v > MAX_QTY){ v = MAX_QTY; pdpCustom.value = String(v); }
+        if (v < 1){ v = 1; pdpCustom.value = '1'; }
+        pdpChipsWrap.querySelectorAll('.bo-qty-chip').forEach(function(c){ c.classList.remove('active'); });
+        pdpState.qty = v;
+        _renderPdpProgress();
+      });
+    }
+  }
+
+  if (pdpAdd){
+    pdpAdd.addEventListener('click', function(){
+      if (!pdpState.handle){ return; }
+      if (root.classList.contains('is-capped')){
+        toast('Max ' + MAX_QTY + ' plants reached. Submit your order or remove items.', true);
+        return;
+      }
+      var chosenVid = _readVariantFromPdp();
+      _pdpProductJson(pdpState.handle).then(function(p){
+        if (!p){ toast('Could not load product.', true); return; }
+        var v = (chosenVid && p.variants.find(function(vv){ return vv.id === chosenVid; }))
+              || p.variants.find(function(vv){ return vv.available; })
+              || p.variants[0];
+        if (!v){ toast('No variant available.', true); return; }
+        addItem({
+          variantId: v.id, productId: p.id, handle: p.handle, title: p.title,
+          price: v.price, compareAt: v.compare_at_price || 0,
+          image: (v.featured_image && v.featured_image.src) || p.featured_image || '',
+          available: v.available, qty: pdpState.qty
+        });
+        closePdp();
+      });
+    });
+  }
+
+  if (pdpClose) pdpClose.addEventListener('click', closePdp);
+  if (pdpEl){
+    pdpEl.addEventListener('click', function(e){
+      if (!e.target.closest('.bo-pdp__card')) closePdp();
+    });
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && pdpEl && pdpEl.classList.contains('open')) closePdp();
+  });
+  root.addEventListener('tao:bo-state-changed', function(){
+    if (pdpEl && pdpEl.classList.contains('open')) _renderPdpProgress();
+  });
+
+  // ─── CARD INTERACTIONS — split so chips/Add work inline, only image/CTA opens modal ──
+  function _getCardQty(card){
+    var custom = card.querySelector('.bo-card__custom-wrap .bo-qty-custom');
+    if (custom && custom.value){
+      var v = parseInt(custom.value, 10);
+      if (v && v > 0) return Math.min(MAX_QTY, v);
+    }
+    var active = card.querySelector('.bo-card__chips .bo-qty-chip.active');
+    if (active){
+      var av = parseInt(active.getAttribute('data-qty'), 10);
+      if (av) return av;
+    }
+    return 10;
+  }
+  function _addFromCard(card){
+    if (!card) return;
+    var qty = _getCardQty(card);
+    addItem({
+      variantId: card.getAttribute('data-variant-id'),
+      productId: card.getAttribute('data-product-id'),
+      handle:    card.getAttribute('data-handle'),
+      title:     card.getAttribute('data-title') || 'Product',
+      price:     parseInt(card.getAttribute('data-price'), 10) || 0,
+      compareAt: parseInt(card.getAttribute('data-compare-at'), 10) || 0,
+      image:     card.getAttribute('data-image') || '',
+      available: card.getAttribute('data-available') === 'true',
+      qty: qty
+    });
+    // Reset chips to default 10 active
+    card.querySelectorAll('.bo-card__chips .bo-qty-chip').forEach(function(c){
+      c.classList.toggle('active', c.getAttribute('data-qty') === '10');
+    });
+    var customInput = card.querySelector('.bo-card__custom-wrap .bo-qty-custom');
+    if (customInput) customInput.value = '';
+  }
+
+  root.addEventListener('click', function(e){
+    // Card qty chip — set active, don't open modal
+    var chip = e.target.closest('.bo-card__chips .bo-qty-chip');
+    if (chip){
+      e.preventDefault();
+      var cChipCard = chip.closest('[data-bo-product-card]');
+      if (cChipCard){
+        cChipCard.querySelectorAll('.bo-card__chips .bo-qty-chip').forEach(function(c){ c.classList.remove('active'); });
+        chip.classList.add('active');
+        var ci = cChipCard.querySelector('.bo-card__custom-wrap .bo-qty-custom');
+        if (ci) ci.value = '';
+      }
+      return;
+    }
+    // Card Add button — add to bulk order with selected qty
+    var addBtn = e.target.closest('[data-bo-card-add]');
+    if (addBtn){
+      e.preventDefault();
+      if (root.classList.contains('is-capped')){
+        toast('Max ' + MAX_QTY + ' plants reached. Submit your order or remove items.', true);
+        return;
+      }
+      _addFromCard(addBtn.closest('[data-bo-product-card]'));
+      return;
+    }
+    // Card custom qty input — focus only, don't open modal
+    if (e.target.closest('.bo-card__custom-wrap .bo-qty-custom')) return;
+    // Card image OR multi-variant CTA → open theme quickview
+    var trigger = e.target.closest('[data-bo-card-img], [data-bo-card-cta]');
+    if (trigger){
+      e.preventDefault();
+      var card = trigger.closest('[data-bo-product-card]');
+      if (card){
+        var handle = card.getAttribute('data-handle');
+        if (handle) openPdp(handle);
+      }
+      return;
+    }
+    // Search row — whole row opens quickview (variant unknown until popup loads)
+    var row = e.target.closest('.bo-result[data-bo-product-card]');
+    if (row){
+      e.preventDefault();
+      var rHandle = row.getAttribute('data-handle');
+      if (rHandle) openPdp(rHandle);
+      return;
+    }
+  });
+
+  // Card custom qty input — clear chips on type
+  root.addEventListener('input', function(e){
+    var custom = e.target.closest('.bo-card__custom-wrap .bo-qty-custom');
+    if (!custom) return;
+    var card = custom.closest('[data-bo-product-card]');
+    if (!card) return;
+    var raw = custom.value.replace(/[^0-9]/g, '');
+    if (raw === ''){ custom.value = ''; return; }
+    var v = parseInt(raw, 10);
+    if (v > MAX_QTY){ v = MAX_QTY; custom.value = String(v); }
+    if (v < 1){ v = 1; custom.value = '1'; }
+    card.querySelectorAll('.bo-card__chips .bo-qty-chip').forEach(function(c){ c.classList.remove('active'); });
+  });
+
+  // ─── SEARCH ───────────────────────────────────────────────────────────────
+  var searchInput = root.querySelector('[data-bo-search]');
+  var searchOut   = root.querySelector('[data-bo-search-results]');
+  var searchTimer = null;
+  if (searchInput){
+    searchInput.addEventListener('input', function(){
+      var q = (searchInput.value || '').trim();
+      if (searchTimer) clearTimeout(searchTimer);
+      if (q.length < 2){ searchOut.innerHTML = '<div class="bo-search__hint">Type 2+ characters to see matching products.</div>'; return; }
+      searchTimer = setTimeout(function(){
+        var url = '/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=10';
+        fetch(url, { headers: { 'Accept': 'application/json' } })
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(data){
+            if (!data || !data.resources || !data.resources.results){ searchOut.innerHTML = '<div class="bo-search__hint">No results.</div>'; return; }
+            var products = data.resources.results.products || [];
+            if (products.length === 0){ searchOut.innerHTML = '<div class="bo-search__hint">No products match "' + q + '".</div>'; return; }
+            searchOut.innerHTML = products.map(_renderSearchRow).join('');
+          })
+          .catch(function(){ searchOut.innerHTML = '<div class="bo-search__hint">Search failed. Try again.</div>'; });
+      }, 250);
+    });
+  }
+  function _renderSearchRow(p){
+    var rawPrice = p.price != null ? parseFloat(p.price) : 0;
+    var rawCmp   = p.compare_at_price != null ? parseFloat(p.compare_at_price) : 0;
+    var price    = isFinite(rawPrice) ? Math.round(rawPrice * 100) : 0;
+    var compare  = isFinite(rawCmp)   ? Math.round(rawCmp   * 100) : 0;
+    var img   = (p.featured_image && p.featured_image.url) || p.image || '';
+    var safeTitle = (p.title || 'Product').replace(/"/g, '&quot;');
+    var displayTitle = p.title || 'Product';
+    var priceHtml = '<div class="bo-result__price">' + (price ? 'Rs.' + Math.round(price/100) : 'View options');
+    if (compare && compare > price) priceHtml += '<s>Rs.' + Math.round(compare/100) + '</s>';
+    priceHtml += '</div>';
+    return '<div class="bo-result" data-bo-product-card data-handle="' + (p.handle || '') + '" data-title="' + safeTitle + '" data-image="' + img + '">' +
+      '<div class="bo-result__img">' + (img ? '<img src="' + img + '" alt="' + safeTitle + '" loading="lazy" width="64" height="64">' : '') + '</div>' +
+      '<div class="bo-result__info">' +
+        '<div class="bo-result__name">' + displayTitle + '</div>' +
+        priceHtml +
+      '</div>' +
+      '<span class="bo-result__cta">Pick &amp; add</span>' +
+    '</div>';
+  }
+
+  // ─── CTA: submit to cart / open quote form ────────────────────────────────
+  els.cta.addEventListener('click', function(){
+    if (els.cta.disabled) return;
+    var q = totalQty();
+    if (q === 0) return;
+    if (q > MAX_QTY){ _openQuoteForm(); return; }
+    _submitToCart();
+  });
+
+  function _submitToCart(){
+    var q = totalQty();
+    var sub = totalSubtotal();
+    var cur = activeTier(q);
+    els.cta.classList.add('loading');
+    var items = Object.keys(state.items).filter(function(k){ return state.items[k].available; }).map(function(k){
+      var it = state.items[k];
+      return {
+        id: parseInt(it.variantId, 10),
+        quantity: it.qty,
+        properties: {
+          _tao_source: 'bulk_orders_page',
+          _bulk_order: 'true',
+          _bulk_tier: cur ? String(cur.pct) + '%' : '0%',
+          _bulk_total_qty: String(q)
+        }
+      };
+    }).filter(function(item){ return !isNaN(item.id) && item.id > 0; });
+    if (items.length === 0){ els.cta.classList.remove('loading'); toast('Nothing valid to add to cart.', true); return; }
+    fire('bulk_cart_submit', { total_qty: q, subtotal: sub, tier: cur ? cur.pct : 0, items_count: items.length });
+
+    // Same drawer-open pattern as BYOB: ask Shopify to re-render the cart sections
+    // in the same /cart/add.js response, then inject the HTML back into the page
+    // and call cart.open() to show the sidecart.
+    var cartEl = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+    var sectionIds = (cartEl && typeof cartEl.getSectionsToRender === 'function')
+      ? cartEl.getSectionsToRender().map(function(s){ return s.id; })
+      : [];
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify({ items: items, sections: sectionIds, sections_url: window.location.pathname })
+    })
+    .then(function(r){
+      if (!r.ok){
+        return r.json().then(function(err){
+          var msg = (err && (err.description || err.message)) || ('Cart add failed (' + r.status + ')');
+          throw new Error(msg);
+        });
+      }
+      return r.json();
+    })
+    .then(function(parsedState){
+      // Tag the cart with bulk metadata (fire-and-forget — doesn't gate the drawer open)
+      try {
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            attributes: {
+              tao_source: 'bulk_orders_page',
+              tao_bulk_order: 'true',
+              tao_bulk_qty: String(q),
+              tao_bulk_tier_pct: cur ? String(cur.pct) : '0',
+              tao_bulk_code: cur ? (cur.code || '') : ''
+            }
+          })
+        }).catch(function(){});
+      } catch(_){}
+
+      // Prime the discount code so it auto-applies at checkout (Shopify sets a cookie
+      // via /discount/CODE — silent, no redirect since we use no-cors).
+      if (cur && cur.code){
+        try {
+          fetch('/discount/' + encodeURIComponent(cur.code), { method: 'GET', mode: 'no-cors', credentials: 'same-origin' }).catch(function(){});
+        } catch(_){}
+      }
+
+      // Refresh cart count bubble + header price + free-ship progress
+      fetch('/cart.json').then(function(r){ return r.json(); }).then(function(cartJson){
+        if (cartJson && cartJson.item_count !== undefined){
+          document.querySelectorAll('.cart-count').forEach(function(el){
+            el.innerHTML = el.classList.contains('cart-count-drawer')
+              ? '(' + cartJson.item_count + ')'
+              : (cartJson.item_count > 100 ? '~' : cartJson.item_count);
+          });
+          var headerPrice = document.querySelector('header-total-price');
+          if (headerPrice && typeof headerPrice.updateTotal === 'function') headerPrice.updateTotal(cartJson);
+          var freeShip = document.querySelector('free-ship-progress-bar');
+          if (freeShip && typeof freeShip.init === 'function') freeShip.init(cartJson.items_subtotal_price);
+        }
+      }).catch(function(){});
+
+      // Inject the fresh sections HTML into the page (same as BYOB)
+      if (parsedState && parsedState.sections && cartEl && typeof cartEl.getSectionsToRender === 'function'){
+        cartEl.getSectionsToRender().forEach(function(section){
+          var el = document.getElementById(section.id);
+          if (!el || !parsedState.sections[section.id]) return;
+          var html = new DOMParser().parseFromString(parsedState.sections[section.id], 'text/html');
+          var minicartForm = html.querySelector('#minicart-form');
+          if (minicartForm) el.innerHTML = minicartForm.innerHTML;
+        });
+        if (typeof cartEl.cartAction === 'function') cartEl.cartAction();
+      }
+
+      els.cta.classList.remove('loading');
+      var labelEl = els.cta.querySelector('.label');
+      if (labelEl){
+        var originalLabel = labelEl.textContent;
+        labelEl.textContent = '✓ Added to cart!';
+        setTimeout(function(){ if (labelEl) labelEl.textContent = originalLabel; }, 2200);
+      }
+
+      // Open the sidecart
+      if (cartEl && typeof cartEl.open === 'function'){
+        try { cartEl.open(); } catch(_){}
+      } else {
+        // Fallback — no drawer component on the page, go to /cart
+        window.location.href = '/cart';
+      }
+
+      // Reset bulk state so the page is fresh for the next bulk order
+      setTimeout(function(){
+        state.items = {};
+        state.lastTier = 0;
+        render();
+      }, 600);
+    })
+    .catch(function(err){
+      els.cta.classList.remove('loading');
+      var msg = (err && err.message) || 'Could not add to cart';
+      console.error('[BULK] add failed:', err);
+      toast(msg, true);
+      fire('bulk_cart_submit_fail', { error: msg });
+    });
+  }
+
+  // Build a Google Form viewform URL with the user's current bulk state pre-filled.
+  // The user clicks "Open quote form →", form opens in a new tab with Products list
+  // + Total qty already populated — they just type name/email/phone and submit.
+  var quoteLinkEl = root.querySelector('[data-bo-quote-link]');
+
+  function _buildQuoteFormHref(){
+    if (!GF.url) return '';
+    var sep = GF.url.indexOf('?') === -1 ? '?' : '&';
+    var url = GF.url + sep + 'usp=pp_url';
+    var keys = Object.keys(state.items);
+    if (GF.products && keys.length > 0){
+      var lines = keys.map(function(k){
+        var it = state.items[k];
+        return (it.title || 'Item') + ' × ' + (it.qty || 0);
+      }).join('\n');
+      url += '&' + GF.products + '=' + encodeURIComponent(lines);
+    }
+    var q = totalQty();
+    if (GF.qty && q > 0){
+      url += '&' + GF.qty + '=' + encodeURIComponent(String(q));
+    }
+    return url;
+  }
+
+  function _refreshQuoteLink(){
+    if (!quoteLinkEl) return;
+    var href = _buildQuoteFormHref();
+    quoteLinkEl.href = href || '#';
+    quoteLinkEl.classList.toggle('is-disabled', !href);
+  }
+  _refreshQuoteLink();
+
+  if (quoteLinkEl){
+    quoteLinkEl.addEventListener('click', function(e){
+      if (!GF.url){
+        e.preventDefault();
+        toast('Quote form not configured yet.', true);
+        return;
+      }
+      // Make sure href is current at click time
+      quoteLinkEl.href = _buildQuoteFormHref();
+      fire('bulk_quote_form_opened', { total_qty: totalQty(), items_count: Object.keys(state.items).length });
+    });
+  }
+
+  function _openQuoteForm(){
+    var quoteSection = root.querySelector('[data-bo-quote]');
+    if (!quoteSection) return;
+    _refreshQuoteLink();
+    quoteSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    quoteSection.classList.add('flash');
+    setTimeout(function(){ quoteSection.classList.remove('flash'); }, 1500);
+    fire('bulk_quote_form_scrolled', { total_qty: totalQty(), items_count: Object.keys(state.items).length });
+  }
+
+  // "Need 100+? Get a custom quote" link inside the bulk box
+  var quoteLinkInline = root.querySelector('[data-bo-quote-scroll]');
+  if (quoteLinkInline) quoteLinkInline.addEventListener('click', function(e){ e.preventDefault(); _openQuoteForm(); });
+
+  // Keep the quote-form URL in sync with the latest bulk state
+  document.addEventListener('tao:bulk_product_added',   function(){ _refreshQuoteLink(); });
+  document.addEventListener('tao:bulk_product_removed', function(){ _refreshQuoteLink(); });
+  root.addEventListener('tao:bo-state-changed',         function(){ _refreshQuoteLink(); });
+
+  render();
+  fire('bulk_page_view', { max_qty: MAX_QTY, tiers: TIERS.length });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Bulk Orders",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Page copy" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Bulk Orders" },
+    { "type": "richtext", "id": "subtitle", "label": "Subtitle / intro paragraph", "default": "<p>Mix any products. Tier discounts apply automatically at <strong>50, 80, and 100</strong> plants. Above 100 we send a custom quote.</p>" },
+
+    { "type": "header", "content": "Tiers behaviour" },
+    { "type": "range", "id": "max_qty", "label": "Max quantity (above this → quote form)", "min": 50, "max": 500, "step": 10, "default": 100, "unit": "qty" },
+
+    { "type": "header", "content": "Featured grid" },
+    { "type": "collection", "id": "top_collection", "label": "Top SKUs collection" },
+    { "type": "range", "id": "top_grid_limit", "label": "Products to show", "min": 4, "max": 48, "step": 2, "default": 30 },
+
+    { "type": "header", "content": "Custom quote form (Google Form)" },
+    { "type": "paragraph", "content": "Create a Google Form. From the form's three-dot menu → Get pre-filled link → fill any value → 'Get link'. Copy that link, find the entry.XXXX IDs for each field, paste below." },
+    { "type": "url", "id": "gf_url", "label": "Google Form viewform URL" },
+    { "type": "text", "id": "gf_entry_name", "label": "Name field entry ID", "info": "e.g., entry.1234567890" },
+    { "type": "text", "id": "gf_entry_email", "label": "Email field entry ID" },
+    { "type": "text", "id": "gf_entry_phone", "label": "Phone field entry ID" },
+    { "type": "text", "id": "gf_entry_products", "label": "Products list field entry ID" },
+    { "type": "text", "id": "gf_entry_qty", "label": "Total quantity field entry ID" }
+  ],
+  "blocks": [
+    {
+      "type": "tier",
+      "name": "Discount tier",
+      "limit": 8,
+      "settings": [
+        { "type": "range", "id": "qty_threshold", "label": "Unlock at quantity", "min": 5, "max": 500, "step": 5, "default": 50, "unit": "qty" },
+        { "type": "range", "id": "discount_pct", "label": "Discount %", "min": 0, "max": 50, "step": 1, "default": 10, "unit": "%" },
+        { "type": "text", "id": "discount_code", "label": "Discount code (auto-applied at checkout)", "default": "BULK10" },
+        { "type": "text", "id": "label", "label": "Tier label (admin-only)", "default": "Wholesale starter" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bulk Orders",
+      "blocks": [
+        { "type": "tier", "settings": { "qty_threshold": 50,  "discount_pct": 10, "discount_code": "BULK10", "label": "Wholesale starter" } },
+        { "type": "tier", "settings": { "qty_threshold": 80,  "discount_pct": 12, "discount_code": "BULK12", "label": "Wholesale plus" } },
+        { "type": "tier", "settings": { "qty_threshold": 100, "discount_pct": 18, "discount_code": "BULK18", "label": "Wholesale max" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

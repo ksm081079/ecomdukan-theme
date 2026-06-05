@@ -1,0 +1,176 @@
+<style>
+
+#shopify-section-{{ section.id }} .accordion {
+  margin-bottom: 20px;
+}
+#shopify-section-{{ section.id }} .panel {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+#shopify-section-{{ section.id }} .panel-heading {
+  padding: 0;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+#shopify-section-{{ section.id }}  h4.panel-title {
+    padding: 8px;
+    margin: 0px;
+}
+#shopify-section-{{ section.id }} .panel-title a {
+  display: block;
+  position: relative;
+  padding: 10px 30px 10px 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+#shopify-section-{{ section.id }} .panel-title a:hover,
+#shopify-section-{{ section.id }} .panel-title a:focus {
+  text-decoration: none;
+  background-color: #eee;
+}
+#shopify-section-{{ section.id }} .panel-title .chevron {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #777;
+  transition: transform 0.3s ease;
+}
+#shopify-section-{{ section.id }} .panel-title .chevron.up::before {
+  content: '▲';
+}
+#shopify-section-{{ section.id }} .panel-title .chevron.down::before {
+  content: '▼';
+}
+#shopify-section-{{ section.id }} .panel-body {
+  padding: 15px;
+  display: none;
+}
+#shopify-section-{{ section.id }} .panel-body.active {
+  display: block;
+}
+</style>
+
+<div class="fluid_container">
+  <h2>{{ section.settings.accordion_title | escape }}</h2>
+  {% if section.settings.note_text != blank %}
+    <p>{{ section.settings.note_text | raw }}</p>
+  {% endif %}
+  <div class="accordion" id="accordion-{{ section.id }}">
+    {% for block in section.blocks %}
+      <div class="panel" {{ block.shopify_attributes }}>
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#collapse-{{ block.id }}" class="accordion-toggle">
+              {% case block.type %}
+                {% when 'discription' %}
+                  Description
+                {% when '@app' %}
+                  Reviews
+              {% endcase %}
+              <span class="chevron {% if forloop.first %}up{% else %}down{% endif %}"></span>
+            </a>
+          </h4>
+        </div>
+        <div id="collapse-{{ block.id }}" class="panel-body {% if forloop.first %}active{% endif %}">
+          {% case block.type %}
+            {% when 'discription' %}
+              {{ block.settings.description_content | raw }}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const accordion = document.querySelector('#accordion-{{ section.id }}');
+  const toggles = accordion.querySelectorAll('.accordion-toggle');
+
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      const targetPanel = document.querySelector(targetId);
+      const parent = this.closest('.accordion');
+      const allPanels = parent.querySelectorAll('.panel-body');
+      const allChevrons = parent.querySelectorAll('.chevron');
+
+      // Close all panels and reset chevrons
+      allPanels.forEach(panel => {
+        if (panel !== targetPanel) {
+          panel.classList.remove('active');
+        }
+      });
+      allChevrons.forEach(chevron => {
+        if (chevron !== this.querySelector('.chevron')) {
+          chevron.classList.remove('up');
+          chevron.classList.add('down');
+        }
+      });
+
+      // Toggle target panel and chevron
+      if (targetPanel.classList.contains('active')) {
+        targetPanel.classList.remove('active');
+        this.querySelector('.chevron').classList.remove('up');
+        this.querySelector('.chevron').classList.add('down');
+      } else {
+        targetPanel.classList.add('active');
+        this.querySelector('.chevron').classList.remove('down');
+        this.querySelector('.chevron').classList.add('up');
+      }
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Meet Collapsible",
+  "settings": [
+    {
+      "type": "text",
+      "id": "accordion_title",
+      "label": "Accordion Title",
+      "default": "Accordion Example"
+    },
+    {
+      "type": "richtext",
+      "id": "note_text",
+      "label": "Note Text",
+      "default": "<p><strong>Note:</strong> The <strong>data-parent</strong> attribute ensures that all collapsible elements under the specified parent will be closed when one of the collapsible items is shown.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "discription",
+      "name": "Description",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "description_content",
+          "label": "Description Content",
+          "default": "<p>Enter your custom Liquid content here.</p>"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Meet Collapsible Reviews & Description"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,42 @@
+{% comment %}
+  Snippet: product-card-qty-picker
+  -------------------------------
+  Compact quantity picker for product cards (bulk-deal style).
+  Renders four preset chips (1, 2, 5, 10) and a custom number input (max 20).
+  Drops a hidden <input name="quantity"> that submits with the parent product form.
+
+  Params:
+    form_id (optional) — when set, the hidden input uses the HTML5 form="..."
+                         attribute so the picker can sit outside the <form>.
+
+  Usage:
+    Inside the form:
+      {% render 'product-card-qty-picker' %}
+    Outside the form (e.g. below the price), bind by id:
+      {% render 'product-card-qty-picker', form_id: product_form_id %}
+{% endcomment %}
+<div class="cqp" data-cqp>
+  <div class="cqp__row" role="radiogroup" aria-label="Quantity">
+    <button type="button" class="cqp__chip is-active" data-qty="1" role="radio" aria-checked="true" tabindex="0">1</button>
+    <button type="button" class="cqp__chip" data-qty="2" role="radio" aria-checked="false" tabindex="0">2</button>
+    <button type="button" class="cqp__chip" data-qty="5" role="radio" aria-checked="false" tabindex="0">5</button>
+    <button type="button" class="cqp__chip" data-qty="10" role="radio" aria-checked="false" tabindex="0">10</button>
+    <input
+      type="number"
+      class="cqp__custom"
+      min="1"
+      max="20"
+      step="1"
+      placeholder="Qty"
+      aria-label="Custom quantity (max 20)"
+      inputmode="numeric"
+    >
+  </div>
+  <input
+    type="hidden"
+    name="quantity"
+    value="1"
+    data-cqp-qty
+    {% if form_id %}form="{{ form_id }}"{% endif %}
+  >
+</div>

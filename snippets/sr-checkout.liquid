@@ -1,37 +1,94 @@
 <script type="application/javascript">
 checkoutBuyer = "https://fastrr-boost-ui.pickrr.com/";
 </script>
-<input type="hidden" value="ecomdukan.com" id="sellerDomain"/>
+<input type="hidden" value="theaffordableorganicstore.com" id="sellerDomain"/>
 <link rel="stylesheet" href="https://fastrr-boost-ui.pickrr.com/assets/styles/shopify.css">
 <script src="https://fastrr-boost-ui.pickrr.com/assets/js/channels/shopify.js" defer></script>
 <script src="https://fastrr-boost-ui.pickrr.com/assets/js/channels/shiprocketMarketing.js"></script>
-<script src="https://shiprocket-pad.pickrr.com/script.js" defer></script>
-<script src="https://shiprocket-sns.pickrr.com/script.js" defer></script>
 <input type="hidden" value="rz" id="template"/>
 <!-- <input type="hidden" value="percent" id="discountType"/>
 <input type="hidden" value="5" id="discValue"/> -->
 <style>
-   .sr-headless-checkout {
-     font-family: inherit;
-     font-size: 12px;
-     font-weight: 600;
-     border-radius: 2px;
-     height: 50px;
-     letter-spacing: normal;
-     background-color: #1e5fff;
-     margin-bottom:5px !important;
+ .sr-headless-checkout {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 30px;
+  height: 53px;
+  /* letter-spacing: 1.4px; */
+  background-color:rgb(15, 133, 91) !important ;
+   margin-bottom:0px !important;
+  /* margin-top:3px;*/
+ }
+ .shiprocket-headless{
+  width:100%;
+ }
+
+  .sr-powered-by{
+    margin-right:10px ;
+  }
+  .shiprocket-headless[data-type="mini-cart"] .sr-headless-checkout{
+   height:55px !important;
+    
+}
+
+   .shiprocket-headless[data-type="mini-cart"]{
+     width:140% !important;
    }
-   .shiprocket-headless{
-     width:100% !important;
+
+   @media screen and (max-width: 767px){
+     .shiprocket-headless[data-type="mini-cart"] .sr-headless-checkout{
+   width:max-content !important;
+}
+     }
    }
-   .sr-powered-by{
-     right:15px;
-   }
-    .shiprocket-headless .full-width{
-     padding:0px !important;
-     background-color: inherit !important;
-   }
-    .cart-drawer .ed-cart-cta-row{
-     grid-template-columns: 1fr;
-   }
+/* .sr-discount-label{
+ font-size:0px !important;
+}
+ .sr-discount-label:before{
+  content:"EXTRA 5% OFF on PERFUMES";
+  font-size: 9px;
+  color: #000;
+  text-transform: none;
+  top: -8px;
+  left: 6px;
+  background-color: #53FF73;
+  border-radius: 3px;
+  padding: 0 10px;
+} */
 </style>
+<script>
+// Select the node that will be observed for mutations
+let fastrrBtn = '<div id="headless-button" class="shiprocket-headless" data-type="mini-cart"></div>'
+let buttonAdded = false
+let parsedBtnCode = new DOMParser().parseFromString(fastrrBtn, 'text/html').querySelectorAll('.shiprocket-headless')[0];
+const headlessNode = document.querySelector('html');
+
+// Options for the observer (which mutations to observe)
+const configuration = { attributes: true, childList: true, subtree: true };
+
+// Callback function to execute when mutations are observed
+const headlessCallback = (mutationList, observer) => {
+  for (const mutation of mutationList) {
+    
+  let sidecart = document.querySelector('.up-bottomBar')
+    
+  let sideCartButton = document.querySelector('.up-standardButton.up-checkoutBtn')
+    
+    if(sidecart) {
+      if(!document.getElementById('headless-button')) {
+      
+      sideCartButton.before(parsedBtnCode)
+      }
+    }
+
+  }
+};
+
+// Create an observer instance linked to the callback function
+const observer1 = new MutationObserver(headlessCallback);
+
+// Start observing the target node for configured mutations
+observer1.observe(headlessNode, configuration);
+
+</script>
