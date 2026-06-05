@@ -563,10 +563,16 @@
         const q = qtyInput ? parseInt(qtyInput.value, 10) : 1;
         ph('add_to_cart', Object.assign({}, meta, { quantity: q, surface: 'pdp' }));
 
+        const drawer = document.querySelector('cart-drawer');
+        // OPEN DRAWER IMMEDIATELY (optimistic) — user sees motion right away, content fills in when AJAX returns
+        if (drawer && typeof drawer.open === 'function') {
+          if (drawer.classList.contains('is-empty')) drawer.classList.remove('is-empty');
+          drawer.open();
+        }
+
         try {
           // 1. Add item to cart
           const fd = new FormData(form);
-          const drawer = document.querySelector('cart-drawer');
           const sections = drawer && typeof drawer.getSectionsToRender === 'function'
             ? drawer.getSectionsToRender().map(function(s) { return s.id; }).join(',')
             : 'cart-drawer,cart-icon-bubble,cart-live-region-text';
@@ -608,12 +614,8 @@
             }
           } catch (e) {}
 
-          // 4. Open the drawer
-          if (drawer && typeof drawer.open === 'function') {
-            if (drawer.classList.contains('is-empty')) drawer.classList.remove('is-empty');
-            drawer.open();
-          } else {
-            // No drawer — fall back to cart page
+          // 4. (Drawer already opened optimistically above; ensure it stays open after section swap)
+          if (!drawer) {
             window.location = window.routes ? window.routes.cart_url : '/cart';
           }
         } catch (err) {

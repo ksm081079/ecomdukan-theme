@@ -203,30 +203,54 @@ cart-drawer-items {
   align-self: end;
   display: flex; align-items: center; gap: 6px;
 }
-.cart-drawer .cart-quantity {
-  border: 1px solid var(--ed-border, #E0DBCF);
-  border-radius: 8px;
-  background: #fff;
-  display: inline-flex; align-items: stretch;
-  height: 28px;
+.cart-drawer .cart-quantity,
+.cart-drawer .quantity {
+  border: 1px solid var(--ed-border, #E0DBCF) !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  display: inline-flex !important; align-items: stretch !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  position: static !important;
+  box-shadow: none !important;
 }
+.cart-drawer .cart-quantity::before,
+.cart-drawer .cart-quantity::after,
+.cart-drawer .quantity::before,
+.cart-drawer .quantity::after { display: none !important; }
 .cart-drawer .quantity__button {
-  width: 26px; min-width: 26px; height: 28px;
-  padding: 0; font-size: 14px; line-height: 1;
-  background: transparent;
-  color: var(--ed-ink, #0A0B0E);
+  width: 28px !important; min-width: 28px !important; height: 32px !important;
+  padding: 0 !important; font-size: 14px !important; line-height: 1 !important;
+  background: transparent !important;
+  color: var(--ed-ink, #0A0B0E) !important;
+  margin: 0 !important;
 }
-.cart-drawer .quantity__button:hover { background: var(--ed-snow, #FBFAF6); }
+.cart-drawer .quantity__button:hover { background: var(--ed-snow, #FBFAF6) !important; }
 .cart-drawer .quantity__input {
-  width: 32px; height: 28px;
-  border: 0;
-  background: transparent;
-  font-family: "Inter", sans-serif;
-  font-size: 12px; font-weight: 600;
-  text-align: center;
+  width: 36px !important; min-width: 36px !important; height: 32px !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 13px !important; font-weight: 600 !important;
+  text-align: center !important;
   -moz-appearance: textfield;
-  padding: 0;
-  color: var(--ed-ink, #0A0B0E);
+  padding: 0 !important;
+  color: var(--ed-ink, #0A0B0E) !important;
+  opacity: 1 !important;
+}
+/* Kill Dawn's quantity-popover-wrapper extra padding/width */
+.cart-drawer .cart-item__quantity-wrapper,
+.cart-drawer .quantity-popover-wrapper,
+.cart-drawer .quantity-popover-container {
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
 }
 
 /* Price — col 3 row 2, bottom-right */
@@ -254,26 +278,33 @@ cart-drawer-items {
   text-decoration: line-through;
 }
 
-/* Trash — absolute top-right, anchored to .cart-item */
+/* Trash — inline next to qty stepper in the same flex row (sibling of .cart-quantity) */
 .cart-drawer .cart-item cart-remove-button,
 .cart-drawer .cart-item .cart-remove-button {
-  position: absolute;
-  top: 10px; right: 14px;
-  margin: 0;
-  grid-column: unset; grid-row: unset;
-  z-index: 2;
+  position: static !important;
+  margin: 0 !important;
+  grid-column: unset !important; grid-row: unset !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 .cart-drawer .cart-remove-button .button {
-  width: 24px; height: 24px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ed-text-mute, #5C6068);
-  border-radius: 6px;
-  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px !important; height: 32px !important;
+  padding: 0 !important;
+  border: 1px solid var(--ed-border, #E0DBCF) !important;
+  background: #fff !important;
+  color: var(--ed-text-mute, #5C6068) !important;
+  border-radius: 8px !important;
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  cursor: pointer !important;
+  transition: color 120ms, border-color 120ms, background 120ms;
 }
-.cart-drawer .cart-remove-button .button:hover { color: var(--ed-error, #A8281C); background: var(--ed-snow, #FBFAF6); }
-.cart-drawer .cart-remove-button svg { width: 15px; height: 15px; }
+.cart-drawer .cart-remove-button .button:hover {
+  color: var(--ed-error, #A8281C) !important;
+  border-color: var(--ed-error, #A8281C) !important;
+  background: rgba(168, 40, 28, 0.04) !important;
+}
+.cart-drawer .cart-remove-button svg { width: 16px; height: 16px; }
 
 @media (max-width: 480px) {
   .cart-drawer .cart-item { grid-template-columns: 90px 1fr 32px; column-gap: 12px; padding: 14px 14px; }
