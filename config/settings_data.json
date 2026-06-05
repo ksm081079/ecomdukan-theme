@@ -103,31 +103,101 @@
       "scheme-1": {
         "settings": {
           "background": "#f4f0e8",
-          "background_gradient": ""
+          "background_gradient": "",
+          "primary_color": "#D0473E",
+          "text_color": "#444",
+          "heading_color": "#111111",
+          "border_color": "#EBEBEB",
+          "btn_primary_color": "#fff",
+          "btn_primary_background": "#111111",
+          "btn_primary_gradient": "",
+          "btn_primary_hover_color": "#fff",
+          "btn_primary_hover_background": "#000",
+          "btn_primary_hover_background_gradient": "",
+          "btn_outline_color": "#111111",
+          "btn_outline_border_color": "#111111",
+          "button_link_color": "#111111",
+          "button_link_hover_color": "#111111"
         }
       },
       "scheme-2": {
         "settings": {
           "background": "#fbfaf6",
-          "background_gradient": ""
+          "background_gradient": "",
+          "primary_color": "#D0473E",
+          "text_color": "#444",
+          "heading_color": "#111111",
+          "border_color": "#EBEBEB",
+          "btn_primary_color": "#fff",
+          "btn_primary_background": "#111111",
+          "btn_primary_gradient": "",
+          "btn_primary_hover_color": "#fff",
+          "btn_primary_hover_background": "#000",
+          "btn_primary_hover_background_gradient": "",
+          "btn_outline_color": "#111111",
+          "btn_outline_border_color": "#111111",
+          "button_link_color": "#111111",
+          "button_link_hover_color": "#111111"
         }
       },
       "scheme-3": {
         "settings": {
           "background": "#1a2c5e",
-          "background_gradient": ""
+          "background_gradient": "",
+          "primary_color": "#D0473E",
+          "text_color": "#444",
+          "heading_color": "#111111",
+          "border_color": "#EBEBEB",
+          "btn_primary_color": "#fff",
+          "btn_primary_background": "#111111",
+          "btn_primary_gradient": "",
+          "btn_primary_hover_color": "#fff",
+          "btn_primary_hover_background": "#000",
+          "btn_primary_hover_background_gradient": "",
+          "btn_outline_color": "#111111",
+          "btn_outline_border_color": "#111111",
+          "button_link_color": "#111111",
+          "button_link_hover_color": "#111111"
         }
       },
       "scheme-4": {
         "settings": {
           "background": "#0a0b0e",
-          "background_gradient": ""
+          "background_gradient": "",
+          "primary_color": "#D0473E",
+          "text_color": "#444",
+          "heading_color": "#111111",
+          "border_color": "#EBEBEB",
+          "btn_primary_color": "#fff",
+          "btn_primary_background": "#111111",
+          "btn_primary_gradient": "",
+          "btn_primary_hover_color": "#fff",
+          "btn_primary_hover_background": "#000",
+          "btn_primary_hover_background_gradient": "",
+          "btn_outline_color": "#111111",
+          "btn_outline_border_color": "#111111",
+          "button_link_color": "#111111",
+          "button_link_hover_color": "#111111"
         }
       },
       "scheme-5": {
         "settings": {
           "background": "#1e5fff",
-          "background_gradient": ""
+          "background_gradient": "",
+          "primary_color": "#D0473E",
+          "text_color": "#444",
+          "heading_color": "#111111",
+          "border_color": "#EBEBEB",
+          "btn_primary_color": "#fff",
+          "btn_primary_background": "#111111",
+          "btn_primary_gradient": "",
+          "btn_primary_hover_color": "#fff",
+          "btn_primary_hover_background": "#000",
+          "btn_primary_hover_background_gradient": "",
+          "btn_outline_color": "#111111",
+          "btn_outline_border_color": "#111111",
+          "button_link_color": "#111111",
+          "button_link_hover_color": "#111111"
         }
       }
     }
