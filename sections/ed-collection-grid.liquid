@@ -239,23 +239,23 @@
   "blocks": [
     {
       "type": "collection_link",
-      "name": "Pill — link to collection",
+      "name": "Pill — collection",
       "settings": [
-        { "type": "text", "id": "label", "label": "Label (leave blank to use collection title)" },
-        { "type": "collection", "id": "collection", "label": "Collection to link to" }
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "collection", "id": "collection", "label": "Collection" }
       ]
     },
     {
       "type": "tag_filter",
-      "name": "Pill — filter by tag",
+      "name": "Pill — tag filter",
       "settings": [
-        { "type": "text", "id": "label", "label": "Label (leave blank to use tag name)" },
-        { "type": "text", "id": "tag", "label": "Tag (must match a product tag exactly)", "info": "Tapping this pill loads /collections/<current>/<tag>" }
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "text", "id": "tag", "label": "Tag (exact match)", "info": "Loads /collections/<handle>/<tag>" }
       ]
     },
     {
       "type": "all_link",
-      "name": "Pill — All (clear filters)",
+      "name": "Pill — All",
       "limit": 1,
       "settings": [
         { "type": "text", "id": "label", "label": "Label", "default": "All" }
