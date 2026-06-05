@@ -66,18 +66,24 @@
           <div style="display: grid; grid-template-columns: repeat({{ cols_desktop }}, 1fr); gap: var(--sp-5);" class="ed-coll-grid" data-cols-mobile="{{ cols_mobile }}" data-ed-grid>
             {%- for product in collection.products -%}
               {%- comment -%}
-                Read area + pack from product tags.
-                Tags: "area-NNNN" (e.g. area-7500) and "pack-NNN" (e.g. pack-500).
-                Per-label price = variant.price (paise) / pack.
+                Size sort = width × height, computed from the bare `WxH` tag (e.g. `38x15`).
+                Price sort = variant price (paise) ÷ `pack-NNN` tag.
+                Area is computed — never read from a stored `area-NNNN` tag — so it can't drift.
               {%- endcomment -%}
               {%- assign area_val = 0 -%}
               {%- assign pack_val = 1 -%}
               {%- for t in product.tags -%}
                 {%- assign tl = t | downcase | strip -%}
+                {%- assign wh = tl | split: 'x' -%}
+                {%- if wh.size == 2 -%}
+                  {%- assign w_num = wh[0] | strip | times: 1 -%}
+                  {%- assign h_num = wh[1] | strip | times: 1 -%}
+                  {%- if w_num > 0 and h_num > 0 -%}
+                    {%- assign area_val = w_num | times: h_num -%}
+                  {%- endif -%}
+                {%- endif -%}
                 {%- assign parts = tl | split: '-' -%}
-                {%- if parts[0] == 'area' and parts.size >= 2 -%}
-                  {%- assign area_val = parts[1] | strip | times: 1 -%}
-                {%- elsif parts[0] == 'pack' and parts.size >= 2 -%}
+                {%- if parts[0] == 'pack' and parts.size >= 2 -%}
                   {%- assign pack_val = parts[1] | strip | times: 1 -%}
                 {%- endif -%}
               {%- endfor -%}

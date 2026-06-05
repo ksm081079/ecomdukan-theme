@@ -15,25 +15,6 @@
   if product.variants.size > 1
     assign has_options = true
   endif
-
-  comment
-    Size badge from product tag `WxH` (e.g. `38x15`, `100x150`).
-    Single source of truth for displayed dimensions — overlays the image so artwork mismatches don't matter.
-  endcomment
-  assign size_label = ''
-  for t in product.tags
-    assign tl = t | downcase | strip
-    assign wh = tl | split: 'x'
-    if wh.size == 2
-      assign w_raw = wh[0] | strip
-      assign h_raw = wh[1] | strip
-      assign w_num = w_raw | times: 1
-      assign h_num = h_raw | times: 1
-      if w_num > 0 and h_num > 0
-        assign size_label = w_num | append: '×' | append: h_num | append: ' mm'
-      endif
-    endif
-  endfor
 -%}
 
 <div class="ed-pc" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" data-product-title="{{ product.title | escape }}">
@@ -56,9 +37,6 @@
         <div class="ed-pc__noimg">
           <img src="{{ 'ed-mark.svg' | asset_url }}" alt="" width="40">
         </div>
-      {%- endif -%}
-      {%- if size_label != blank -%}
-        <span class="ed-pc__size">{{ size_label }}</span>
       {%- endif -%}
       {%- if on_sale -%}
         <span class="ed-pc__badge">−{{ discount_pct }}%</span>
@@ -143,15 +121,6 @@
     font-weight: 700; font-size: 11px;
     padding: 3px 7px; border-radius: 6px;
     letter-spacing: 0.02em;
-  }
-  .ed-pc__size {
-    position: absolute; top: 10px; left: 10px;
-    background: #0A1A3F; color: #fff;
-    font-family: "IBM Plex Mono", monospace;
-    font-weight: 700; font-size: 13px;
-    padding: 5px 10px; border-radius: 6px;
-    letter-spacing: 0.02em;
-    z-index: 2;
   }
   .ed-pc__soldout {
     position: absolute; bottom: 8px; left: 8px;
@@ -241,7 +210,6 @@
     .ed-pc__price-now { font-size: 13px; }
     .ed-pc__price-was { font-size: 11px; }
     .ed-pc__badge { font-size: 10px; padding: 2px 5px; top: 6px; right: 6px; }
-    .ed-pc__size { font-size: 11px; padding: 3px 7px; top: 6px; left: 6px; }
     .ed-pc__form { padding: 4px 8px 8px; gap: 5px; }
     .ed-pc__chip { height: 26px; font-size: 10px; }
     .ed-pc__add { height: 30px; font-size: 11px; margin: 4px 8px 8px; }
