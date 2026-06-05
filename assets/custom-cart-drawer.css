@@ -71,19 +71,34 @@ cart-drawer-items {
    Ecomdukan — Alibaba-style dense cart drawer overrides
    ===================================================== */
 
-/* Header */
+/* Header — lighter weight, breathes */
 .cart-drawer .drawer__header {
-  padding: 14px 18px;
+  padding: 18px 20px;
   background: var(--ed-snow, #FBFAF6);
-  border-bottom: 1.5px solid var(--ed-ink, #0A0B0E);
+  border-bottom: 1px solid var(--ed-border, #E0DBCF);
 }
 .cart-drawer .drawer__heading {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
-  font-size: 16px;
-  letter-spacing: -0.02em;
+  font-size: 17px;
+  letter-spacing: -0.01em;
   margin: 0;
+  color: var(--ed-ink, #0A0B0E);
 }
+.cart-drawer .drawer__heading-count {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ed-text-mute, #5C6068);
+  margin-left: 8px;
+}
+.cart-drawer .drawer__close {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ed-text-mute, #5C6068);
+}
+.cart-drawer .drawer__close:hover { background: var(--ed-paper, #F4F0E8); color: var(--ed-ink, #0A0B0E); }
 /* removed dead ::after that referenced non-existent data-count attr */
 
 /* Drawer body */
@@ -135,9 +150,9 @@ cart-drawer-items {
 /* Title row — col 2-3 row 1, leaves space for absolute trash */
 .cart-drawer .cart-item__details {
   grid-column: 2 / 4; grid-row: 1;
-  padding: 0 28px 0 0; min-width: 0;
+  padding: 0 36px 0 0; min-width: 0;
   display: flex; flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 .cart-drawer .cart-item__name {
   font-family: "Inter", sans-serif;
@@ -264,27 +279,35 @@ cart-drawer-items {
 
 /* Footer / Totals */
 .cart-drawer .drawer__footer {
-  padding: 14px 18px 16px;
+  padding: 16px 20px 18px;
   background: var(--ed-snow, #FBFAF6);
-  border-top: 1.5px solid var(--ed-ink, #0A0B0E);
+  border-top: 1px solid var(--ed-border, #E0DBCF);
 }
 .cart-drawer .totals {
   display: flex; justify-content: space-between; align-items: baseline;
-  padding: 6px 0 10px;
+  padding: 4px 0 6px;
 }
 .cart-drawer .totals__total {
   font-family: "Inter", sans-serif;
-  font-weight: 600; font-size: 13px;
-  letter-spacing: 0.04em; text-transform: uppercase;
-  color: var(--ed-text-mute, #5C6068);
+  font-weight: 600; font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--ed-ink, #0A0B0E);
   margin: 0;
 }
 .cart-drawer .totals__total-value {
   font-family: "IBM Plex Mono", monospace;
-  font-weight: 700; font-size: 22px;
+  font-weight: 700; font-size: 20px;
+  color: var(--ed-ink, #0A0B0E);
   margin: 0;
 }
-.cart-drawer .tax-note { font-size: 11px; }
+.cart-drawer .tax-note {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  color: var(--ed-text-mute, #5C6068);
+  line-height: 1.5;
+  margin: 8px 0 14px;
+  padding: 0;
+}
 
 /* CTA buttons — full-width electric primary */
 .cart-drawer .cart__ctas {
@@ -294,16 +317,21 @@ cart-drawer-items {
 .cart-drawer .cart__checkout-button {
   width: 100%;
   background: var(--ed-electric, #1E5FFF) !important;
-  color: var(--ed-paper, #F4F0E8) !important;
+  color: #fff !important;
   border: 1.5px solid var(--ed-electric, #1E5FFF) !important;
-  border-radius: 8px;
-  padding: 14px 18px;
+  border-radius: 10px;
+  padding: 16px 18px;
   font-family: "Inter", sans-serif;
-  font-weight: 600; font-size: 14px; letter-spacing: 0.02em;
+  font-weight: 700; font-size: 15px; letter-spacing: 0.02em;
   cursor: pointer;
-  transition: background 120ms;
+  box-shadow: 0 4px 12px rgba(30, 95, 255, 0.22);
+  transition: background 120ms, box-shadow 120ms, transform 120ms;
 }
-.cart-drawer .cart__checkout-button:hover:not(:disabled) { background: #1747D6 !important; border-color: #1747D6 !important; }
+.cart-drawer .cart__checkout-button:hover:not(:disabled) {
+  background: #1747D6 !important; border-color: #1747D6 !important;
+  box-shadow: 0 6px 16px rgba(23, 71, 214, 0.32);
+}
+.cart-drawer .cart__checkout-button:active:not(:disabled) { transform: translateY(1px); box-shadow: 0 2px 6px rgba(30,95,255,0.2); }
 
 /* Note/gift action chips */
 .cart-drawer-actions {
@@ -392,28 +420,28 @@ cart-drawer-items {
   margin-left: 6px;
 }
 
-/* Split CTA row — View cart + Checkout */
+/* CTA hierarchy — Checkout dominant electric, View cart subtle text-link below */
 .cart-drawer .ed-cart-cta-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
+  flex-direction: column-reverse;
   gap: 10px;
   align-items: stretch;
 }
 .cart-drawer .ed-cart-cta-row__viewcart {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 12px 18px;
-  border: 1.5px solid var(--ed-ink, #0A0B0E);
-  border-radius: 8px;
+  padding: 10px 8px;
   background: transparent;
-  color: var(--ed-ink, #0A0B0E);
-  text-decoration: none;
-  font-family: "Inter", sans-serif; font-weight: 600; font-size: 13px;
+  color: var(--ed-text-mute, #5C6068);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-family: "Inter", sans-serif; font-weight: 500; font-size: 12px;
   letter-spacing: 0.02em;
-  transition: background 120ms, color 120ms;
+  transition: color 120ms;
+  border: 0;
 }
 .cart-drawer .ed-cart-cta-row__viewcart:hover {
-  background: var(--ed-ink, #0A0B0E);
-  color: var(--ed-paper, #F4F0E8);
+  background: transparent;
+  color: var(--ed-ink, #0A0B0E);
 }
 .cart-drawer .ed-cart-cta-row__checkout { margin: 0 !important; }
 
