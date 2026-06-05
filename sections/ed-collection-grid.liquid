@@ -1,6 +1,6 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 24
-  assign _pb = section.settings.padding_bottom | default: 24
+  assign _pt = section.settings.padding_top | default: 0
+  assign _pb = section.settings.padding_bottom | default: 0
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
@@ -225,7 +225,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 24,
+      "default": 0,
       "unit": "px"
     },
     {
@@ -235,7 +235,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 24,
+      "default": 0,
       "unit": "px"
     }
   ],

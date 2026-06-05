@@ -48,7 +48,7 @@
   }
 
   summary.list-menu__item {
-    padding-right: 2.7rem;
+    padding-right: 1rem;
   }
 
   .list-menu__item {
@@ -173,22 +173,33 @@
   .header__active-menu-item { font-weight: 600 !important; }
   .header__menu-item:hover { color: var(--ed-electric, #1E5FFF); }
 
-  /* Dropdown caret arrow — fixed size + gap so it never overlaps the label on hover */
-  .header__menu-item svg,
+  /* Dropdown caret arrow — kill Dawn's position:absolute (which overlapped the label),
+     render inline-flex child with proper gap. */
   .header__menu-item .icon-caret,
+  .header__menu-item svg.icon-caret,
+  summary.list-menu__item .icon-caret,
   summary.list-menu__item svg {
+    position: static !important;
+    right: auto !important;
+    top: auto !important;
     width: 10px !important;
     height: 10px !important;
-    margin-left: 6px !important;
-    flex-shrink: 0;
+    margin: 0 0 0 8px !important;
+    flex-shrink: 0 !important;
     transform: none !important;
-    transition: transform 120ms;
+    transition: transform 120ms !important;
   }
+  details[open] > summary.list-menu__item .icon-caret,
+  details[open] > summary.header__menu-item .icon-caret,
   details[open] > summary.list-menu__item svg,
   details[open] > summary.header__menu-item svg {
     transform: rotate(180deg) !important;
   }
-  .header__menu-item { display: inline-flex !important; align-items: center !important; }
+  summary.header__menu-item,
+  summary.list-menu__item {
+    display: inline-flex !important;
+    align-items: center !important;
+  }
 
   /* Mega menu typography */
   .mega-menu__list .mega-menu__link {

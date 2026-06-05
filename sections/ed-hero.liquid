@@ -13,8 +13,9 @@
 
 {%- liquid
   assign scheme = section.settings.color_scheme | default: 'scheme-1'
-  assign dh = section.settings.desktop_height | default: 720
+  assign dh = section.settings.desktop_height | default: 800
   assign mh = section.settings.mobile_height | default: 480
+  assign effect = section.settings.slide_effect | default: 'slide'
   assign autoplay = section.settings.autoplay
   assign speed = section.settings.autoplay_speed | default: 6
   assign show_arrows = section.settings.show_arrows
@@ -22,16 +23,25 @@
   assign id = section.id
 -%}
 
-<div class="ed-hero ed-hero--slideshow color-{{ scheme }}" data-ed-hero data-autoplay="{{ autoplay }}" data-speed="{{ speed }}" style="--dh: {{ dh }}px; --mh: {{ mh }}px;">
+<div class="ed-hero ed-hero--slideshow ed-hero--{{ effect }} color-{{ scheme }}" data-ed-hero data-effect="{{ effect }}" data-autoplay="{{ autoplay }}" data-speed="{{ speed }}" style="--dh: {{ dh }}px; --mh: {{ mh }}px;">
   {%- if section.blocks.size > 0 -%}
     <div class="ed-hero__track" data-ed-hero-track>
       {%- for block in section.blocks -%}
         {%- assign desk = block.settings.image -%}
         {%- assign mob = block.settings.image_mobile | default: block.settings.image -%}
         {%- assign h = block.settings.heading | strip_newlines | escape -%}
+        {%- if block.settings.link != blank -%}
+          {%- assign slide_href = block.settings.link -%}
+        {%- elsif block.settings.cta_link != blank -%}
+          {%- assign slide_href = block.settings.cta_link -%}
+        {%- else -%}
+          {%- assign slide_href = routes.all_products_collection_url -%}
+        {%- endif -%}
+        {%- assign overlay = block.settings.overlay_opacity | default: 0 -%}
         <div class="ed-hero__slide{% if forloop.first %} is-active{% endif %}" data-ed-slide="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
-          {%- if block.settings.link != blank -%}
-            <a href="{{ block.settings.link }}" class="ed-hero__link" data-action="hero_slide" data-slide="{{ forloop.index }}">
+          <a href="{{ slide_href }}" class="ed-hero__link" data-action="hero_slide" data-slide="{{ forloop.index }}" aria-label="Slide {{ forloop.index }}"><span class="visually-hidden">View</span></a>
+          {%- if overlay > 0 -%}
+            <div class="ed-hero__overlay" style="background: rgba(0,0,0,{{ overlay | divided_by: 100.0 }});"></div>
           {%- endif -%}
           <picture class="ed-hero__media">
             {%- if mob != blank -%}
@@ -67,9 +77,6 @@
                 <a href="{{ block.settings.cta_link | default: '#' }}" class="ed-btn ed-btn--primary ed-btn--lg ed-hero__cta" data-action="hero_cta" data-slide="{{ forloop.index }}">{{ block.settings.cta_label }}</a>
               {%- endif -%}
             </div>
-          {%- endif -%}
-          {%- if block.settings.link != blank -%}
-            </a>
           {%- endif -%}
         </div>
       {%- endfor -%}
@@ -118,29 +125,56 @@
     width: 100%;
     height: 100%;
   }
-  .ed-hero__slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    visibility: hidden;
+  /* Effect: fade (default fallback) */
+  .ed-hero--fade .ed-hero__track { display: block; }
+  .ed-hero--fade .ed-hero__slide {
+    position: absolute; inset: 0;
+    opacity: 0; visibility: hidden;
     transition: opacity 600ms ease;
+    cursor: pointer;
   }
-  .ed-hero__slide.is-active {
-    opacity: 1;
-    visibility: visible;
+  .ed-hero--fade .ed-hero__slide.is-active { opacity: 1; visibility: visible; z-index: 1; }
+
+  /* Effect: slide (taos default — translateX horizontal slide) */
+  .ed-hero--slide .ed-hero__track {
+    display: flex;
+    width: 100%; height: 100%;
+    transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  .ed-hero--slide .ed-hero__slide {
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%; height: 100%;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  /* Per-slide dark overlay (controlled by block.overlay_opacity 0-90) */
+  .ed-hero__overlay {
+    position: absolute; inset: 0;
     z-index: 1;
+    pointer-events: none;
   }
   .ed-hero__link {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
     display: block;
     width: 100%;
     height: 100%;
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
   }
+  /* Content + CTA need to sit above the slide-wide link so the CTA itself is clickable */
+  .ed-hero__content { z-index: 4; pointer-events: none; }
+  .ed-hero__content .ed-hero__cta { pointer-events: auto; position: relative; z-index: 5; }
   .ed-hero__media {
     position: absolute;
     inset: 0;
     display: block;
+    pointer-events: none;
   }
   .ed-hero__img {
     width: 100%;
@@ -183,8 +217,8 @@
   .ed-hero__h {
     margin: 0 0 12px;
     font-family: "Poppins", sans-serif; font-weight: 700;
-    font-size: clamp(28px, 5vw, 64px);
-    letter-spacing: -0.025em; line-height: 1.05;
+    font-size: clamp(32px, 5.4vw, 70px);
+    letter-spacing: -0.03em; line-height: 1.02;
     color: #fff;
   }
   .ed-hero__sub {
@@ -304,6 +338,7 @@
   (function() {
     const root = document.querySelector('[data-ed-hero]');
     if (!root) return;
+    const track = root.querySelector('[data-ed-hero-track]');
     const slides = Array.from(root.querySelectorAll('.ed-hero__slide'));
     if (slides.length < 2) return;
     const dots = Array.from(root.querySelectorAll('[data-ed-hero-dot]'));
@@ -311,12 +346,16 @@
     const next = root.querySelector('[data-ed-hero-next]');
     const autoplay = root.dataset.autoplay === 'true';
     const speedMs = (parseFloat(root.dataset.speed) || 6) * 1000;
+    const effect = root.dataset.effect || 'slide';
     let current = 0;
     let timer = null;
     const show = function(i) {
       if (i < 0) i = slides.length - 1;
       if (i >= slides.length) i = 0;
       current = i;
+      if (effect === 'slide' && track) {
+        track.style.transform = 'translateX(-' + (i * 100) + '%)';
+      }
       slides.forEach(function(s, idx) { s.classList.toggle('is-active', idx === i); });
       dots.forEach(function(d, idx) { d.classList.toggle('is-active', idx === i); });
     };
@@ -367,7 +406,23 @@
       "min": 360,
       "max": 1000,
       "step": 20,
-      "default": 720
+      "default": 800
+    },
+    {
+      "type": "select",
+      "id": "slide_effect",
+      "label": "Slide transition",
+      "default": "slide",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Slide (horizontal)"
+        },
+        {
+          "value": "fade",
+          "label": "Fade (cross-fade)"
+        }
+      ]
     },
     {
       "type": "range",
@@ -473,6 +528,16 @@
           "type": "url",
           "id": "link",
           "label": "Slide link"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Image dim overlay (%)",
+          "min": 0,
+          "max": 90,
+          "step": 5,
+          "default": 0,
+          "unit": "%"
         },
         {
           "type": "header",

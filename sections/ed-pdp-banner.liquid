@@ -58,22 +58,81 @@
   "name": "ED PDP banner",
   "tag": "section",
   "settings": [
-    { "type": "image_picker", "id": "image_1", "label": "Image 1" },
-    { "type": "text", "id": "alt_1", "label": "Image 1 alt text" },
-    { "type": "url", "id": "link_1", "label": "Image 1 link" },
-    { "type": "image_picker", "id": "image_2", "label": "Image 2" },
-    { "type": "text", "id": "alt_2", "label": "Image 2 alt text" },
-    { "type": "url", "id": "link_2", "label": "Image 2 link" },
-    { "type": "header", "content": "Layout" },
-    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "text",
+      "id": "alt_1",
+      "label": "Image 1 alt text"
+    },
+    {
+      "type": "url",
+      "id": "link_1",
+      "label": "Image 1 link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "text",
+      "id": "alt_2",
+      "label": "Image 2 alt text"
+    },
+    {
+      "type": "url",
+      "id": "link_2",
+      "label": "Image 2 link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
       "options": [
-        { "value": "scheme-1", "label": "Paper" },
-        { "value": "scheme-2", "label": "Snow" }
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
       ]
     },
-    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 0 },
-    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 }
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
   ],
-  "presets": [{ "name": "ED PDP banner" }]
+  "presets": [
+    {
+      "name": "ED PDP banner"
+    }
+  ]
 }
 {% endschema %}
