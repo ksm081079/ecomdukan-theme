@@ -28,6 +28,8 @@
       "name": "ED Footer",
       "settings": {
         "color_scheme": "scheme-2",
+        "bg_color": "#1a2c5e",
+        "text_color": "#fff",
         "brand_tagline": "Lowest bulk prices on thermal labels and packaging tapes. Ships from Hyderabad across India.",
         "support_email": "aniket@thelascaux.com",
         "support_phone": "917993179681",
