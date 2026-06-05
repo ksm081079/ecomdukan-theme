@@ -58,11 +58,18 @@
           "settings": {
             "collection": "packaging-tapes"
           }
+        },
+        "featured_collection_NQeaQ4": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "packaging-tapes"
+          }
         }
       },
       "block_order": [
         "featured_collection_BcTkB4",
-        "featured_collection_nqkWzj"
+        "featured_collection_nqkWzj",
+        "featured_collection_NQeaQ4"
       ],
       "name": "t:sections.collection-list.presets.name",
       "settings": {

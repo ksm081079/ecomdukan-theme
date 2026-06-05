@@ -39,7 +39,7 @@
         "placeholder": "you@company.in",
         "cta_label": "Subscribe",
         "disclaimer": "We never share your email. Unsubscribe anytime.",
-        "trust_text": "GST invoicing on every order · Lowest bulk prices · Ships from Hyderabad",
+        "trust_text": "",
         "show_payment": true,
         "show_social": true,
         "show_policies": false,
