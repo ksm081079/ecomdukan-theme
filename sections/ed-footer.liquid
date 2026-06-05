@@ -11,9 +11,24 @@
   assign show_payment = section.settings.show_payment
   assign show_back_to_top = section.settings.show_back_to_top
   assign show_social = section.settings.show_social
+  assign bg_color = section.settings.bg_color
+  assign text_color = section.settings.text_color
 -%}
 
-<footer class="color-{{ scheme }} ed-footer" style="background: rgb(var(--color-background)); color: rgb(var(--color-foreground));">
+{%- if bg_color != blank or text_color != blank -%}
+  {%- style -%}
+    .ed-footer-{{ section.id }} {
+      {%- if bg_color != blank -%}
+        --color-background: {{ bg_color | color_extract: 'red' }},{{ bg_color | color_extract: 'green' }},{{ bg_color | color_extract: 'blue' }};
+      {%- endif -%}
+      {%- if text_color != blank -%}
+        --color-foreground: {{ text_color | color_extract: 'red' }},{{ text_color | color_extract: 'green' }},{{ text_color | color_extract: 'blue' }};
+      {%- endif -%}
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+<footer class="color-{{ scheme }} ed-footer ed-footer-{{ section.id }}" style="background: rgb(var(--color-background)); color: rgb(var(--color-foreground));">
   <div class="ed-container ed-footer__wrap">
 
     {%- comment -%} Newsletter strip (top of footer) {%- endcomment -%}
@@ -431,7 +446,8 @@
     {
       "type": "select",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "Color scheme (fallback)",
+      "info": "Used when custom colors below are blank.",
       "default": "scheme-4",
       "options": [
         {
@@ -451,6 +467,18 @@
           "label": "Ink"
         }
       ]
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "info": "Overrides the color scheme above."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "info": "Overrides the color scheme above. Most footer text uses this at varying opacity."
     },
     {
       "type": "header",
