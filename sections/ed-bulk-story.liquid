@@ -1,0 +1,171 @@
+{%- liquid
+  assign _pt = section.settings.padding_top | default: 0
+  assign _pb = section.settings.padding_bottom | default: 0
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-2'
+-%}
+<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
+  <div class="ed-container">
+    <div class="ed-split">
+      <div class="ed-split__media">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '600, 900, 1200', alt: section.settings.heading }}
+        {%- else -%}
+          <div style="aspect-ratio:4/3;background:var(--ed-paper);border:1.5px solid var(--ed-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-ed-mono);color:var(--ed-mute);font-size:12px;letter-spacing:.08em;text-transform:uppercase;">add an image</div>
+        {%- endif -%}
+      </div>
+      <div class="ed-split__body">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ed-display-m" style="margin: 0 0 var(--sp-4);">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.body != blank -%}
+          <div class="ed-body-l" style="color: var(--ed-text-mute); margin-bottom: var(--sp-5);">{{ section.settings.body }}</div>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <table class="ed-spec" style="margin-bottom: var(--sp-5);">
+            <tbody>
+              {%- for block in section.blocks -%}
+                <tr {{ block.shopify_attributes }}>
+                  <th>{{ block.settings.label }}</th>
+                  <td>{{ block.settings.value }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        {%- endif -%}
+
+        <div style="display: flex; gap: var(--sp-3); flex-wrap: wrap;">
+          {%- if section.settings.cta_1_label != blank -%}
+            <a href="{{ section.settings.cta_1_link | default: '#' }}" class="ed-btn ed-btn--primary">{{ section.settings.cta_1_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.cta_2_label != blank -%}
+            <a href="{{ section.settings.cta_2_link | default: '#' }}" class="ed-btn ed-btn--ghost">{{ section.settings.cta_2_label }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "ED Bulk story (split)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The bulk story"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Built for the packing table. Priced for the spreadsheet."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>From 100 labels to 100,000. Same-day dispatch from three DCs. One GST invoice per order, every order.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_1_label",
+      "label": "Primary CTA",
+      "default": "See bulk pricing"
+    },
+    {
+      "type": "url",
+      "id": "cta_1_link",
+      "label": "Primary CTA link"
+    },
+    {
+      "type": "text",
+      "id": "cta_2_label",
+      "label": "Secondary CTA",
+      "default": "Request a sample"
+    },
+    {
+      "type": "url",
+      "id": "cta_2_link",
+      "label": "Secondary CTA link"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2",
+      "options": [
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Spec row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Min order"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "1 case \u00b7 1,000 labels"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

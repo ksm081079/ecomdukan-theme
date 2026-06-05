@@ -1,0 +1,139 @@
+{%- liquid
+  assign _pt = section.settings.padding_top | default: 0
+  assign _pb = section.settings.padding_bottom | default: 0
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-2'
+  assign printers = product.metafields.specs.printer_compat.value
+-%}
+<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
+  <div class="ed-container" style="max-width: 760px;">
+    <div class="ed-card" style="padding: var(--sp-6);">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="ed-display-m" style="margin: 0 0 var(--sp-3); font-size: 28px;">{{ section.settings.heading | default: 'Printer compatibility' }}</h2>
+      <p class="ed-body" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-5);">{{ section.settings.body | default: 'Type your printer model to check fit. We verify against the supplied compatibility list.' }}</p>
+
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: var(--sp-3);">
+        <label for="ed-printer-check" class="visually-hidden">Printer model</label>
+        <input id="ed-printer-check" type="text" class="ed-input" placeholder="e.g. TSC TDP-225, Zebra ZD230" data-ed-printer-input>
+        <button type="button" class="ed-btn ed-btn--primary" data-ed-printer-btn>Check</button>
+      </div>
+      <p data-ed-printer-result class="ed-mono" style="margin-top: var(--sp-4); font-size: 13px; min-height: 1.6em; color: var(--ed-text-mute);"></p>
+
+      {%- if printers -%}
+        <details style="margin-top: var(--sp-5); border-top: 1px solid var(--ed-border); padding-top: var(--sp-4);">
+          <summary class="ed-caption" style="cursor: pointer; color: var(--ed-ink);">All confirmed-compatible printers ({{ printers.size }})</summary>
+          <ul class="ed-mono" style="list-style: none; padding: var(--sp-3) 0 0; margin: 0; font-size: 12px; color: var(--ed-text-mute); columns: 2; column-gap: var(--sp-5);">
+            {%- for p in printers -%}
+              <li style="padding: 3px 0; break-inside: avoid;">· {{ p }}</li>
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var input = document.querySelector('[data-ed-printer-input]');
+    var btn = document.querySelector('[data-ed-printer-btn]');
+    var out = document.querySelector('[data-ed-printer-result]');
+    if (!input || !btn || !out) return;
+
+    var list = {{ printers | json }} || [];
+    var lower = list.map(function (p) { return String(p).toLowerCase(); });
+
+    function check() {
+      var q = (input.value || '').trim().toLowerCase();
+      if (!q) { out.textContent = ''; return; }
+      var hit = lower.find(function (p) { return p.indexOf(q) >= 0 || q.indexOf(p) >= 0; });
+      if (hit) {
+        out.style.color = 'var(--ed-success)';
+        out.textContent = '✓ Compatible. This label fits your printer.';
+      } else {
+        out.style.color = 'var(--ed-warn)';
+        out.textContent = "? Not on our verified list. WhatsApp us your model — we’ll check in <1 hour.";
+      }
+    }
+    btn.addEventListener('click', check);
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); check(); } });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "ED Compatibility checker",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Compatibility"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Will it fit your printer?"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Type your printer model. We check against the verified compatibility list set on this product."
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2",
+      "options": [
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "product"
+    ]
+  }
+}
+{% endschema %}

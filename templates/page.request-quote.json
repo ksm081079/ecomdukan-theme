@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "form": {
+      "type": "ed-quote-form",
+      "settings": {
+        "eyebrow": "Quote",
+        "heading": "Request a bulk quote",
+        "body": "<p>Tell us what you need. We reply with pricing, lead time, and a one-page proposal — usually within 2 business hours.</p>",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": ["form"]
+}

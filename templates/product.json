@@ -1,1 +1,80 @@
-{"sections":{"breadcrumb":{"type":"breadcrumb","disabled":true,"settings":{"section_width":"fluid_container","color_scheme":"","next_prev":true}},"main":{"type":"main-product","blocks":{"judge_me_reviews_preview_badge_wTf7Yq":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/preview_badge\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{}},"title_G6tU8U":{"type":"title","settings":{"show_vendor":false}},"text_KQmyXQ":{"type":"text","settings":{"heading":"","content":""}},"review_and_sold_9MKrRg":{"type":"review_and_sold","settings":{"show_review":false,"show_sold_products":true,"sold":"8,10,12,15,17,22","hours":"10,12,15,16,18,20,24"}},"live_view_QqQPF8":{"type":"live_view","settings":{"min_number":10,"max_number":40,"interval_time":10,"content":"[count] peoples are viewing this right now"}},"price_VJ4N8m":{"type":"price","settings":{}},"delivery_return_iJHeMD":{"type":"delivery_return","disabled":true,"settings":{"delivery_design":"vertical","delivery_content_icon":"truck","delivery_content":"<p>Estimate delivery times:<strong> 3-5 days International.<\/strong><\/p>","discount_content_icon":"discount","discount_content":"<p>Use code \"<strong>WELCOME15<\/strong>\" for discount 15% on your first order.<\/p>","return_content_icon":"free_shipping","return_content":"<p>Free shipping & returns: <strong>On all orders over $150.<\/strong><\/p>"}},"countdown_timer_QB4Ydn":{"type":"countdown_timer","disabled":true,"settings":{"timer_style":"default","content":"🔥 Hurry Up! Sale ends in:"}},"product_addons_YRaprz":{"type":"product_addons","settings":{"show_compare_color":false,"show_ask_question":true,"show_share":true}},"variant_picker_tcCihG":{"type":"variant_picker","settings":{"variant_type":"swatches","show_size_guide":false,"size_guide_label":"Size guide","size_guide_page":"size-guide"}},"custom_liquid_LtxBnh":{"type":"custom_liquid","disabled":true,"settings":{"custom_liquid":"{% if product.metafields.custom.pa_rank_math_description != blank %}\n  <div class=\"custom-description\">\n<h5>Short Description<\/h5>    {{ product.metafields.custom.pa_rank_math_description.value }}\n  <\/div>\n{% endif %}"}},"custom_liquid_8c47qg":{"type":"custom_liquid","settings":{"custom_liquid":"{% render 'offers-pdp.liquid',\nsection_id: section.settings %}"}},"custom_liquid_RRRMYw":{"type":"custom_liquid","settings":{"custom_liquid":"<div class=\"product-highlights\">\n<ul>\n<li>⏰ Order yours before 2.30pm for fast dispatch<\/li>\n    <\/ul>\n  <\/div>"}},"buy_buttons_LcQGtR":{"type":"buy_buttons","settings":{"show_dynamic_checkout":false,"show_gift_card_recipient":true,"show_wishlist":false,"show_compare":false}},"trust_badge_qKXhpg":{"type":"trust_badge","settings":{"message":"","trust_badge_image":"shopify:\/\/shop_images\/Group_1171276254.webp","image_width":560}},"essential_upsell_frequently_bought_together_app_block_3z9Unc":{"type":"shopify:\/\/apps\/essential-upsell\/blocks\/frequently-bought-together-app-block\/50627fd9-24fd-4250-8614-accc12826d80","settings":{}},"collapsible_row_H4C8ik":{"type":"collapsible_row","settings":{"heading":"Description","content":"","use_product_description":true,"open":true}},"bloy_loyalty_rewards_bloy_point_caculator_pdp_h6cTXt":{"type":"shopify:\/\/apps\/bloy-loyalty-rewards\/blocks\/bloy-point-caculator-pdp\/97e8894d-00f0-41a9-b986-49828146257c","disabled":true,"settings":{}}},"block_order":["judge_me_reviews_preview_badge_wTf7Yq","title_G6tU8U","text_KQmyXQ","review_and_sold_9MKrRg","live_view_QqQPF8","price_VJ4N8m","delivery_return_iJHeMD","countdown_timer_QB4Ydn","product_addons_YRaprz","variant_picker_tcCihG","custom_liquid_LtxBnh","custom_liquid_8c47qg","custom_liquid_RRRMYw","buy_buttons_LcQGtR","trust_badge_qKXhpg","essential_upsell_frequently_bought_together_app_block_3z9Unc","collapsible_row_H4C8ik","bloy_loyalty_rewards_bloy_point_caculator_pdp_h6cTXt"],"settings":{"section_width":"fluid_container","color_scheme":"default","enable_sticky_content_on_desktop":true,"enable_skeleton_loading":false,"desktop_media_width":50,"desktop_layout":"thumbnail_left","image_zoom":"open_lightbox","enable_video_looping":true,"enable_video_autoplay":true,"offer_heading":"Available Offers","offer_1":"Get ₹100 off","offer_1_tagline":"On carts above ₹899","offer_1_code":"SAVE100","offer_2":"Get 9% off","offer_2_tagline":"On carts above ₹1200","offer_2_code":"SAVE09","offer_3":"Get 15% off","offer_3_tagline":"On carts above ₹2400","offer_3_code":"SAVE15","enable_frequently_bought_together":true,"enable_on_desktop":true,"enable_on_mobile":true,"mobile_options":"show_thumbnails","padding_top":16,"padding_bottom":0,"reset_spacing":false}},"divider_ALptEM":{"type":"divider","name":"t:sections.divider.name","settings":{"custom_class":"right-left-icon","section_width":"fluid_container","border_height":1,"border_color":"#cfb79e","reset_spacing":false}},"slideshow_bAwYXn":{"type":"slideshow","blocks":{"slider_item_Bbi3Wh":{"type":"slider_item","settings":{"image":"shopify:\/\/shop_images\/Banner_2_ca294bcc-a54c-4276-a04e-19f871c80ed9.webp","image_mobile":"shopify:\/\/shop_images\/Banner_5_1.webp","image_link":"shopify:\/\/pages\/byob","overlay_opacity":0,"slider_effect":"effect_fadeindown","subheading":"","heading":"","description":"","first_button_label":"","first_button_link":"","first_button_style":false,"second_button_label":"","second_button_link":"","second_button_style":false,"content_alignment":"left","content_position":"bottom-left","content_width":"container","content_max_width":100,"content_padding_block":60,"content_padding_inline":30,"show_content_background":false,"content_background":"#ffffff","content_box_opacity":100,"content_alignment_mobile":"left"}}},"block_order":["slider_item_Bbi3Wh"],"name":"t:sections.slideshow.name","settings":{"custom_class":"","section_width":"fluid_container","slide_height":"adapt","desktop_height":800,"mobile_height":360,"color_scheme":"","subheading_font_size":14,"subheading_font_weight":"body_weight","subheading_spacing_bottom":10,"heading_font_size":70,"heading_font_weight":"heading_weight","heading_uppercase":false,"heading_spacing_bottom":10,"des_font_size":14,"des_font_weight":"body_weight","des_spacing_bottom":40,"slide_effect":"fade","show_arrow":false,"carousel_pagination":"disable","pagination_position":"center","autoplay":false,"autorotate_speed":5,"content_below_image":false,"padding_top":0,"padding_bottom":0,"reset_spacing":false}},"products_carousel_y7rHGD":{"type":"products-carousel","name":"t:sections.products-carousel.name","settings":{"section_width":"fluid_container","color_scheme":"","heading":"Ready to Buy Combos","description":"","show_view_all_button":false,"header_size":"medium","header_alignment":"center","collection":"bundle","items_to_show":8,"items_per_row":4,"column_gap":15,"show_banner":false,"sticky_banner":false,"banner_width":30,"position":"left","banner_link":"","banner_type":"image","video_url":"","video_autoplay":true,"show_arrow":false,"carousel_pagination":"show_dots","infinite":true,"autoplay":true,"autorotate_speed":6,"reveal":false,"items_per_row_mobile":2,"padding_top":0,"padding_bottom":0,"reset_spacing":false}},"pdp_banner_DUz6HW":{"type":"pdp-banner","name":"pdp banner","settings":{"image_1":"shopify:\/\/shop_images\/Group_1321322423_1.webp","image_2":"shopify:\/\/shop_images\/Frame_1321321853_2.webp","custom_class":"","padding_top":0,"padding_bottom":80,"mobile_padding_top":0,"mobile_padding_bottom":40}},"product-set":{"type":"product-set","disabled":true,"settings":{"section_width":"container","color_scheme":"","heading":"Combination Styles","description":"","header_size":"medium","header_alignment":"left","items_per_row":2,"column_gap":30,"show_arrow":false,"carousel_pagination":"show_dots","infinite":false,"autoplay":true,"autorotate_speed":5,"reveal":false,"items_per_row_mobile":1,"padding_top":0,"padding_bottom":0,"reset_spacing":false}},"custom_slider_qVgAYf":{"type":"custom-slider","blocks":{"custom_slider_xxe7nb":{"type":"custom-slider","settings":{"link":"","desktop_image":"shopify:\/\/shop_images\/Group_1321322424.webp","mobile_image":"shopify:\/\/shop_images\/Group_1321322424_1.webp"}},"custom_slider_abCYmQ":{"type":"custom-slider","settings":{"link":"","desktop_image":"shopify:\/\/shop_images\/Group_1321322428.webp","mobile_image":"shopify:\/\/shop_images\/Group_1321322424_2.webp"}},"custom_slider_dxm8fe":{"type":"custom-slider","settings":{"link":"","desktop_image":"shopify:\/\/shop_images\/Group_1321322427.webp","mobile_image":"shopify:\/\/shop_images\/Group_1321322506.webp"}}},"block_order":["custom_slider_xxe7nb","custom_slider_abCYmQ","custom_slider_dxm8fe"],"name":"custom Slider","settings":{"custom_class":"","heading":"Why Choose","tag":"The Affordable Organic Store?","user_action":true,"show_nav":false,"slides_mobile":1,"slides_tablet":3,"slider_leptop":3,"slides_desktop":3,"padding_top":0,"padding_bottom":100,"mobile_padding_top":0,"mobile_padding_bottom":40}},"related_products":{"type":"related-products","settings":{"section_width":"fluid_container","color_scheme":"","heading":"Similar Picks","description":"","header_size":"medium","header_alignment":"center","items_to_show":8,"items_per_row":4,"column_gap":15,"items_per_row_mobile":2,"padding_top":0,"padding_bottom":0,"reset_spacing":false}},"17702214983059422a":{"type":"apps","blocks":{"judge_me_reviews_review_widget_8QL4Xh":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/review_widget\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{"review_data":"sample_data","max_width":1200,"show_shop_reviews":false,"empty_state":"empty_widget"}}},"block_order":["judge_me_reviews_review_widget_8QL4Xh"],"settings":{}}},"order":["breadcrumb","main","divider_ALptEM","slideshow_bAwYXn","products_carousel_y7rHGD","pdp_banner_DUz6HW","product-set","custom_slider_qVgAYf","related_products","17702214983059422a"]}
+{
+  "sections": {
+    "main": {
+      "type": "ed-main-product",
+      "settings": {
+        "show_breadcrumb": true,
+        "price_unit_label": "Roll",
+        "delivery_promise": "Ships from Hyderabad",
+        "show_social_proof": false,
+        "sold_values": "8,12,15,18,22,26",
+        "viewing_min": 8,
+        "viewing_max": 32,
+        "offers_heading": "",
+        "offer_1": "",
+        "offer_1_tagline": "",
+        "offer_1_code": "",
+        "offer_2": "",
+        "offer_2_tagline": "",
+        "offer_2_code": "",
+        "offer_3": "",
+        "offer_3_tagline": "",
+        "offer_3_code": "",
+        "highlight_icon": "",
+        "highlight_text": "",
+        "show_quote_cta": false,
+        "quote_cta_label": "",
+        "quote_url": "",
+        "sample_url": "",
+        "upsell_icon": "\ud83d\udc8e",
+        "upsell_heading": "",
+        "upsell_sub": "",
+        "upsell_link": "",
+        "promise_icon": "",
+        "promise_text": "",
+        "policy_1_icon": "",
+        "policy_1_label": "",
+        "policy_1_url": "",
+        "policy_2_icon": "\ud83e\uddfe",
+        "policy_2_label": "",
+        "policy_2_url": "",
+        "show_pincode_check": true,
+        "trust_1_icon": "",
+        "trust_1_label": "",
+        "trust_1_sub": "",
+        "trust_2_icon": "",
+        "trust_2_label": "",
+        "trust_2_sub": "",
+        "trust_3_icon": "",
+        "trust_3_label": "",
+        "trust_3_sub": "",
+        "trust_4_icon": "",
+        "trust_4_label": "",
+        "trust_4_sub": "",
+        "usp_1": "",
+        "usp_2": "",
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "ed_custom_print_cta_7KnV74": {
+      "type": "ed-custom-print-cta",
+      "name": "ED Custom-print CTA",
+      "settings": {
+        "eyebrow": "Custom Order",
+        "heading": "Need a different size or printed label?",
+        "body": "Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.",
+        "cta_label": "Submit a custom order",
+        "cta_link": "",
+        "color_scheme": "scheme-4",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    }
+  },
+  "order": [
+    "main",
+    "ed_custom_print_cta_7KnV74"
+  ]
+}

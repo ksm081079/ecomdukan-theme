@@ -1,0 +1,279 @@
+{%- liquid
+  assign _pt = section.settings.padding_top | default: 0
+  assign _pb = section.settings.padding_bottom | default: 0
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+{% endstyle %}
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
+  assign per_page = section.settings.products_per_page | default: 24
+  assign cols_desktop = section.settings.columns_desktop | default: 4
+  assign cols_mobile = section.settings.columns_mobile | default: 2
+-%}
+{%- paginate collection.products by per_page -%}
+<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background)); padding-block: var(--sp-6) var(--sp-8);">
+  <div class="ed-container">
+    {%- comment -%} Top filter pills — editor-driven (collection or tag) {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="ed-coll-pills" role="navigation" aria-label="Filter">
+        {%- for block in section.blocks -%}
+          {%- assign label = block.settings.label -%}
+          {%- if block.type == 'collection_link' -%}
+            {%- assign coll = block.settings.collection -%}
+            {%- if coll -%}
+              {%- if label == blank -%}{%- assign label = coll.title -%}{%- endif -%}
+              {%- assign active = false -%}
+              {%- if collection.handle == coll.handle -%}{%- assign active = true -%}{%- endif -%}
+              <a href="{{ coll.url }}" class="ed-coll-pill{% if active %} is-active{% endif %}" {{ block.shopify_attributes }}>{{ label }}</a>
+            {%- endif -%}
+          {%- elsif block.type == 'tag_filter' -%}
+            {%- assign tag = block.settings.tag -%}
+            {%- if tag != blank -%}
+              {%- assign url = collection.url | append: '/' | append: tag | downcase | replace: ' ', '-' -%}
+              {%- if label == blank -%}{%- assign label = tag -%}{%- endif -%}
+              {%- assign active = false -%}
+              {%- if current_tags contains tag -%}{%- assign active = true -%}{%- endif -%}
+              <a href="{{ url }}" class="ed-coll-pill{% if active %} is-active{% endif %}" {{ block.shopify_attributes }}>{{ label }}</a>
+            {%- endif -%}
+          {%- elsif block.type == 'all_link' -%}
+            {%- if label == blank -%}{%- assign label = 'All' -%}{%- endif -%}
+            {%- assign active = false -%}
+            {%- if current_tags.size == 0 -%}{%- assign active = true -%}{%- endif -%}
+            <a href="{{ collection.url }}" class="ed-coll-pill{% if active %} is-active{% endif %}" {{ block.shopify_attributes }}>{{ label }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="ed-coll-layout" style="display: block;">
+      <div>
+        {%- comment -%} Sort bar — size + price only {%- endcomment -%}
+        {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-5); padding-bottom: var(--sp-3); border-bottom: 1.5px solid var(--ed-ink); flex-wrap: wrap;">
+          <p class="ed-mono" style="color: var(--ed-text-mute); margin: 0; font-size: 12px;">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label for="ed-sort" class="ed-caption" style="color: var(--ed-text-mute);">Sort by</label>
+            <select id="ed-sort" name="sort_by" class="ed-select" style="width: auto; padding: 8px 24px 8px 12px; font-size: 13px;" onchange="window.location.search = (new URLSearchParams(Object.assign(Object.fromEntries(new URLSearchParams(window.location.search)), { sort_by: this.value }))).toString();">
+              <option value="price-ascending"  {% if current_sort == 'price-ascending'  %}selected{% endif %}>Price: low to high</option>
+              <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>Price: high to low</option>
+              <option value="title-ascending"  {% if current_sort == 'title-ascending'  %}selected{% endif %}>Size: A to Z</option>
+              <option value="title-descending" {% if current_sort == 'title-descending' %}selected{% endif %}>Size: Z to A</option>
+            </select>
+          </div>
+        </div>
+
+        {%- if collection.products.size > 0 -%}
+          <div style="display: grid; grid-template-columns: repeat({{ cols_desktop }}, 1fr); gap: var(--sp-5);" class="ed-coll-grid" data-cols-mobile="{{ cols_mobile }}">
+            {%- for product in collection.products -%}
+              {%- render 'ed-product-card', product: product -%}
+            {%- endfor -%}
+          </div>
+
+          {%- if paginate.pages > 1 -%}
+            <div style="text-align: center; margin-top: var(--sp-7);">
+              {%- if paginate.next -%}
+                <a href="{{ paginate.next.url }}" class="ed-btn ed-btn--ghost ed-btn--lg">Load next page ({{ paginate.current_page }}/{{ paginate.pages }})</a>
+              {%- else -%}
+                <p class="ed-caption" style="color: var(--ed-text-mute);">That's everything in this collection.</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <div class="ed-card" style="padding: var(--sp-7); text-align: center;">
+            <p class="ed-headline" style="margin: 0 0 var(--sp-3);">No products match those filters.</p>
+            <p class="ed-body" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-4);">Try clearing one — like the in-stock toggle, or a printer-type filter.</p>
+            <a href="{{ collection.url }}" class="ed-btn ed-btn--primary">Clear filters</a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- endpaginate -%}
+
+<style>
+  /* Top pill filter row */
+  .ed-coll-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 0 0 4px; overflow-x: auto; scrollbar-width: thin; }
+  .ed-coll-pill {
+    display: inline-flex; align-items: center;
+    padding: 8px 16px;
+    background: #fff;
+    border: 1.5px solid var(--ed-border, #E0DBCF);
+    border-radius: 999px;
+    color: var(--ed-ink, #0A0B0E);
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 13px;
+    text-decoration: none; white-space: nowrap;
+    transition: background 120ms, color 120ms, border-color 120ms;
+  }
+  .ed-coll-pill:hover { border-color: var(--ed-ink, #0A0B0E); }
+  .ed-coll-pill.is-active { background: var(--ed-electric, #1E5FFF); color: #fff; border-color: var(--ed-electric, #1E5FFF); }
+
+  @media (max-width: 989px) {
+    .ed-coll-grid { grid-template-columns: repeat({{ cols_mobile }}, 1fr) !important; gap: var(--sp-3) !important; }
+  }
+  @media (max-width: 599px) {
+    .ed-coll-grid { grid-template-columns: repeat({{ cols_mobile }}, 1fr) !important; gap: 12px !important; }
+    .ed-coll-pills { gap: 6px; margin-bottom: 16px; }
+    .ed-coll-pill { padding: 6px 12px; font-size: 12px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ED Collection grid",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "in_stock_default",
+      "label": "Default 'In stock only' toggle on",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Mobile columns",
+      "default": "2",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 per row"
+        },
+        {
+          "value": "2",
+          "label": "2 per row"
+        },
+        {
+          "value": "3",
+          "label": "3 per row"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
+      "options": [
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "collection"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "collection_link",
+      "name": "Pill \u2014 collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    },
+    {
+      "type": "tag_filter",
+      "name": "Pill \u2014 tag filter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag (exact match)",
+          "info": "Loads /collections/<handle>/<tag>"
+        }
+      ]
+    },
+    {
+      "type": "all_link",
+      "name": "Pill \u2014 All",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "All"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "ED Collection grid",
+      "blocks": [
+        {
+          "type": "all_link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

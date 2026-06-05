@@ -1,0 +1,133 @@
+{%- comment -%} ED PDP banner — twin-image promo strip (11 may inspired) {%- endcomment -%}
+
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
+  assign pt = section.settings.padding_top | default: 0
+  assign pb = section.settings.padding_bottom | default: 40
+-%}
+
+<div class="ed-section color-{{ scheme }}" style="background: rgb(var(--color-background)); padding-top: {{ pt }}px; padding-bottom: {{ pb }}px;">
+  <div class="ed-container">
+    <div class="ed-pdp-banner__grid">
+      {%- if section.settings.image_1 != blank -%}
+        <a class="ed-pdp-banner__cell" href="{{ section.settings.link_1 | default: '#' }}" data-action="pdp_banner_click" data-slot="1">
+          {{ section.settings.image_1 | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200, 1600', alt: section.settings.alt_1 | default: 'Promo banner', class: 'ed-pdp-banner__img' }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.image_2 != blank -%}
+        <a class="ed-pdp-banner__cell" href="{{ section.settings.link_2 | default: '#' }}" data-action="pdp_banner_click" data-slot="2">
+          {{ section.settings.image_2 | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200, 1600', alt: section.settings.alt_2 | default: 'Promo banner', class: 'ed-pdp-banner__img' }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .ed-pdp-banner__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .ed-pdp-banner__cell {
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--ed-snow, #FBFAF6);
+    transition: transform 200ms;
+  }
+  .ed-pdp-banner__cell:hover { transform: translateY(-2px); }
+  .ed-pdp-banner__img { width: 100%; height: auto; display: block; }
+  @media (max-width: 749px) {
+    .ed-pdp-banner__grid { grid-template-columns: 1fr; gap: 10px; }
+  }
+</style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-action="pdp_banner_click"]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        if (window.posthog) try { posthog.capture('pdp_banner_click', { slot: el.dataset.slot, href: el.getAttribute('href') }); } catch (e) {}
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "ED PDP banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "text",
+      "id": "alt_1",
+      "label": "Image 1 alt text"
+    },
+    {
+      "type": "url",
+      "id": "link_1",
+      "label": "Image 1 link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "text",
+      "id": "alt_2",
+      "label": "Image 2 alt text"
+    },
+    {
+      "type": "url",
+      "id": "link_2",
+      "label": "Image 2 link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
+      "options": [
+        {
+          "value": "scheme-1",
+          "label": "Paper"
+        },
+        {
+          "value": "scheme-2",
+          "label": "Snow"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ]
+}
+{% endschema %}
