@@ -1,98 +1,127 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 0
-  assign _pb = section.settings.padding_bottom | default: 0
+  assign _pt = section.settings.padding_top | default: 32
+  assign _pb = section.settings.padding_bottom | default: 32
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
 {% endstyle %}
-{%- liquid
-  assign scheme = section.settings.color_scheme | default: 'scheme-1'
--%}
-<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
-  <div class="ed-container" style="max-width: 760px;">
-    <div style="text-align: center; margin-bottom: var(--sp-7);">
-      {%- if section.settings.eyebrow != blank -%}
-        <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">{{ section.settings.eyebrow }}</p>
-      {%- endif -%}
-      <h1 class="ed-display-l" style="margin: 0 0 var(--sp-4);">{{ section.settings.heading | default: 'Request a sample pack' }}</h1>
-      {%- if section.settings.body != blank -%}
-        <div class="ed-body-l" style="color: var(--ed-text-mute);">{{ section.settings.body }}</div>
-      {%- endif -%}
-    </div>
 
-    <div class="ed-card" style="padding: var(--sp-6);">
-      {%- form 'contact', class: 'ed-form', id: 'ed-sample-form' -%}
-        <input type="hidden" name="contact[tags]" value="sample">
-        <input type="hidden" name="contact[subject]" value="Sample pack request">
-
-        <div class="ed-row">
-          <div>
-            <label class="ed-label" for="s-name">Name</label>
-            <input id="s-name" type="text" name="contact[name]" class="ed-input" required>
-          </div>
-          <div>
-            <label class="ed-label" for="s-company">Company</label>
-            <input id="s-company" type="text" name="contact[Company]" class="ed-input" required>
-          </div>
-        </div>
-
-        <div class="ed-row">
-          <div>
-            <label class="ed-label" for="s-email">Email</label>
-            <input id="s-email" type="email" name="contact[email]" class="ed-input" required>
-          </div>
-          <div>
-            <label class="ed-label" for="s-phone">Phone</label>
-            <input id="s-phone" type="tel" name="contact[Phone]" class="ed-input">
-          </div>
-        </div>
-
-        <div>
-          <label class="ed-label" for="s-address">Shipping address (full)</label>
-          <textarea id="s-address" name="contact[Shipping address]" class="ed-textarea" placeholder="Door no, building, street, area, city, PIN" required></textarea>
-        </div>
-
-        <div>
-          <label class="ed-label" for="s-want">What would you like to sample? (max 3)</label>
-          <textarea id="s-want" name="contact[Samples wanted]" class="ed-textarea" placeholder="e.g. 4×6 thermal labels · kraft mailers · 80gsm A4 sheets" required></textarea>
-        </div>
-
-        <button type="submit" class="ed-btn ed-btn--primary ed-btn--lg ed-btn--block">Send my sample pack</button>
-
-        {%- if form.posted_successfully? -%}
-          <p class="ed-form-success">Got it — pack ships in 2 business days. We'll send the AWB to your email.</p>
-        {%- elsif form.errors -%}
-          <p class="ed-err">{{ form.errors | default_errors }}</p>
-        {%- endif -%}
-      {%- endform -%}
-
-      <p class="ed-help" style="text-align: center; margin-top: var(--sp-4);">Free. Ships in 2 business days. One sample pack per business per quarter.</p>
-    </div>
+<div class="color-{{ scheme }} ed-cta-block" style="background: rgb(var(--color-background));">
+  <div class="ed-cta-block__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ed-cta-block__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="ed-cta-block__h">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.body != blank -%}
+      <div class="ed-cta-block__body">{{ section.settings.body }}</div>
+    {%- endif -%}
+    {%- if section.settings.cta_label != blank -%}
+      <a href="{{ section.settings.cta_link | default: '#' }}" {% if section.settings.open_in_new_tab %}target="_blank" rel="noopener"{% endif %} class="ed-cta-block__btn">{{ section.settings.cta_label }}</a>
+    {%- endif -%}
   </div>
 </div>
 
+<style>
+  .ed-cta-block { width: 100%; }
+  .ed-cta-block__inner {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .ed-cta-block__eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ed-text-mute, #5C6068);
+    margin: 0 0 12px;
+  }
+  .ed-cta-block__h {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: clamp(24px, 3vw, 36px);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin: 0 0 16px;
+    color: rgb(var(--color-foreground));
+  }
+  .ed-cta-block__body {
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ed-text-mute, #5C6068);
+    margin: 0 0 28px;
+  }
+  .ed-cta-block__body p { margin: 0 0 8px; }
+  .ed-cta-block__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    background: var(--ed-electric, #1E5FFF);
+    color: #fff;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: background 120ms;
+  }
+  .ed-cta-block__btn:hover { background: #1747D6; color: #fff; }
+  @media (max-width: 749px) {
+    .ed-cta-block__inner { padding: 24px 18px; }
+    .ed-cta-block__btn { padding: 12px 24px; font-size: 13px; }
+  }
+</style>
+
 {% schema %}
 {
-  "name": "ED Sample-pack form",
+  "name": "ED Sample CTA",
   "tag": "section",
   "settings": [
     {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Sample pack \u00b7 free"
+      "default": "Sample pack"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Try before you commit"
+      "default": "Request a free sample pack"
     },
     {
       "type": "richtext",
       "id": "body",
       "label": "Body",
-      "default": "<p>Pick up to 3 SKUs you'd like to feel and test. We ship a sample pack \u2014 free, in 2 business days.</p>"
+      "default": "<p>We'll ship a sample of every roll size so you can test compatibility before you commit.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Request sample"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link (paste Google Form URL or any link)"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open link in new tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Color scheme"
     },
     {
       "type": "select",
@@ -107,6 +136,14 @@
         {
           "value": "scheme-2",
           "label": "Snow"
+        },
+        {
+          "value": "scheme-3",
+          "label": "Indigo"
+        },
+        {
+          "value": "scheme-4",
+          "label": "Ink"
         }
       ]
     },
@@ -121,7 +158,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 32,
       "unit": "px"
     },
     {
@@ -131,13 +168,13 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 32,
       "unit": "px"
     }
   ],
   "presets": [
     {
-      "name": "ED Sample-pack form"
+      "name": "ED Sample CTA"
     }
   ]
 }
