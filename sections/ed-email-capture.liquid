@@ -1,85 +1,84 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 24
-  assign _pb = section.settings.padding_bottom | default: 24
+  assign _pt = section.settings.padding_top | default: 32
+  assign _pb = section.settings.padding_bottom | default: 32
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
 {% endstyle %}
-{%- liquid
-  assign scheme = section.settings.color_scheme | default: 'scheme-2'
--%}
-<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
-  <div class="ed-container" style="max-width: 720px; text-align: center;">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
-    {%- if section.settings.heading != blank -%}
-      <h2 class="ed-display-m" style="margin: 0 0 var(--sp-3);">{{ section.settings.heading }}</h2>
-    {%- endif -%}
-    {%- if section.settings.body != blank -%}
-      <p class="ed-body" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-5);">{{ section.settings.body }}</p>
-    {%- endif -%}
 
-    {%- form 'customer', class: 'ed-form', id: 'ed-email-capture' -%}
-      <input type="hidden" name="contact[tags]" value="newsletter">
-      <div style="display: grid; grid-template-columns: 1fr auto; gap: var(--sp-3);">
-        <label for="ed-email" class="visually-hidden">Email</label>
-        <input id="ed-email" class="ed-input" type="email" name="contact[email]" placeholder="you@company.in" required autocomplete="email">
-        <button type="submit" class="ed-btn ed-btn--primary">{{ section.settings.cta_label | default: 'Subscribe' }}</button>
-      </div>
-      {%- if form.posted_successfully? -%}
-        <p class="ed-form-success" style="margin-top: var(--sp-4);">Thanks. We'll send the next restock & price update to your inbox.</p>
-      {%- elsif form.errors -%}
-        <p class="ed-err" style="margin-top: var(--sp-4);">{{ form.errors | default_errors }}</p>
-      {%- endif -%}
-    {%- endform -%}
-
-    {%- if section.settings.disclaimer != blank -%}
-      <p class="ed-help" style="margin-top: var(--sp-4);">{{ section.settings.disclaimer }}</p>
+<div class="color-{{ scheme }} ed-cta-block" style="background: rgb(var(--color-background));">
+  <div class="ed-cta-block__inner">
+    {%- if section.settings.eyebrow != blank -%}<p class="ed-cta-block__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    {%- if section.settings.heading != blank -%}<h2 class="ed-cta-block__h">{{ section.settings.heading }}</h2>{%- endif -%}
+    {%- if section.settings.body != blank -%}<div class="ed-cta-block__body">{{ section.settings.body }}</div>{%- endif -%}
+    {%- if section.settings.cta_label != blank -%}
+      <a href="{{ section.settings.cta_link | default: '#' }}" {% if section.settings.open_in_new_tab %}target="_blank" rel="noopener"{% endif %} class="ed-cta-block__btn">{{ section.settings.cta_label }}</a>
     {%- endif -%}
   </div>
 </div>
 
+<style>
+  .ed-cta-block { width: 100%; }
+  .ed-cta-block__inner { max-width: 720px; margin: 0 auto; padding: 32px 24px; text-align: center; }
+  .ed-cta-block__eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ed-text-mute, #5C6068); margin: 0 0 12px; }
+  .ed-cta-block__h { font-family: "Poppins", sans-serif; font-weight: 700; font-size: clamp(24px, 3vw, 36px); letter-spacing: -0.025em; line-height: 1.15; margin: 0 0 16px; color: rgb(var(--color-foreground)); }
+  .ed-cta-block__body { font-family: "Inter", sans-serif; font-size: 15px; line-height: 1.6; color: var(--ed-text-mute, #5C6068); margin: 0 0 28px; }
+  .ed-cta-block__body p { margin: 0 0 8px; }
+  .ed-cta-block__btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; background: var(--ed-electric, #1E5FFF); color: #fff; border-radius: 8px; font-family: "Inter", sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.02em; text-decoration: none; transition: background 120ms; }
+  .ed-cta-block__btn:hover { background: #1747D6; color: #fff; }
+  @media (max-width: 749px) { .ed-cta-block__inner { padding: 24px 18px; } .ed-cta-block__btn { padding: 12px 24px; font-size: 13px; } }
+</style>
+
 {% schema %}
 {
-  "name": "ED Email capture",
+  "name": "ED Subscribe CTA",
   "tag": "section",
   "settings": [
     {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Newsletter"
+      "default": "Stay updated"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Restock & price-drop alerts"
+      "default": "New sizes & price updates"
     },
     {
-      "type": "textarea",
+      "type": "richtext",
       "id": "body",
       "label": "Body",
-      "default": "One email a week. New SKUs, price drops, and bulk-tier changes. No content marketing, no fluff."
+      "default": "<p>Get notified when we add new products or update prices. No spam.</p>"
     },
     {
       "type": "text",
       "id": "cta_label",
-      "label": "CTA label",
+      "label": "Button label",
       "default": "Subscribe"
     },
     {
-      "type": "text",
-      "id": "disclaimer",
-      "label": "Disclaimer",
-      "default": "We never share your email. Unsubscribe anytime."
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link (paste Google Form URL or any link)"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open link in new tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Color scheme"
     },
     {
       "type": "select",
       "id": "color_scheme",
       "label": "Color scheme",
-      "default": "scheme-2",
+      "default": "scheme-1",
       "options": [
         {
           "value": "scheme-1",
@@ -88,6 +87,14 @@
         {
           "value": "scheme-2",
           "label": "Snow"
+        },
+        {
+          "value": "scheme-3",
+          "label": "Indigo"
+        },
+        {
+          "value": "scheme-4",
+          "label": "Ink"
         }
       ]
     },
@@ -102,7 +109,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 24,
+      "default": 32,
       "unit": "px"
     },
     {
@@ -112,8 +119,13 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 24,
+      "default": 32,
       "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "ED Subscribe CTA"
     }
   ]
 }

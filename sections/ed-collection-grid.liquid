@@ -1,6 +1,6 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 24
-  assign _pb = section.settings.padding_bottom | default: 24
+  assign _pt = section.settings.padding_top | default: 0
+  assign _pb = section.settings.padding_bottom | default: 0
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
@@ -14,65 +14,51 @@
 {%- paginate collection.products by per_page -%}
 <div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background)); padding-block: var(--sp-6) var(--sp-8);">
   <div class="ed-container">
-    <div class="ed-coll-layout" style="display: grid; grid-template-columns: 220px 1fr; gap: var(--sp-7); align-items: start;">
-
-      {%- comment -%} Filter rail {%- endcomment -%}
-      <aside class="ed-filters" style="position: sticky; top: 24px;">
-        {%- if collection.filters.size > 0 -%}
-          <form action="{{ collection.url }}" method="get" id="ed-filters-form">
-            {%- if section.settings.in_stock_default -%}
-              <label style="display: flex; align-items: center; gap: 8px; padding: var(--sp-3) 0; border-bottom: 1.5px solid var(--ed-ink);">
-                <input type="checkbox" name="filter.v.availability" value="1" checked style="accent-color: var(--ed-electric);">
-                <span class="ed-caption" style="color: var(--ed-ink);">In stock only</span>
-              </label>
+    {%- comment -%} Top filter pills — editor-driven (collection or tag) {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="ed-coll-pills" role="navigation" aria-label="Filter">
+        {%- for block in section.blocks -%}
+          {%- assign label = block.settings.label -%}
+          {%- if block.type == 'collection_link' -%}
+            {%- assign coll = block.settings.collection -%}
+            {%- if coll -%}
+              {%- if label == blank -%}{%- assign label = coll.title -%}{%- endif -%}
+              {%- assign active = false -%}
+              {%- if collection.handle == coll.handle -%}{%- assign active = true -%}{%- endif -%}
+              <a href="{{ coll.url }}" class="ed-coll-pill{% if active %} is-active{% endif %}" {{ block.shopify_attributes }}>{{ label }}</a>
             {%- endif -%}
-
-            {%- for filter in collection.filters -%}
-              <details open style="padding: var(--sp-3) 0; border-bottom: 1px solid var(--ed-border);">
-                <summary class="ed-caption" style="cursor: pointer; padding-bottom: var(--sp-2); color: var(--ed-ink); list-style: none; display: flex; justify-content: space-between;">
-                  <span>{{ filter.label }}</span>
-                  <span class="ed-mono">+</span>
-                </summary>
-                <div style="padding-top: var(--sp-2);">
-                  {%- case filter.type -%}
-                    {%- when 'list' -%}
-                      {%- for value in filter.values -%}
-                        <label style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: var(--ed-ink); {% if value.count == 0 %}opacity: 0.4;{% endif %}">
-                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
-                          <span>{{ value.label }} <span class="ed-mono" style="color: var(--ed-mute);">({{ value.count }})</span></span>
-                        </label>
-                      {%- endfor -%}
-                    {%- when 'price_range' -%}
-                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <input type="number" name="{{ filter.min_value.param_name }}" placeholder="Min" value="{{ filter.min_value.value }}" class="ed-input" style="padding: 8px;">
-                        <input type="number" name="{{ filter.max_value.param_name }}" placeholder="Max" value="{{ filter.max_value.value }}" class="ed-input" style="padding: 8px;">
-                      </div>
-                  {%- endcase -%}
-                </div>
-              </details>
-            {%- endfor -%}
-
-            <button type="submit" class="ed-btn ed-btn--ghost ed-btn--block" style="margin-top: var(--sp-4);">Apply filters</button>
-            {%- if collection.current_vendor or collection.current_type or collection.url contains '?' -%}
-              <a href="{{ collection.url }}" class="ed-btn--link" style="display: block; text-align: center; margin-top: var(--sp-3); font-family: var(--font-ed-body); font-size: 13px;">Clear all</a>
+          {%- elsif block.type == 'tag_filter' -%}
+            {%- assign tag = block.settings.tag -%}
+            {%- if tag != blank -%}
+              {%- assign url = collection.url | append: '/' | append: tag | downcase | replace: ' ', '-' -%}
+              {%- if label == blank -%}{%- assign label = tag -%}{%- endif -%}
+              {%- assign active = false -%}
+              {%- if current_tags contains tag -%}{%- assign active = true -%}{%- endif -%}
+              <a href="{{ url }}" class="ed-coll-pill{% if active %} is-active{% endif %}" {{ block.shopify_attributes }}>{{ label }}</a>
             {%- endif -%}
-          </form>
-        {%- else -%}
-          <p class="ed-help">No filters configured. Set up Search & Discovery in admin.</p>
-        {%- endif -%}
-      </aside>
+          {%- elsif block.type == 'all_link' -%}
+            {%- if label == blank -%}{%- assign label = 'All' -%}{%- endif -%}
+            {%- assign active = false -%}
+            {%- if current_tags.size == 0 -%}{%- assign active = true -%}{%- endif -%}
+            <a href="{{ collection.url }}" class="ed-coll-pill{% if active %} is-active{% endif %}" {{ block.shopify_attributes }}>{{ label }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
 
-      {%- comment -%} Product grid {%- endcomment -%}
+    <div class="ed-coll-layout" style="display: block;">
       <div>
-        {%- comment -%} Sort bar {%- endcomment -%}
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-5); padding-bottom: var(--sp-3); border-bottom: 1.5px solid var(--ed-ink);">
+        {%- comment -%} Sort bar — size + price only {%- endcomment -%}
+        {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-5); padding-bottom: var(--sp-3); border-bottom: 1.5px solid var(--ed-ink); flex-wrap: wrap;">
           <p class="ed-mono" style="color: var(--ed-text-mute); margin: 0; font-size: 12px;">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <label for="ed-sort" class="ed-caption" style="color: var(--ed-text-mute);">Sort</label>
+            <label for="ed-sort" class="ed-caption" style="color: var(--ed-text-mute);">Sort by</label>
             <select id="ed-sort" name="sort_by" class="ed-select" style="width: auto; padding: 8px 24px 8px 12px; font-size: 13px;" onchange="window.location.search = (new URLSearchParams(Object.assign(Object.fromEntries(new URLSearchParams(window.location.search)), { sort_by: this.value }))).toString();">
-              {%- for option in collection.sort_options -%}
-                <option value="{{ option.value }}" {% if collection.sort_by == option.value %}selected{% endif %}>{{ option.name }}</option>
-              {%- endfor -%}
+              <option value="price-ascending"  {% if current_sort == 'price-ascending'  %}selected{% endif %}>Price: low to high</option>
+              <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>Price: high to low</option>
+              <option value="title-ascending"  {% if current_sort == 'title-ascending'  %}selected{% endif %}>Size: A to Z</option>
+              <option value="title-descending" {% if current_sort == 'title-descending' %}selected{% endif %}>Size: Z to A</option>
             </select>
           </div>
         </div>
@@ -108,45 +94,31 @@
 {%- endpaginate -%}
 
 <style>
-  /* Rentmojo-style filter rail */
-  .ed-coll-layout { grid-template-columns: 240px 1fr !important; gap: 32px !important; }
-  .ed-filters details {
-    border: 0 !important; border-bottom: 1px solid var(--ed-border, #E0DBCF) !important;
-    padding: 14px 0 !important;
+  /* Top pill filter row */
+  .ed-coll-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 0 0 4px; overflow-x: auto; scrollbar-width: thin; }
+  .ed-coll-pill {
+    display: inline-flex; align-items: center;
+    padding: 8px 16px;
+    background: #fff;
+    border: 1.5px solid var(--ed-border, #E0DBCF);
+    border-radius: 999px;
+    color: var(--ed-ink, #0A0B0E);
+    font-family: "Inter", sans-serif;
+    font-weight: 600; font-size: 13px;
+    text-decoration: none; white-space: nowrap;
+    transition: background 120ms, color 120ms, border-color 120ms;
   }
-  .ed-filters details summary {
-    font-family: "Inter", sans-serif !important;
-    font-weight: 700 !important;
-    font-size: 14px !important;
-    letter-spacing: 0 !important;
-    text-transform: none !important;
-    color: var(--ed-ink, #0A0B0E) !important;
-  }
-  .ed-filters details label {
-    padding: 6px 0 !important;
-    font-size: 13px !important;
-  }
-  .ed-filters details label input[type="checkbox"] {
-    width: 16px; height: 16px;
-    accent-color: var(--ed-electric, #1E5FFF);
-    margin-right: 4px;
-  }
-  .ed-filters details label .ed-mono {
-    color: rgba(var(--color-foreground), 0.5) !important;
-    font-family: "Inter", sans-serif !important;
-    font-size: 12px !important;
-  }
+  .ed-coll-pill:hover { border-color: var(--ed-ink, #0A0B0E); }
+  .ed-coll-pill.is-active { background: var(--ed-electric, #1E5FFF); color: #fff; border-color: var(--ed-electric, #1E5FFF); }
 
   @media (max-width: 989px) {
-    .ed-coll-layout { grid-template-columns: 1fr !important; }
-    .ed-filters { position: static !important; }
     .ed-coll-grid { grid-template-columns: repeat({{ cols_mobile }}, 1fr) !important; gap: var(--sp-3) !important; }
   }
   @media (max-width: 599px) {
     .ed-coll-grid { grid-template-columns: repeat({{ cols_mobile }}, 1fr) !important; gap: 12px !important; }
+    .ed-coll-pills { gap: 6px; margin-bottom: 16px; }
+    .ed-coll-pill { padding: 6px 12px; font-size: 12px; }
   }
-  details[open] summary span:last-child { transform: rotate(45deg); transition: transform 120ms; }
-  summary::-webkit-details-marker { display: none; }
 </style>
 
 {% schema %}
@@ -225,7 +197,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 24,
+      "default": 0,
       "unit": "px"
     },
     {
@@ -235,7 +207,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 24,
+      "default": 0,
       "unit": "px"
     }
   ],
@@ -244,9 +216,63 @@
       "collection"
     ]
   },
+  "blocks": [
+    {
+      "type": "collection_link",
+      "name": "Pill \u2014 collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    },
+    {
+      "type": "tag_filter",
+      "name": "Pill \u2014 tag filter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag (exact match)",
+          "info": "Loads /collections/<handle>/<tag>"
+        }
+      ]
+    },
+    {
+      "type": "all_link",
+      "name": "Pill \u2014 All",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "All"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
   "presets": [
     {
-      "name": "ED Collection grid"
+      "name": "ED Collection grid",
+      "blocks": [
+        {
+          "type": "all_link"
+        }
+      ]
     }
   ]
 }

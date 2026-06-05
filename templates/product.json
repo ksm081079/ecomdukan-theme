@@ -1,1 +1,80 @@
-{"sections":{"main":{"type":"ed-main-product","settings":{"show_breadcrumb":true,"price_unit_label":"Roll","delivery_promise":"Ships from Hyderabad","show_social_proof":false,"sold_values":"8,12,15,18,22,26","viewing_min":8,"viewing_max":32,"offers_heading":"","offer_1":"","offer_1_tagline":"","offer_1_code":"","offer_2":"","offer_2_tagline":"","offer_2_code":"","offer_3":"","offer_3_tagline":"","offer_3_code":"","highlight_icon":"","highlight_text":"","show_quote_cta":false,"quote_cta_label":"","quote_url":"","sample_url":"","upsell_icon":"💎","upsell_heading":"","upsell_sub":"","upsell_link":"","promise_icon":"","promise_text":"","policy_1_icon":"","policy_1_label":"","policy_1_url":"","policy_2_icon":"🧾","policy_2_label":"","policy_2_url":"","show_pincode_check":true,"trust_1_icon":"","trust_1_label":"","trust_1_sub":"","trust_2_icon":"","trust_2_label":"","trust_2_sub":"","trust_3_icon":"","trust_3_label":"","trust_3_sub":"","trust_4_icon":"","trust_4_label":"","trust_4_sub":"","usp_1":"","usp_2":"","color_scheme":"scheme-1","padding_top":24,"padding_bottom":24}},"ed_custom_print_cta_7KnV74":{"type":"ed-custom-print-cta","name":"ED Custom-print CTA","settings":{"eyebrow":"Custom Order","heading":"Need a different size or printed label?","body":"Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.","cta_label":"Submit a custom order","cta_link":"","color_scheme":"scheme-4","padding_top":24,"padding_bottom":24}}},"order":["main","ed_custom_print_cta_7KnV74"]}
+{
+  "sections": {
+    "main": {
+      "type": "ed-main-product",
+      "settings": {
+        "show_breadcrumb": true,
+        "price_unit_label": "Roll",
+        "delivery_promise": "Ships from Hyderabad",
+        "show_social_proof": false,
+        "sold_values": "8,12,15,18,22,26",
+        "viewing_min": 8,
+        "viewing_max": 32,
+        "offers_heading": "",
+        "offer_1": "",
+        "offer_1_tagline": "",
+        "offer_1_code": "",
+        "offer_2": "",
+        "offer_2_tagline": "",
+        "offer_2_code": "",
+        "offer_3": "",
+        "offer_3_tagline": "",
+        "offer_3_code": "",
+        "highlight_icon": "",
+        "highlight_text": "",
+        "show_quote_cta": false,
+        "quote_cta_label": "",
+        "quote_url": "",
+        "sample_url": "",
+        "upsell_icon": "\ud83d\udc8e",
+        "upsell_heading": "",
+        "upsell_sub": "",
+        "upsell_link": "",
+        "promise_icon": "",
+        "promise_text": "",
+        "policy_1_icon": "",
+        "policy_1_label": "",
+        "policy_1_url": "",
+        "policy_2_icon": "\ud83e\uddfe",
+        "policy_2_label": "",
+        "policy_2_url": "",
+        "show_pincode_check": true,
+        "trust_1_icon": "",
+        "trust_1_label": "",
+        "trust_1_sub": "",
+        "trust_2_icon": "",
+        "trust_2_label": "",
+        "trust_2_sub": "",
+        "trust_3_icon": "",
+        "trust_3_label": "",
+        "trust_3_sub": "",
+        "trust_4_icon": "",
+        "trust_4_label": "",
+        "trust_4_sub": "",
+        "usp_1": "",
+        "usp_2": "",
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "ed_custom_print_cta_7KnV74": {
+      "type": "ed-custom-print-cta",
+      "name": "ED Custom-print CTA",
+      "settings": {
+        "eyebrow": "Custom Order",
+        "heading": "Need a different size or printed label?",
+        "body": "Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.",
+        "cta_label": "Submit a custom order",
+        "cta_link": "",
+        "color_scheme": "scheme-4",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    }
+  },
+  "order": [
+    "main",
+    "ed_custom_print_cta_7KnV74"
+  ]
+}
