@@ -73,15 +73,16 @@
               {%- assign area_val = 0 -%}
               {%- assign pack_val = 1 -%}
               {%- for t in product.tags -%}
-                {%- assign tl = t | downcase -%}
-                {%- if tl contains 'area-' -%}
-                  {%- assign area_val = tl | remove: 'area-' | plus: 0 -%}
-                {%- elsif tl contains 'pack-' -%}
-                  {%- assign pack_val = tl | remove: 'pack-' | plus: 0 -%}
+                {%- assign tl = t | downcase | strip -%}
+                {%- assign parts = tl | split: '-' -%}
+                {%- if parts[0] == 'area' and parts.size >= 2 -%}
+                  {%- assign area_val = parts[1] | strip | times: 1 -%}
+                {%- elsif parts[0] == 'pack' and parts.size >= 2 -%}
+                  {%- assign pack_val = parts[1] | strip | times: 1 -%}
                 {%- endif -%}
               {%- endfor -%}
               {%- if pack_val < 1 -%}{%- assign pack_val = 1 -%}{%- endif -%}
-              {%- assign price_paise = product.selected_or_first_available_variant.price | default: product.price_min -%}
+              {%- assign price_paise = product.selected_or_first_available_variant.price | default: product.price_min | default: 0 -%}
               {%- assign ppl_paise = price_paise | divided_by: pack_val -%}
               <div class="ed-coll-grid__cell" data-ed-card data-area="{{ area_val }}" data-ppl="{{ ppl_paise }}" data-price="{{ price_paise }}">
                 {%- render 'ed-product-card', product: product -%}
@@ -90,39 +91,61 @@
           </div>
           <script>
             (function() {
-              const grid = document.querySelector('[data-ed-grid]');
-              const select = document.querySelector('[data-ed-sort]');
-              if (!grid || !select) return;
+              const init = function() {
+                const grid = document.querySelector('[data-ed-grid]');
+                const select = document.querySelector('[data-ed-sort]');
+                if (!grid || !select) return;
 
-              const reorder = function(mode) {
-                const cards = Array.from(grid.querySelectorAll('[data-ed-card]'));
-                let key, dir;
-                if (mode === 'size-asc')        { key = 'area'; dir = 1; }
-                else if (mode === 'size-desc')  { key = 'area'; dir = -1; }
-                else if (mode === 'price-asc')  { key = 'ppl';  dir = 1; }
-                else if (mode === 'price-desc') { key = 'ppl';  dir = -1; }
-                else return;
-                cards.sort(function(a, b) {
-                  const va = parseFloat(a.dataset[key]) || 0;
-                  const vb = parseFloat(b.dataset[key]) || 0;
-                  return (va - vb) * dir;
+                const cards = grid.querySelectorAll('[data-ed-card]');
+                // Debug dump — open browser console to verify tags were read correctly.
+                try {
+                  const dump = Array.from(cards).map(function(c) {
+                    return { area: c.dataset.area, ppl: c.dataset.ppl, price: c.dataset.price };
+                  });
+                  console.log('[ed-sort] cards parsed from tags:', dump);
+                } catch (e) {}
+
+                const reorder = function(mode) {
+                  const arr = Array.from(grid.querySelectorAll('[data-ed-card]'));
+                  let key, dir;
+                  if (mode === 'size-asc')        { key = 'area'; dir = 1; }
+                  else if (mode === 'size-desc')  { key = 'area'; dir = -1; }
+                  else if (mode === 'price-asc')  { key = 'ppl';  dir = 1; }
+                  else if (mode === 'price-desc') { key = 'ppl';  dir = -1; }
+                  else return;
+                  arr.sort(function(a, b) {
+                    const va = parseFloat(a.dataset[key]);
+                    const vb = parseFloat(b.dataset[key]);
+                    // Treat unset / NaN as 0 — they sort to the bottom on desc, top on asc.
+                    const aa = isNaN(va) ? 0 : va;
+                    const bb = isNaN(vb) ? 0 : vb;
+                    return (aa - bb) * dir;
+                  });
+                  arr.forEach(function(c) { grid.appendChild(c); });
+                };
+
+                const url = new URL(window.location.href);
+                const fromUrl = url.searchParams.get('sort');
+                const initial = fromUrl || 'size-asc';
+                if (Array.prototype.some.call(select.options, function(o) { return o.value === initial; })) {
+                  select.value = initial;
+                }
+                // Always run an initial sort so the page lands sorted (size-asc by default).
+                reorder(initial);
+
+                select.addEventListener('change', function() {
+                  reorder(select.value);
+                  const u = new URL(window.location.href);
+                  u.searchParams.set('sort', select.value);
+                  window.history.replaceState({}, '', u.toString());
                 });
-                cards.forEach(function(c) { grid.appendChild(c); });
               };
 
-              const url = new URL(window.location.href);
-              const initial = url.searchParams.get('sort') || 'size-asc';
-              if ([...select.options].some(function(o) { return o.value === initial; })) {
-                select.value = initial;
-                reorder(initial);
+              if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+              } else {
+                init();
               }
-
-              select.addEventListener('change', function() {
-                reorder(select.value);
-                const u = new URL(window.location.href);
-                u.searchParams.set('sort', select.value);
-                window.history.replaceState({}, '', u.toString());
-              });
             })();
           </script>
 
