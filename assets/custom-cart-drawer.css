@@ -202,14 +202,23 @@ cart-drawer-items {
 .cart-drawer .product-option dd { display: inline; margin: 0; }
 .cart-drawer .cart-item__details dl { margin: 0; }
 
-/* Price — col 2 row 2 (under title, muted) */
+/* Price — col 2 row 2 (under title, muted). Override Dawn's right-align + green-success styling. */
+.cart-drawer .cart-items .cart-item__totals,
 .cart-drawer .cart-item__totals {
-  grid-column: 2; grid-row: 2;
-  padding: 0; text-align: left;
-  display: flex; align-items: baseline; gap: 8px;
-  font-family: "Inter", sans-serif;
-  font-weight: 500; font-size: 15px;
-  color: var(--ed-text-mute, #5C6068);
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: left !important;
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  font-family: "Inter", sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  color: var(--ed-text-mute, #5C6068) !important;
+  pointer-events: auto !important;
 }
 .cart-drawer .cart-item__price-wrapper { display: inline-flex; align-items: baseline; gap: 8px; }
 .cart-drawer .cart-item__totals .price,
@@ -282,31 +291,6 @@ cart-drawer-items {
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
-}
-
-/* Price — col 3 row 2, bottom-right */
-.cart-drawer .cart-item__totals {
-  grid-column: 3; grid-row: 2;
-  display: flex; align-items: baseline; justify-content: flex-end;
-  align-self: end;
-  padding: 0; margin: 0;
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 700; font-size: 14px;
-  color: var(--ed-success, #1E6B3A);
-}
-.cart-drawer .cart-item__price-wrapper {
-  display: inline-flex; align-items: baseline; gap: 6px;
-  font: inherit; color: inherit;
-}
-.cart-drawer .cart-item__price-wrapper .price,
-.cart-drawer .cart-item__price-wrapper .price--end { font: inherit; color: inherit; }
-.cart-drawer .cart-item__old-price,
-.cart-drawer .cart-item__totals s,
-.cart-drawer .cart-item__price-wrapper s {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 11px; font-weight: 400;
-  color: var(--ed-text-mute, #5C6068);
-  text-decoration: line-through;
 }
 
 /* Trash — col 3 row 3, far bottom-right of the row. Ghost icon, no border */
