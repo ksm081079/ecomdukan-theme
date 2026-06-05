@@ -50,10 +50,10 @@
       <div>
         {%- comment -%} Sort bar — client-side custom sort by area or price-per-label {%- endcomment -%}
         <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-5); padding-bottom: var(--sp-3); border-bottom: 1.5px solid var(--ed-ink); flex-wrap: wrap;">
-          <p class="ed-mono" style="color: var(--ed-text-mute); margin: 0; font-size: 12px;">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
+          <p style="font-family: 'Poppins', sans-serif; color: var(--ed-text-mute); margin: 0; font-size: 13px; font-weight: 500;">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <label for="ed-sort" class="ed-caption" style="color: var(--ed-text-mute);">Sort by</label>
-            <select id="ed-sort" class="ed-select" data-ed-sort style="width: auto; padding: 8px 24px 8px 12px; font-size: 13px;">
+            <label for="ed-sort" style="font-family: 'Poppins', sans-serif; color: var(--ed-text-mute); font-size: 13px; font-weight: 500;">Sort by</label>
+            <select id="ed-sort" class="ed-select" data-ed-sort style="width: auto; padding: 8px 24px 8px 12px; font-size: 13px; font-family: 'Poppins', sans-serif; font-weight: 500;">
               <option value="size-asc">Size: Small → Large</option>
               <option value="size-desc">Size: Large → Small</option>
               <option value="price-asc">Price: Low → High</option>
@@ -167,8 +167,9 @@
     border: 1.5px solid var(--ed-border, #E0DBCF);
     border-radius: 999px;
     color: var(--ed-ink, #0A0B0E);
-    font-family: "Inter", sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 600; font-size: 13px;
+    letter-spacing: -0.01em;
     text-decoration: none; white-space: nowrap;
     transition: background 120ms, color 120ms, border-color 120ms;
   }

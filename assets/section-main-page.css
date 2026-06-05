@@ -1,9 +1,28 @@
 .page-title {
   margin-top: 0;
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
 }
 
 .main-page-title {
   margin-bottom: 3rem;
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.035em !important;
+}
+
+/* Page body content uses Poppins too (user request: "font poppins everywhere") */
+.page-width .rte,
+.page-width .rte p,
+.page-width .rte li,
+.page-width .rte h1,
+.page-width .rte h2,
+.page-width .rte h3,
+.page-width .rte h4,
+.page-width .rte h5,
+.page-width .rte h6 {
+  font-family: "Poppins", sans-serif !important;
 }
 
 @media screen and (min-width: 750px) {
