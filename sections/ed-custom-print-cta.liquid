@@ -1,114 +1,137 @@
 {%- liquid
   assign _pt = section.settings.padding_top | default: 0
   assign _pb = section.settings.padding_bottom | default: 0
+  assign scheme = section.settings.color_scheme | default: 'scheme-4'
+
+  case scheme
+    when 'scheme-1'
+      assign bg = '#F4F0E8'
+      assign fg = '#0A0B0E'
+      assign fg_dim = 'rgba(10,11,14,0.78)'
+    when 'scheme-2'
+      assign bg = '#FBFAF6'
+      assign fg = '#0A0B0E'
+      assign fg_dim = 'rgba(10,11,14,0.78)'
+    when 'scheme-3'
+      assign bg = '#1A2C5E'
+      assign fg = '#F4F0E8'
+      assign fg_dim = 'rgba(244,240,232,0.85)'
+    when 'scheme-4'
+      assign bg = '#0A0B0E'
+      assign fg = '#F4F0E8'
+      assign fg_dim = 'rgba(244,240,232,0.85)'
+    when 'scheme-5'
+      assign bg = '#1E5FFF'
+      assign fg = '#FFFFFF'
+      assign fg_dim = 'rgba(255,255,255,0.85)'
+    else
+      assign bg = '#FBFAF6'
+      assign fg = '#0A0B0E'
+      assign fg_dim = 'rgba(10,11,14,0.78)'
+  endcase
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
+  #shopify-section-{{ section.id }} .ed-cpc { background: {{ bg }}; color: {{ fg }}; }
+  #shopify-section-{{ section.id }} .ed-cpc__eyebrow { color: {{ fg_dim }}; }
+  #shopify-section-{{ section.id }} .ed-cpc__heading { color: {{ fg }} !important; }
+  #shopify-section-{{ section.id }} .ed-cpc__body { color: {{ fg_dim }}; }
 {% endstyle %}
-{%- liquid
-  assign scheme = section.settings.color_scheme | default: 'scheme-3'
--%}
-<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
-  <div class="ed-container" style="text-align: center; max-width: 920px;">
+
+<div class="ed-cpc">
+  <div class="ed-cpc__inner">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="ed-caption" style="margin: 0 0 var(--sp-4); color: rgb(var(--color-foreground));">{{ section.settings.eyebrow }}</p>
+      <p class="ed-cpc__eyebrow">{{ section.settings.eyebrow }}</p>
     {%- endif -%}
     {%- if section.settings.heading != blank -%}
-      <h2 class="ed-display-m" style="color: rgb(var(--color-foreground)); margin: 0 0 var(--sp-4);">{{ section.settings.heading }}</h2>
+      <h2 class="ed-cpc__heading">{{ section.settings.heading }}</h2>
     {%- endif -%}
     {%- if section.settings.body != blank -%}
-      <p class="ed-body-l" style="color: rgb(var(--color-foreground)); opacity: 0.85; margin: 0 0 var(--sp-6);">{{ section.settings.body }}</p>
+      <p class="ed-cpc__body">{{ section.settings.body }}</p>
     {%- endif -%}
     {%- if section.settings.cta_label != blank -%}
-      <a href="{{ section.settings.cta_link | default: '#' }}" class="ed-btn ed-btn--primary ed-btn--lg">{{ section.settings.cta_label }}</a>
+      <a href="{{ section.settings.cta_link | default: '#' }}" class="ed-cpc__btn">{{ section.settings.cta_label }}</a>
     {%- endif -%}
-    <div class="ed-shutter ed-shutter--on-paper" style="max-width: 240px; margin: var(--sp-6) auto 0; opacity: 0.4;"></div>
   </div>
 </div>
+
+<style>
+  .ed-cpc { width: 100%; }
+  .ed-cpc__inner {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 24px;
+    text-align: center;
+  }
+  .ed-cpc__eyebrow {
+    margin: 0 0 14px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .ed-cpc__heading {
+    margin: 0 0 16px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+  .ed-cpc__body {
+    margin: 0 auto 28px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px; line-height: 1.6;
+    max-width: 640px;
+  }
+  .ed-cpc__btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 14px 32px;
+    background: #1E5FFF;
+    color: #fff;
+    border-radius: 10px;
+    font-family: "Inter", sans-serif;
+    font-weight: 700; font-size: 14px;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(30,95,255,0.28);
+    transition: background 120ms, transform 120ms, box-shadow 120ms;
+  }
+  .ed-cpc__btn:hover { background: #1747D6; color: #fff; box-shadow: 0 6px 20px rgba(23,71,214,0.36); }
+  .ed-cpc__btn:active { transform: translateY(1px); }
+
+  @media (max-width: 749px) {
+    .ed-cpc__inner { padding: 36px 18px; }
+    .ed-cpc__body { font-size: 14px; }
+    .ed-cpc__btn { padding: 12px 24px; font-size: 13px; }
+  }
+</style>
 
 {% schema %}
 {
   "name": "ED Custom-print CTA",
   "tag": "section",
   "settings": [
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Custom print"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Need it printed your way?"
-    },
-    {
-      "type": "textarea",
-      "id": "body",
-      "label": "Body",
-      "default": "Send us a brief \u2014 dimensions, material, finish. We quote in 2 business hours, Mon\u2013Sat, 9 AM \u2013 7 PM IST."
-    },
-    {
-      "type": "text",
-      "id": "cta_label",
-      "label": "CTA label",
-      "default": "Start a custom job"
-    },
-    {
-      "type": "url",
-      "id": "cta_link",
-      "label": "CTA link"
-    },
-    {
-      "type": "select",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-3",
+    { "type": "text",     "id": "eyebrow",      "label": "Eyebrow",       "default": "Custom print" },
+    { "type": "text",     "id": "heading",      "label": "Heading",       "default": "Need it printed your way?" },
+    { "type": "textarea", "id": "body",         "label": "Body",          "default": "Send us a brief — dimensions, material, finish. We quote in 2 business hours, Mon–Sat, 9 AM – 7 PM IST." },
+    { "type": "text",     "id": "cta_label",    "label": "CTA label",     "default": "Start a custom job" },
+    { "type": "url",      "id": "cta_link",     "label": "CTA link" },
+    { "type": "select",   "id": "color_scheme", "label": "Color scheme",  "default": "scheme-4",
       "options": [
-        {
-          "value": "scheme-3",
-          "label": "Indigo (full-width band)"
-        },
-        {
-          "value": "scheme-4",
-          "label": "Ink"
-        },
-        {
-          "value": "scheme-5",
-          "label": "Electric"
-        }
+        { "value": "scheme-1", "label": "Paper (light)" },
+        { "value": "scheme-2", "label": "Snow (light)" },
+        { "value": "scheme-3", "label": "Indigo (dark)" },
+        { "value": "scheme-4", "label": "Ink (dark)" },
+        { "value": "scheme-5", "label": "Electric (blue)" }
       ]
     },
-    {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Top padding (px)",
-      "min": 0,
-      "max": 200,
-      "step": 4,
-      "default": 0,
-      "unit": "px"
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Bottom padding (px)",
-      "min": 0,
-      "max": 200,
-      "step": 4,
-      "default": 0,
-      "unit": "px"
-    }
+    { "type": "header",   "content": "Spacing" },
+    { "type": "range",    "id": "padding_top",    "label": "Top padding (px)",    "min": 0, "max": 200, "step": 4, "default": 0, "unit": "px" },
+    { "type": "range",    "id": "padding_bottom", "label": "Bottom padding (px)", "min": 0, "max": 200, "step": 4, "default": 0, "unit": "px" }
   ],
   "presets": [
-    {
-      "name": "ED Custom-print CTA"
-    }
+    { "name": "ED Custom-print CTA" }
   ]
 }
 {% endschema %}
