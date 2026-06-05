@@ -355,19 +355,33 @@
       </div>
     </div>
 
-    {%- comment -%} Tabbed content blocks (Description / Specs / Reviews / FAQ) {%- endcomment -%}
-    {%- if section.blocks.size > 0 -%}
+    {%- comment -%} Tabbed content blocks (Description / Specs / Reviews / FAQ) — Description always auto-rendered from product.description {%- endcomment -%}
+    {%- assign has_desc = false -%}
+    {%- if product.description != blank -%}{%- assign has_desc = true -%}{%- endif -%}
+    {%- if has_desc or section.blocks.size > 0 -%}
       <div class="ed-pdp-tabs" data-ed-tabs>
         <div class="ed-pdp-tabs__nav" role="tablist">
+          {%- if has_desc -%}
+            <button type="button" class="ed-pdp-tabs__tab is-active" role="tab" aria-selected="true" data-tab="0">Description</button>
+          {%- endif -%}
           {%- for block in section.blocks -%}
-            <button type="button" class="ed-pdp-tabs__tab{% if forloop.first %} is-active{% endif %}" role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" data-tab="{{ forloop.index }}" {{ block.shopify_attributes }}>
+            {%- assign idx_offset = 1 -%}{%- unless has_desc -%}{%- assign idx_offset = 0 -%}{%- endunless -%}
+            {%- assign tab_idx = forloop.index | plus: idx_offset | minus: 1 -%}
+            <button type="button" class="ed-pdp-tabs__tab{% if forloop.first and has_desc == false %} is-active{% endif %}" role="tab" aria-selected="{% if forloop.first and has_desc == false %}true{% else %}false{% endif %}" data-tab="{{ tab_idx }}" {{ block.shopify_attributes }}>
               {{ block.settings.title }}
             </button>
           {%- endfor -%}
         </div>
         <div class="ed-pdp-tabs__panels">
+          {%- if has_desc -%}
+            <div class="ed-pdp-tabs__panel is-active" role="tabpanel" data-panel="0">
+              <div class="ed-rte">{{ product.description }}</div>
+            </div>
+          {%- endif -%}
           {%- for block in section.blocks -%}
-            <div class="ed-pdp-tabs__panel{% if forloop.first %} is-active{% endif %}" role="tabpanel" data-panel="{{ forloop.index }}">
+            {%- assign idx_offset = 1 -%}{%- unless has_desc -%}{%- assign idx_offset = 0 -%}{%- endunless -%}
+            {%- assign panel_idx = forloop.index | plus: idx_offset | minus: 1 -%}
+            <div class="ed-pdp-tabs__panel{% if forloop.first and has_desc == false %} is-active{% endif %}" role="tabpanel" data-panel="{{ panel_idx }}">
               {%- case block.type -%}
                 {%- when 'rich_text' -%}
                   <div class="ed-rte">{{ block.settings.content }}</div>
