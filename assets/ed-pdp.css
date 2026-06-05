@@ -49,7 +49,7 @@
   .ed-pdp-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(320px, 1fr);
-    gap: 48px;
+    gap: var(--sp-7, 32px);
     align-items: start;
   }
   @media (min-width: 990px) {
@@ -465,9 +465,9 @@
   }
 
   /* ===== Rentmojo-style stacked-card PDP info column ===== */
-  .ed-rm { display: flex; flex-direction: column; gap: 16px; }
+  .ed-rm { display: flex; flex-direction: column; gap: 12px; }
   .ed-rm__title {
-    margin: 0 0 8px;
+    margin: 0 0 4px;
     font-family: "Poppins", sans-serif; font-weight: 700;
     font-size: clamp(22px, 2.4vw, 30px);
     letter-spacing: -0.025em; line-height: 1.15;
@@ -476,8 +476,8 @@
   .ed-rm-card {
     background: var(--ed-snow, #FBFAF6);
     border: 1px solid var(--ed-border, #E0DBCF);
-    border-radius: 10px;
-    padding: 18px 20px;
+    border-radius: 8px;
+    padding: 16px;
     text-decoration: none;
     color: inherit;
     display: block;

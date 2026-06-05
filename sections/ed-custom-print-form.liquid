@@ -1,87 +1,136 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 32
-  assign _pb = section.settings.padding_bottom | default: 32
-  assign scheme = section.settings.color_scheme | default: 'scheme-1'
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
 {% endstyle %}
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-1'
+-%}
+<div class="color-{{ scheme }} ed-section" style="background: rgb(var(--color-background));">
+  <div class="ed-container" style="max-width: 880px;">
+    <div style="text-align: center; margin-bottom: var(--sp-7);">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ed-caption" style="color: var(--ed-text-mute); margin: 0 0 var(--sp-3);">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="ed-display-l" style="margin: 0 0 var(--sp-4);">{{ section.settings.heading | default: 'Custom print intake' }}</h1>
+      {%- if section.settings.body != blank -%}
+        <div class="ed-body-l" style="color: var(--ed-text-mute); max-width: 600px; margin: 0 auto;">{{ section.settings.body }}</div>
+      {%- endif -%}
+    </div>
 
-<div class="color-{{ scheme }} ed-cta-block" style="background: rgb(var(--color-background));">
-  <div class="ed-cta-block__inner">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="ed-cta-block__eyebrow">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
-    {%- if section.settings.heading != blank -%}
-      <h2 class="ed-cta-block__h">{{ section.settings.heading }}</h2>
-    {%- endif -%}
-    {%- if section.settings.body != blank -%}
-      <div class="ed-cta-block__body">{{ section.settings.body }}</div>
-    {%- endif -%}
-    {%- if section.settings.cta_label != blank -%}
-      <a href="{{ section.settings.cta_link | default: '#' }}" {% if section.settings.open_in_new_tab %}target="_blank" rel="noopener"{% endif %} class="ed-cta-block__btn">{{ section.settings.cta_label }}</a>
-    {%- endif -%}
+    <div class="ed-card" style="padding: var(--sp-7);">
+      {%- form 'contact', class: 'ed-form', id: 'ed-custom-form' -%}
+        <input type="hidden" name="contact[tags]" value="custom-print">
+        <input type="hidden" name="contact[subject]" value="Custom print enquiry">
+        <input type="hidden" name="contact[Form type]" value="Custom print">
+
+        <div class="ed-row">
+          <div>
+            <label class="ed-label" for="c-company">Company</label>
+            <input id="c-company" type="text" name="contact[Company]" class="ed-input" required>
+          </div>
+          <div>
+            <label class="ed-label" for="c-name">Contact name</label>
+            <input id="c-name" type="text" name="contact[name]" class="ed-input" required>
+          </div>
+        </div>
+
+        <div class="ed-row">
+          <div>
+            <label class="ed-label" for="c-email">Email</label>
+            <input id="c-email" type="email" name="contact[email]" class="ed-input" required>
+          </div>
+          <div>
+            <label class="ed-label" for="c-phone">Phone (WhatsApp preferred)</label>
+            <input id="c-phone" type="tel" name="contact[Phone]" class="ed-input">
+          </div>
+        </div>
+
+        <div class="ed-row">
+          <div>
+            <label class="ed-label" for="c-product">Product type</label>
+            <select id="c-product" name="contact[Product type]" class="ed-select">
+              <option>Label</option>
+              <option>Box / mailer</option>
+              <option>Tape</option>
+              <option>Tissue / wrap</option>
+              <option>Letterhead / stationery</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="ed-label" for="c-qty">Quantity</label>
+            <input id="c-qty" type="text" name="contact[Quantity]" class="ed-input" placeholder="e.g. 10,000 labels" required>
+          </div>
+        </div>
+
+        <div class="ed-row">
+          <div>
+            <label class="ed-label" for="c-dims">Dimensions</label>
+            <input id="c-dims" type="text" name="contact[Dimensions]" class="ed-input" placeholder="100 × 150 mm">
+          </div>
+          <div>
+            <label class="ed-label" for="c-material">Material</label>
+            <input id="c-material" type="text" name="contact[Material]" class="ed-input" placeholder="Paper 85gsm, BOPP, kraft…">
+          </div>
+        </div>
+
+        <div class="ed-row">
+          <div>
+            <label class="ed-label" for="c-finish">Finish</label>
+            <select id="c-finish" name="contact[Finish]" class="ed-select">
+              <option>Matte</option>
+              <option>Gloss</option>
+              <option>Uncoated</option>
+              <option>Soft-touch</option>
+              <option>Spot UV</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="ed-label" for="c-colors">Colors</label>
+            <input id="c-colors" type="text" name="contact[Colors]" class="ed-input" placeholder="2-color, CMYK, Pantone 286C…">
+          </div>
+        </div>
+
+        <div class="ed-row">
+          <div>
+            <label class="ed-label">Die-cut?</label>
+            <div style="display: flex; gap: var(--sp-4); align-items: center; padding: 14px 0;">
+              <label style="display: flex; align-items: center; gap: 6px;"><input type="radio" name="contact[Die cut]" value="Yes"> Yes</label>
+              <label style="display: flex; align-items: center; gap: 6px;"><input type="radio" name="contact[Die cut]" value="No" checked> No</label>
+            </div>
+          </div>
+          <div>
+            <label class="ed-label" for="c-need-by">Required by</label>
+            <input id="c-need-by" type="date" name="contact[Required by]" class="ed-input">
+          </div>
+        </div>
+
+        <div>
+          <label class="ed-label" for="c-brief">Brief / artwork notes</label>
+          <textarea id="c-brief" name="contact[Brief]" class="ed-textarea" placeholder="Anything we need to know about the design, the print, the use…" required></textarea>
+        </div>
+
+        <p class="ed-help">Artwork upload: please email artwork directly to <a href="mailto:{{ settings.ed_quote_email | default: 'quotes@ecomdukan.in' }}" style="color: var(--ed-electric);">{{ settings.ed_quote_email | default: 'quotes@ecomdukan.in' }}</a> after submitting this form — reference the quote number we'll send back.</p>
+
+        <button type="submit" class="ed-btn ed-btn--primary ed-btn--lg ed-btn--block">Send brief</button>
+
+        {%- if form.posted_successfully? -%}
+          <p class="ed-form-success">Got it — we'll reply within 2 business hours with a quote and a brief reference number. Email artwork to {{ settings.ed_quote_email | default: 'quotes@ecomdukan.in' }} once you receive it.</p>
+        {%- elsif form.errors -%}
+          <p class="ed-err">{{ form.errors | default_errors }}</p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
   </div>
 </div>
 
-<style>
-  .ed-cta-block { width: 100%; }
-  .ed-cta-block__inner {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 32px 24px;
-    text-align: center;
-  }
-  .ed-cta-block__eyebrow {
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ed-text-mute, #5C6068);
-    margin: 0 0 12px;
-  }
-  .ed-cta-block__h {
-    font-family: "Poppins", sans-serif;
-    font-weight: 700;
-    font-size: clamp(24px, 3vw, 36px);
-    letter-spacing: -0.025em;
-    line-height: 1.15;
-    margin: 0 0 16px;
-    color: rgb(var(--color-foreground));
-  }
-  .ed-cta-block__body {
-    font-family: "Inter", sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--ed-text-mute, #5C6068);
-    margin: 0 0 28px;
-  }
-  .ed-cta-block__body p { margin: 0 0 8px; }
-  .ed-cta-block__btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 32px;
-    background: var(--ed-electric, #1E5FFF);
-    color: #fff;
-    border-radius: 8px;
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-    transition: background 120ms;
-  }
-  .ed-cta-block__btn:hover { background: #1747D6; color: #fff; }
-  @media (max-width: 749px) {
-    .ed-cta-block__inner { padding: 24px 18px; }
-    .ed-cta-block__btn { padding: 12px 24px; font-size: 13px; }
-  }
-</style>
-
 {% schema %}
 {
-  "name": "ED Custom-print CTA",
+  "name": "ED Custom-print form",
   "tag": "section",
   "settings": [
     {
@@ -94,34 +143,13 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Need it printed your way?"
+      "default": "Send us your brief"
     },
     {
       "type": "richtext",
       "id": "body",
       "label": "Body",
-      "default": "<p>Send us your brief \u2014 dimensions, material, finish, color. We quote in 2 business hours.</p>"
-    },
-    {
-      "type": "text",
-      "id": "cta_label",
-      "label": "Button label",
-      "default": "Start a custom job"
-    },
-    {
-      "type": "url",
-      "id": "cta_link",
-      "label": "Button link (paste Google Form URL or any link)"
-    },
-    {
-      "type": "checkbox",
-      "id": "open_in_new_tab",
-      "label": "Open link in new tab",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Color scheme"
+      "default": "<p>Dimensions, material, finish, colors. We quote in 2 business hours.</p>"
     },
     {
       "type": "select",
@@ -136,14 +164,6 @@
         {
           "value": "scheme-2",
           "label": "Snow"
-        },
-        {
-          "value": "scheme-3",
-          "label": "Indigo"
-        },
-        {
-          "value": "scheme-4",
-          "label": "Ink"
         }
       ]
     },
@@ -158,7 +178,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 32,
+      "default": 24,
       "unit": "px"
     },
     {
@@ -168,13 +188,13 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 32,
+      "default": 24,
       "unit": "px"
     }
   ],
   "presets": [
     {
-      "name": "ED Custom-print CTA"
+      "name": "ED Custom-print form"
     }
   ]
 }

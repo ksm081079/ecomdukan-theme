@@ -1,26 +1,16 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "current": {
-    "ed_company_legal_name": "Ecomdukan Pvt. Ltd.",
-    "ed_gstin": "27ABCDE1234F1Z5",
-    "ed_cin": "U74999MH2026PTC123456",
-    "ed_contact_email": "hello@ecomdukan.in",
-    "ed_quote_email": "quotes@ecomdukan.in",
-    "ed_sample_email": "samples@ecomdukan.in",
-    "ed_whatsapp_number": "+91 78426 80660",
+    "ed_company_legal_name": "",
+    "ed_gstin": "",
+    "ed_cin": "",
+    "ed_contact_email": "aniket@thelascaux.com",
+    "ed_quote_email": "",
+    "ed_sample_email": "",
+    "ed_whatsapp_number": "+91 7993179681",
     "ed_support_hours": "Mon\u2013Sat \u00b7 9 AM \u2013 6 PM IST",
-    "ed_dcs": "Mumbai \u00b7 Bengaluru \u00b7 Delhi",
-    "logo": "shopify://shop_images/EcomDukan_Backg_2_crop.png",
+    "ed_dcs": "",
+    "logo": "shopify://shop_images/mark-electric-512.png",
     "logo_width": 300,
-    "favicon": "shopify://shop_images/Bag_Backg_2_croped.png",
     "type_header_font": "poppins_n7",
     "heading_scale": 110,
     "type_body_font": "inter_n4",
@@ -103,57 +93,57 @@
     "color_schemes": {
       "scheme-1": {
         "settings": {
-          "background": "#F4F0E8",
+          "background": "#f4f0e8",
           "background_gradient": "",
-          "text": "#0A0B0E",
-          "button": "#1E5FFF",
-          "button_label": "#F4F0E8",
-          "secondary_button_label": "#0A0B0E",
-          "shadow": "#0A0B0E"
+          "text": "#0a0b0e",
+          "button": "#1e5fff",
+          "button_label": "#f4f0e8",
+          "secondary_button_label": "#0a0b0e",
+          "shadow": "#0a0b0e"
         }
       },
       "scheme-2": {
         "settings": {
-          "background": "#FBFAF6",
+          "background": "#fbfaf6",
           "background_gradient": "",
-          "text": "#0A0B0E",
-          "button": "#1E5FFF",
-          "button_label": "#F4F0E8",
-          "secondary_button_label": "#0A0B0E",
-          "shadow": "#0A0B0E"
+          "text": "#0a0b0e",
+          "button": "#1e5fff",
+          "button_label": "#f4f0e8",
+          "secondary_button_label": "#0a0b0e",
+          "shadow": "#0a0b0e"
         }
       },
       "scheme-3": {
         "settings": {
-          "background": "#1A2C5E",
+          "background": "#1a2c5e",
           "background_gradient": "",
-          "text": "#F4F0E8",
-          "button": "#1E5FFF",
-          "button_label": "#F4F0E8",
-          "secondary_button_label": "#F4F0E8",
-          "shadow": "#0A0B0E"
+          "text": "#f4f0e8",
+          "button": "#1e5fff",
+          "button_label": "#f4f0e8",
+          "secondary_button_label": "#f4f0e8",
+          "shadow": "#0a0b0e"
         }
       },
       "scheme-4": {
         "settings": {
-          "background": "#0A0B0E",
+          "background": "#0a0b0e",
           "background_gradient": "",
-          "text": "#F4F0E8",
-          "button": "#1E5FFF",
-          "button_label": "#F4F0E8",
-          "secondary_button_label": "#F4F0E8",
-          "shadow": "#0A0B0E"
+          "text": "#f4f0e8",
+          "button": "#1e5fff",
+          "button_label": "#f4f0e8",
+          "secondary_button_label": "#f4f0e8",
+          "shadow": "#0a0b0e"
         }
       },
       "scheme-5": {
         "settings": {
-          "background": "#1E5FFF",
+          "background": "#1e5fff",
           "background_gradient": "",
-          "text": "#F4F0E8",
-          "button": "#F4F0E8",
-          "button_label": "#1E5FFF",
-          "secondary_button_label": "#F4F0E8",
-          "shadow": "#0A0B0E"
+          "text": "#f4f0e8",
+          "button": "#f4f0e8",
+          "button_label": "#1e5fff",
+          "secondary_button_label": "#f4f0e8",
+          "shadow": "#0a0b0e"
         }
       }
     }
@@ -177,64 +167,7 @@
       "card_style": "card",
       "card_corner_radius": 12,
       "card_border_thickness": 1,
-      "badge_corner_radius": 6,
-      "color_schemes": {
-        "scheme-1": {
-          "settings": {
-            "background": "#F4F0E8",
-            "background_gradient": "",
-            "text": "#0A0B0E",
-            "button": "#1E5FFF",
-            "button_label": "#F4F0E8",
-            "secondary_button_label": "#0A0B0E",
-            "shadow": "#0A0B0E"
-          }
-        },
-        "scheme-2": {
-          "settings": {
-            "background": "#FBFAF6",
-            "background_gradient": "",
-            "text": "#0A0B0E",
-            "button": "#1E5FFF",
-            "button_label": "#F4F0E8",
-            "secondary_button_label": "#0A0B0E",
-            "shadow": "#0A0B0E"
-          }
-        },
-        "scheme-3": {
-          "settings": {
-            "background": "#1A2C5E",
-            "background_gradient": "",
-            "text": "#F4F0E8",
-            "button": "#1E5FFF",
-            "button_label": "#F4F0E8",
-            "secondary_button_label": "#F4F0E8",
-            "shadow": "#0A0B0E"
-          }
-        },
-        "scheme-4": {
-          "settings": {
-            "background": "#0A0B0E",
-            "background_gradient": "",
-            "text": "#F4F0E8",
-            "button": "#1E5FFF",
-            "button_label": "#F4F0E8",
-            "secondary_button_label": "#F4F0E8",
-            "shadow": "#0A0B0E"
-          }
-        },
-        "scheme-5": {
-          "settings": {
-            "background": "#1E5FFF",
-            "background_gradient": "",
-            "text": "#F4F0E8",
-            "button": "#F4F0E8",
-            "button_label": "#1E5FFF",
-            "secondary_button_label": "#F4F0E8",
-            "shadow": "#0A0B0E"
-          }
-        }
-      }
+      "badge_corner_radius": 6
     }
   }
 }

@@ -20,30 +20,20 @@
   assign sample = product.metafields.lead.sample_available.value
 -%}
 
-<div class="color-{{ section.settings.color_scheme | default: 'scheme-1' }} ed-section" style="background: rgb(var(--color-background)); padding-top: {{ section.settings.padding_top | default: 0 }}px; padding-bottom: {{ section.settings.padding_bottom | default: 0 }}px;">
+<div class="color-{{ section.settings.color_scheme | default: 'scheme-1' }} ed-section" style="background: rgb(var(--color-background)); padding-top: {{ section.settings.padding_top | default: 24 }}px; padding-bottom: {{ section.settings.padding_bottom | default: 24 }}px;">
   <div class="ed-container">
-    {%- comment -%} Breadcrumb — always rendered for SEO/structured data, visibility controlled by "Show breadcrumb" setting {%- endcomment -%}
-    <nav aria-label="Breadcrumb"{% unless section.settings.show_breadcrumb %} class="visually-hidden"{% endunless %}{% if section.settings.show_breadcrumb %} class="ed-mono" style="font-size: 12px; color: var(--ed-text-mute); margin-bottom: var(--sp-5); text-transform: uppercase; letter-spacing: .06em;"{% endif %}>
-      <a href="{{ routes.root_url }}"{% if section.settings.show_breadcrumb %} style="color: inherit; text-decoration: none;"{% endif %}>Home</a>
-      {%- if collection -%}
-        <span> › </span>
-        <a href="{{ collection.url }}"{% if section.settings.show_breadcrumb %} style="color: inherit; text-decoration: none;"{% endif %}>{{ collection.title }}</a>
-      {%- endif -%}
-      <span> › </span>
-      <span>{{ product.title }}</span>
-    </nav>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}{{ routes.root_url }}" }
-        {%- if collection -%}, { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": "{{ shop.url }}{{ collection.url }}" }, { "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}" }
-        {%- else -%}, { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}" }
+    {%- comment -%} Breadcrumb {%- endcomment -%}
+    {%- if section.settings.show_breadcrumb -%}
+      <nav class="ed-mono" style="font-size: 12px; color: var(--ed-text-mute); margin-bottom: var(--sp-5); text-transform: uppercase; letter-spacing: .06em;">
+        <a href="{{ routes.root_url }}" style="color: inherit; text-decoration: none;">Home</a>
+        {%- if collection -%}
+          <span class="ed-foot-meta__dot"> › </span>
+          <a href="{{ collection.url }}" style="color: inherit; text-decoration: none;">{{ collection.title }}</a>
         {%- endif -%}
-      ]
-    }
-    </script>
+        <span class="ed-foot-meta__dot"> › </span>
+        <span style="color: var(--ed-ink);">{{ product.title }}</span>
+      </nav>
+    {%- endif -%}
 
     <div class="ed-pdp-grid">
       {%- comment -%} Media gallery — scratch rebuild. Main image + thumb strip below. {%- endcomment -%}
@@ -775,530 +765,127 @@
   "name": "ED Main product",
   "tag": "section",
   "settings": [
-    {
-      "type": "header",
-      "content": "Layout"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_breadcrumb",
-      "label": "Show breadcrumb (always emits SEO structured data; toggle controls visibility)",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "price_unit_label",
-      "label": "Price unit label (e.g. 'case', 'roll')",
-      "default": "case"
-    },
-    {
-      "type": "text",
-      "id": "delivery_promise",
-      "label": "Delivery promise (in price card)",
-      "default": "Same-day dispatch"
-    },
-    {
-      "type": "header",
-      "content": "Social proof (sold + live viewers)"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_social_proof",
-      "label": "Show sold / viewing-now row",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "sold_values",
-      "label": "Sold counts (comma-separated, rotates)",
-      "default": "8,12,15,18,22,26"
-    },
-    {
-      "type": "range",
-      "id": "viewing_min",
-      "label": "Viewing now \u2014 min",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "default": 8
-    },
-    {
-      "type": "range",
-      "id": "viewing_max",
-      "label": "Viewing now \u2014 max",
-      "min": 0,
-      "max": 200,
-      "step": 2,
-      "default": 32
-    },
-    {
-      "type": "header",
-      "content": "Available offers (3 coupon cards)"
-    },
-    {
-      "type": "text",
-      "id": "offers_heading",
-      "label": "Heading",
-      "default": "Available offers"
-    },
-    {
-      "type": "text",
-      "id": "offer_1",
-      "label": "Offer 1 \u2014 Title",
-      "default": "Get \u20b9100 off"
-    },
-    {
-      "type": "text",
-      "id": "offer_1_tagline",
-      "label": "Offer 1 \u2014 Tagline",
-      "default": "On carts above \u20b9899"
-    },
-    {
-      "type": "text",
-      "id": "offer_1_code",
-      "label": "Offer 1 \u2014 Code",
-      "default": "SAVE100"
-    },
-    {
-      "type": "text",
-      "id": "offer_2",
-      "label": "Offer 2 \u2014 Title",
-      "default": "Get 9% off"
-    },
-    {
-      "type": "text",
-      "id": "offer_2_tagline",
-      "label": "Offer 2 \u2014 Tagline",
-      "default": "On carts above \u20b91,200"
-    },
-    {
-      "type": "text",
-      "id": "offer_2_code",
-      "label": "Offer 2 \u2014 Code",
-      "default": "SAVE09"
-    },
-    {
-      "type": "text",
-      "id": "offer_3",
-      "label": "Offer 3 \u2014 Title",
-      "default": "Get 15% off"
-    },
-    {
-      "type": "text",
-      "id": "offer_3_tagline",
-      "label": "Offer 3 \u2014 Tagline",
-      "default": "On carts above \u20b92,400"
-    },
-    {
-      "type": "text",
-      "id": "offer_3_code",
-      "label": "Offer 3 \u2014 Code",
-      "default": "SAVE15"
-    },
-    {
-      "type": "header",
-      "content": "Highlight strip (single line under buy bar)"
-    },
-    {
-      "type": "text",
-      "id": "highlight_icon",
-      "label": "Icon (emoji)",
-      "default": "\u23f0"
-    },
-    {
-      "type": "text",
-      "id": "highlight_text",
-      "label": "Text",
-      "default": "Order before 2:30 PM IST for same-day dispatch"
-    },
-    {
-      "type": "header",
-      "content": "Trust badge image (replaces emoji grid if set)"
-    },
-    {
-      "type": "image_picker",
-      "id": "trust_badge_image",
-      "label": "Image (full width, transparent PNG works best)"
-    },
-    {
-      "type": "header",
-      "content": "Quote CTA"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_quote_cta",
-      "label": "Show quote link",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "quote_cta_label",
-      "label": "Quote link label",
-      "default": "Need 50+ cases? Request a custom quote \u2192"
-    },
-    {
-      "type": "text",
-      "id": "quote_url",
-      "label": "Quote page URL",
-      "default": "/pages/request-quote"
-    },
-    {
-      "type": "text",
-      "id": "sample_url",
-      "label": "Sample-pack page URL",
-      "default": "/pages/sample-pack"
-    },
-    {
-      "type": "header",
-      "content": "Upsell card (Mojo-Secure equivalent)"
-    },
-    {
-      "type": "text",
-      "id": "upsell_icon",
-      "label": "Icon (emoji)",
-      "default": "\ud83d\udc8e"
-    },
-    {
-      "type": "text",
-      "id": "upsell_heading",
-      "label": "Heading",
-      "default": "Bulk savings unlock at 20+ cases"
-    },
-    {
-      "type": "text",
-      "id": "upsell_sub",
-      "label": "Sub",
-      "default": "Save up to 11% per case. See the full tier table."
-    },
-    {
-      "type": "text",
-      "id": "upsell_link",
-      "label": "Link",
-      "default": "/pages/bulk-pricing"
-    },
-    {
-      "type": "header",
-      "content": "Delivery promise card"
-    },
-    {
-      "type": "text",
-      "id": "promise_icon",
-      "label": "Icon (emoji)",
-      "default": "\ud83d\ude9a"
-    },
-    {
-      "type": "text",
-      "id": "promise_text",
-      "label": "Text",
-      "default": "Order by 2 PM IST \u00b7 Ships same day from Mumbai DC"
-    },
-    {
-      "type": "header",
-      "content": "Policy row (two cards)"
-    },
-    {
-      "type": "text",
-      "id": "policy_1_icon",
-      "label": "Policy 1 icon",
-      "default": "\u21a9\ufe0f"
-    },
-    {
-      "type": "text",
-      "id": "policy_1_label",
-      "label": "Policy 1 label",
-      "default": "Returns & exchanges"
-    },
-    {
-      "type": "text",
-      "id": "policy_1_url",
-      "label": "Policy 1 link"
-    },
-    {
-      "type": "text",
-      "id": "policy_2_icon",
-      "label": "Policy 2 icon",
-      "default": "\ud83e\uddfe"
-    },
-    {
-      "type": "text",
-      "id": "policy_2_label",
-      "label": "Policy 2 label",
-      "default": "GST invoicing info"
-    },
-    {
-      "type": "text",
-      "id": "policy_2_url",
-      "label": "Policy 2 link"
-    },
-    {
-      "type": "header",
-      "content": "Delivery check"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_pincode_check",
-      "label": "Show pincode delivery checker",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Legacy"
-    },
-    {
-      "type": "header",
-      "content": "Trust strip (4 cells)"
-    },
-    {
-      "type": "text",
-      "id": "trust_1_icon",
-      "label": "Icon 1 (emoji)",
-      "default": "\ud83d\ude9a"
-    },
-    {
-      "type": "text",
-      "id": "trust_1_label",
-      "label": "Label 1",
-      "default": "Free shipping"
-    },
-    {
-      "type": "text",
-      "id": "trust_1_sub",
-      "label": "Sub 1",
-      "default": "On orders above \u20b92,500"
-    },
-    {
-      "type": "text",
-      "id": "trust_2_icon",
-      "label": "Icon 2 (emoji)",
-      "default": "\ud83e\uddfe"
-    },
-    {
-      "type": "text",
-      "id": "trust_2_label",
-      "label": "Label 2",
-      "default": "GST invoice"
-    },
-    {
-      "type": "text",
-      "id": "trust_2_sub",
-      "label": "Sub 2",
-      "default": "Included on every order"
-    },
-    {
-      "type": "text",
-      "id": "trust_3_icon",
-      "label": "Icon 3 (emoji)",
-      "default": "\u26a1"
-    },
-    {
-      "type": "text",
-      "id": "trust_3_label",
-      "label": "Label 3",
-      "default": "Same-day dispatch"
-    },
-    {
-      "type": "text",
-      "id": "trust_3_sub",
-      "label": "Sub 3",
-      "default": "Mumbai \u00b7 Bengaluru \u00b7 Delhi"
-    },
-    {
-      "type": "text",
-      "id": "trust_4_icon",
-      "label": "Icon 4 (emoji)",
-      "default": "\u21a9\ufe0f"
-    },
-    {
-      "type": "text",
-      "id": "trust_4_label",
-      "label": "Label 4",
-      "default": "Easy returns"
-    },
-    {
-      "type": "text",
-      "id": "trust_4_sub",
-      "label": "Sub 4",
-      "default": "7-day return window"
-    },
-    {
-      "type": "header",
-      "content": "Legacy USPs (deprecated \u2014 use Trust strip above)"
-    },
-    {
-      "type": "text",
-      "id": "usp_1",
-      "label": "USP 1"
-    },
-    {
-      "type": "text",
-      "id": "usp_2",
-      "label": "USP 2"
-    },
-    {
-      "type": "header",
-      "content": "Color scheme"
-    },
-    {
-      "type": "select",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-1",
+    { "type": "header", "content": "Layout" },
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "Show breadcrumb", "default": true },
+    { "type": "text", "id": "price_unit_label", "label": "Price unit label (e.g. 'case', 'roll')", "default": "case" },
+    { "type": "text", "id": "delivery_promise", "label": "Delivery promise (in price card)", "default": "Same-day dispatch" },
+
+    { "type": "header", "content": "Social proof (sold + live viewers)" },
+    { "type": "checkbox", "id": "show_social_proof", "label": "Show sold / viewing-now row", "default": true },
+    { "type": "text", "id": "sold_values", "label": "Sold counts (comma-separated, rotates)", "default": "8,12,15,18,22,26" },
+    { "type": "range", "id": "viewing_min", "label": "Viewing now — min", "min": 0, "max": 100, "step": 1, "default": 8 },
+    { "type": "range", "id": "viewing_max", "label": "Viewing now — max", "min": 0, "max": 200, "step": 2, "default": 32 },
+
+    { "type": "header", "content": "Available offers (3 coupon cards)" },
+    { "type": "text", "id": "offers_heading", "label": "Heading", "default": "Available offers" },
+    { "type": "text", "id": "offer_1", "label": "Offer 1 — Title", "default": "Get ₹100 off" },
+    { "type": "text", "id": "offer_1_tagline", "label": "Offer 1 — Tagline", "default": "On carts above ₹899" },
+    { "type": "text", "id": "offer_1_code", "label": "Offer 1 — Code", "default": "SAVE100" },
+    { "type": "text", "id": "offer_2", "label": "Offer 2 — Title", "default": "Get 9% off" },
+    { "type": "text", "id": "offer_2_tagline", "label": "Offer 2 — Tagline", "default": "On carts above ₹1,200" },
+    { "type": "text", "id": "offer_2_code", "label": "Offer 2 — Code", "default": "SAVE09" },
+    { "type": "text", "id": "offer_3", "label": "Offer 3 — Title", "default": "Get 15% off" },
+    { "type": "text", "id": "offer_3_tagline", "label": "Offer 3 — Tagline", "default": "On carts above ₹2,400" },
+    { "type": "text", "id": "offer_3_code", "label": "Offer 3 — Code", "default": "SAVE15" },
+
+    { "type": "header", "content": "Highlight strip (single line under buy bar)" },
+    { "type": "text", "id": "highlight_icon", "label": "Icon (emoji)", "default": "⏰" },
+    { "type": "text", "id": "highlight_text", "label": "Text", "default": "Order before 2:30 PM IST for same-day dispatch" },
+
+    { "type": "header", "content": "Trust badge image (replaces emoji grid if set)" },
+    { "type": "image_picker", "id": "trust_badge_image", "label": "Image (full width, transparent PNG works best)" },
+
+    { "type": "header", "content": "Quote CTA" },
+    { "type": "checkbox", "id": "show_quote_cta", "label": "Show quote link", "default": true },
+    { "type": "text", "id": "quote_cta_label", "label": "Quote link label", "default": "Need 50+ cases? Request a custom quote →" },
+    { "type": "text", "id": "quote_url", "label": "Quote page URL", "default": "/pages/request-quote" },
+    { "type": "text", "id": "sample_url", "label": "Sample-pack page URL", "default": "/pages/sample-pack" },
+
+    { "type": "header", "content": "Upsell card (Mojo-Secure equivalent)" },
+    { "type": "text", "id": "upsell_icon", "label": "Icon (emoji)", "default": "💎" },
+    { "type": "text", "id": "upsell_heading", "label": "Heading", "default": "Bulk savings unlock at 20+ cases" },
+    { "type": "text", "id": "upsell_sub", "label": "Sub", "default": "Save up to 11% per case. See the full tier table." },
+    { "type": "text", "id": "upsell_link", "label": "Link", "default": "/pages/bulk-pricing" },
+
+    { "type": "header", "content": "Delivery promise card" },
+    { "type": "text", "id": "promise_icon", "label": "Icon (emoji)", "default": "🚚" },
+    { "type": "text", "id": "promise_text", "label": "Text", "default": "Order by 2 PM IST · Ships same day from Mumbai DC" },
+
+    { "type": "header", "content": "Policy row (two cards)" },
+    { "type": "text", "id": "policy_1_icon", "label": "Policy 1 icon", "default": "↩️" },
+    { "type": "text", "id": "policy_1_label", "label": "Policy 1 label", "default": "Returns & exchanges" },
+    { "type": "text", "id": "policy_1_url", "label": "Policy 1 link" },
+    { "type": "text", "id": "policy_2_icon", "label": "Policy 2 icon", "default": "🧾" },
+    { "type": "text", "id": "policy_2_label", "label": "Policy 2 label", "default": "GST invoicing info" },
+    { "type": "text", "id": "policy_2_url", "label": "Policy 2 link" },
+
+    { "type": "header", "content": "Delivery check" },
+    { "type": "checkbox", "id": "show_pincode_check", "label": "Show pincode delivery checker", "default": true },
+
+    { "type": "header", "content": "Legacy" },
+
+    { "type": "header", "content": "Trust strip (4 cells)" },
+    { "type": "text", "id": "trust_1_icon", "label": "Icon 1 (emoji)", "default": "🚚" },
+    { "type": "text", "id": "trust_1_label", "label": "Label 1", "default": "Free shipping" },
+    { "type": "text", "id": "trust_1_sub", "label": "Sub 1", "default": "On orders above ₹2,500" },
+    { "type": "text", "id": "trust_2_icon", "label": "Icon 2 (emoji)", "default": "🧾" },
+    { "type": "text", "id": "trust_2_label", "label": "Label 2", "default": "GST invoice" },
+    { "type": "text", "id": "trust_2_sub", "label": "Sub 2", "default": "Included on every order" },
+    { "type": "text", "id": "trust_3_icon", "label": "Icon 3 (emoji)", "default": "⚡" },
+    { "type": "text", "id": "trust_3_label", "label": "Label 3", "default": "Same-day dispatch" },
+    { "type": "text", "id": "trust_3_sub", "label": "Sub 3", "default": "Mumbai · Bengaluru · Delhi" },
+    { "type": "text", "id": "trust_4_icon", "label": "Icon 4 (emoji)", "default": "↩️" },
+    { "type": "text", "id": "trust_4_label", "label": "Label 4", "default": "Easy returns" },
+    { "type": "text", "id": "trust_4_sub", "label": "Sub 4", "default": "7-day return window" },
+
+    { "type": "header", "content": "Legacy USPs (deprecated — use Trust strip above)" },
+    { "type": "text", "id": "usp_1", "label": "USP 1" },
+    { "type": "text", "id": "usp_2", "label": "USP 2" },
+
+    { "type": "header", "content": "Color scheme" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1",
       "options": [
-        {
-          "value": "scheme-1",
-          "label": "Paper"
-        },
-        {
-          "value": "scheme-2",
-          "label": "Snow"
-        }
+        { "value": "scheme-1", "label": "Paper" },
+        { "value": "scheme-2", "label": "Snow" }
       ]
     },
-    {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Top padding (px)",
-      "min": 0,
-      "max": 200,
-      "step": 4,
-      "default": 0,
-      "unit": "px"
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Bottom padding (px)",
-      "min": 0,
-      "max": 200,
-      "step": 4,
-      "default": 0,
-      "unit": "px"
-    }
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px)", "min": 0, "max": 200, "step": 4, "default": 24, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px)", "min": 0, "max": 200, "step": 4, "default": 24, "unit": "px" }
   ],
   "blocks": [
     {
       "type": "rich_text",
-      "name": "Tab \u2014 Rich text",
+      "name": "Tab — Rich text",
       "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Tab title",
-          "default": "Description"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>Describe your product, materials, and use cases.</p>"
-        }
+        { "type": "text", "id": "title", "label": "Tab title", "default": "Description" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p>Describe your product, materials, and use cases.</p>" }
       ]
     },
     {
       "type": "specs_table",
-      "name": "Tab \u2014 Specs table",
+      "name": "Tab — Specs table",
       "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Tab title",
-          "default": "Specs"
-        },
-        {
-          "type": "richtext",
-          "id": "intro",
-          "label": "Intro (optional)"
-        },
-        {
-          "type": "textarea",
-          "id": "specs",
-          "label": "Specs (one per line, format: Label | Value)",
-          "default": "Material | 80 GSM thermal paper\nDimensions | 100 \u00d7 150 mm\nCore | 25 mm\nPack | 1,000 labels / roll\nCase | 4 rolls / case"
-        }
+        { "type": "text", "id": "title", "label": "Tab title", "default": "Specs" },
+        { "type": "richtext", "id": "intro", "label": "Intro (optional)" },
+        { "type": "textarea", "id": "specs", "label": "Specs (one per line, format: Label | Value)", "default": "Material | 80 GSM thermal paper\nDimensions | 100 × 150 mm\nCore | 25 mm\nPack | 1,000 labels / roll\nCase | 4 rolls / case" }
       ]
     },
     {
       "type": "faq",
-      "name": "Tab \u2014 FAQ",
+      "name": "Tab — FAQ",
       "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Tab title",
-          "default": "FAQ"
-        },
-        {
-          "type": "text",
-          "id": "q1",
-          "label": "Q1"
-        },
-        {
-          "type": "richtext",
-          "id": "a1",
-          "label": "A1"
-        },
-        {
-          "type": "text",
-          "id": "q2",
-          "label": "Q2"
-        },
-        {
-          "type": "richtext",
-          "id": "a2",
-          "label": "A2"
-        },
-        {
-          "type": "text",
-          "id": "q3",
-          "label": "Q3"
-        },
-        {
-          "type": "richtext",
-          "id": "a3",
-          "label": "A3"
-        },
-        {
-          "type": "text",
-          "id": "q4",
-          "label": "Q4"
-        },
-        {
-          "type": "richtext",
-          "id": "a4",
-          "label": "A4"
-        },
-        {
-          "type": "text",
-          "id": "q5",
-          "label": "Q5"
-        },
-        {
-          "type": "richtext",
-          "id": "a5",
-          "label": "A5"
-        },
-        {
-          "type": "text",
-          "id": "q6",
-          "label": "Q6"
-        },
-        {
-          "type": "richtext",
-          "id": "a6",
-          "label": "A6"
-        }
+        { "type": "text", "id": "title", "label": "Tab title", "default": "FAQ" },
+        { "type": "text", "id": "q1", "label": "Q1" }, { "type": "richtext", "id": "a1", "label": "A1" },
+        { "type": "text", "id": "q2", "label": "Q2" }, { "type": "richtext", "id": "a2", "label": "A2" },
+        { "type": "text", "id": "q3", "label": "Q3" }, { "type": "richtext", "id": "a3", "label": "A3" },
+        { "type": "text", "id": "q4", "label": "Q4" }, { "type": "richtext", "id": "a4", "label": "A4" },
+        { "type": "text", "id": "q5", "label": "Q5" }, { "type": "richtext", "id": "a5", "label": "A5" },
+        { "type": "text", "id": "q6", "label": "Q6" }, { "type": "richtext", "id": "a6", "label": "A6" }
       ]
     }
   ],
   "max_blocks": 6,
-  "enabled_on": {
-    "templates": [
-      "product"
-    ]
-  }
+  "enabled_on": { "templates": ["product"] }
 }
 {% endschema %}

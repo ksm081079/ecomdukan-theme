@@ -1,6 +1,6 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 0
-  assign _pb = section.settings.padding_bottom | default: 0
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
@@ -240,7 +240,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     },
     {
@@ -250,7 +250,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     }
   ],
@@ -278,61 +278,6 @@
       ]
     }
   ],
-  "max_blocks": 16,
-  "presets": [
-    {
-      "name": "ED Categories (circles)",
-      "blocks": [
-        {
-          "type": "category",
-          "settings": {
-            "title": "Thermal labels"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "title": "Branded labels"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "title": "Office paper"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "title": "Packing supplies"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "title": "Mailers"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "title": "Tissue & kraft"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "title": "Tags & tape"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "title": "Custom print"
-          }
-        }
-      ]
-    }
-  ]
+  "max_blocks": 16
 }
 {% endschema %}

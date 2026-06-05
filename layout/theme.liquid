@@ -405,6 +405,40 @@ document.addEventListener('click', function(e) {
 }, true);
 </script>
 
+    {% render 'sr-checkout' %}
+
+<!-- Global Time Zone Script Shiprocket Checkout Start -->
+<script>
+  function getUserTimezone() {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
+  function renderButton(showShiprocketCheckout) {
+    let modifiedCSS = "";
+    if (showShiprocketCheckout) {
+      modifiedCSS = `
+        button[name="checkout"]{display:none !important;}
+        .shopify-payment-button__button.shopify-payment-button__button--unbranded{display:none !important;}
+      `;
+    } else {
+      modifiedCSS = `
+        .shiprocket-headless{display:none !important;}
+      `;
+    }
+    const styleElement = document.createElement("style");
+    styleElement.textContent = modifiedCSS;
+    document.head.appendChild(styleElement);
+  }
+  function checkAndSetButtonVisibility() {
+    const indiaTimezones = ["Asia/Kolkata", "Asia/Calcutta"];
+    const userTimezone = getUserTimezone();
+    const isIndia = indiaTimezones.includes(userTimezone);
+    renderButton(isIndia);
+  }
+  checkAndSetButtonVisibility();
+</script>
+<!-- Global Time Zone Script Shiprocket Checkout End  --> 
+
+
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">

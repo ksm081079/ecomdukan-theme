@@ -1,6 +1,6 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 0
-  assign _pb = section.settings.padding_bottom | default: 0
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
@@ -54,7 +54,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     },
     {
@@ -64,7 +64,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     }
   ],
@@ -88,41 +88,6 @@
       ]
     }
   ],
-  "max_blocks": 4,
-  "presets": [
-    {
-      "name": "ED USP \u2014 four promises",
-      "blocks": [
-        {
-          "type": "promise",
-          "settings": {
-            "heading": "In stock, in spec.",
-            "sub": "What's on the page is in the warehouse, today."
-          }
-        },
-        {
-          "type": "promise",
-          "settings": {
-            "heading": "Made for the line.",
-            "sub": "Engineered for thermal printers and packing tables."
-          }
-        },
-        {
-          "type": "promise",
-          "settings": {
-            "heading": "Receipts you'd frame.",
-            "sub": "Invoices and packaging that match your brand."
-          }
-        },
-        {
-          "type": "promise",
-          "settings": {
-            "heading": "Reorder in one tap.",
-            "sub": "Procurement should not be project work."
-          }
-        }
-      ]
-    }
-  ]
+  "max_blocks": 4
 }
 {% endschema %}

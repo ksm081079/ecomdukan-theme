@@ -1,6 +1,6 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 0
-  assign _pb = section.settings.padding_bottom | default: 0
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
@@ -280,7 +280,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     },
     {
@@ -290,7 +290,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     }
   ],
@@ -313,37 +313,6 @@
       ]
     }
   ],
-  "max_blocks": 8,
-  "presets": [
-    {
-      "name": "ED Collection tabs",
-      "blocks": [
-        {
-          "type": "tab",
-          "settings": {
-            "label": "Thermal labels"
-          }
-        },
-        {
-          "type": "tab",
-          "settings": {
-            "label": "Branded labels"
-          }
-        },
-        {
-          "type": "tab",
-          "settings": {
-            "label": "Office paper"
-          }
-        },
-        {
-          "type": "tab",
-          "settings": {
-            "label": "Packing supplies"
-          }
-        }
-      ]
-    }
-  ]
+  "max_blocks": 8
 }
 {% endschema %}

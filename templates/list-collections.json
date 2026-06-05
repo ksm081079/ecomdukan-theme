@@ -1,18 +1,1 @@
-{
-  "sections": {
-    "banner": {
-      "type": "ed-hero",
-      "settings": {
-        "color_scheme": "scheme-2",
-        "eyebrow": "All categories",
-        "heading": "Everything we stock.",
-        "subhead": "Labels, paper, envelopes, mailers, tape — by printer, by size, by GSM."
-      }
-    },
-    "main": {
-      "type": "main-list-collections",
-      "settings": {}
-    }
-  },
-  "order": ["banner", "main"]
-}
+{"sections":{"banner":{"type":"ed-hero","settings":{"desktop_height":800,"slide_effect":"slide","mobile_height":480,"autoplay":true,"autoplay_speed":6,"show_arrows":true,"show_dots":true,"color_scheme":"scheme-2","padding_top":0,"padding_bottom":0}},"main":{"type":"main-list-collections","settings":{"title":"Collections","sort":"alphabetical","image_ratio":"adapt","columns_desktop":3,"columns_mobile":"2"}}},"order":["banner","main"]}

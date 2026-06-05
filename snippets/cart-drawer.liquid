@@ -619,10 +619,11 @@
             <form action="{{ routes.cart_url }}" method="post" id="CartDrawer-BuyNow-Form" class="cart__buy-now-form">
               <input type="hidden" name="return_to" value="/checkout">
               <input type="hidden" value="true" id="fastrrCollectionPage" />
-              <div class="shiprocket-headless" data-type="cart"></div>
               {{ form | payment_button }}
             </form>
           </div>
+
+          <div class="shiprocket-headless" data-type="cart"></div>
 
           <div class="ed-cart-cta-row">
             <a href="{{ routes.cart_url }}" class="ed-cart-cta-row__viewcart">View cart</a>

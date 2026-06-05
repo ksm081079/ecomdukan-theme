@@ -1,6 +1,6 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 0
-  assign _pb = section.settings.padding_bottom | default: 0
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
@@ -32,6 +32,7 @@
       </div>
     {%- else -%}
       <div class="ed-cart-layout" style="display: grid; grid-template-columns: 1fr 380px; gap: var(--sp-7); align-items: start;">
+        
         <form action="{{ routes.cart_url }}" method="post" id="ed-cart-form">
           {%- for item in cart.items -%}
             <div class="ed-cart-line" style="display: grid; grid-template-columns: 96px 1fr auto; gap: var(--sp-4); padding: var(--sp-4) 0; border-bottom: 1px solid var(--ed-border); align-items: start;">
@@ -103,6 +104,8 @@
 
             <p class="ed-help" style="margin: 0 0 var(--sp-4);">GST will be calculated and added at checkout. Enter your GSTIN on the billing step for a GST-compliant invoice.</p>
 
+            <div class="shiprocket-headless" data-type="cart"></div>
+
             <button type="submit" form="ed-cart-form" name="checkout" class="ed-btn ed-btn--primary ed-btn--block ed-btn--lg">Checkout — {{ cart.total_price | money }}</button>
 
             <a href="{{ section.settings.quote_url | default: '/pages/request-quote' }}?cart={{ cart.item_count }}" class="ed-btn--link" style="display: block; text-align: center; margin-top: var(--sp-4); font-family: var(--font-ed-body); font-weight: 600; font-size: 13px;">Request a quote on this cart →</a>
@@ -161,7 +164,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     },
     {
@@ -171,7 +174,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     }
   ],

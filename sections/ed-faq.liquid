@@ -1,6 +1,6 @@
 {%- liquid
-  assign _pt = section.settings.padding_top | default: 0
-  assign _pb = section.settings.padding_bottom | default: 0
+  assign _pt = section.settings.padding_top | default: 24
+  assign _pb = section.settings.padding_bottom | default: 24
 -%}
 {% style %}
   #shopify-section-{{ section.id }} { padding-top: {{ _pt }}px !important; padding-bottom: {{ _pb }}px !important; }
@@ -94,7 +94,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     },
     {
@@ -104,7 +104,7 @@
       "min": 0,
       "max": 200,
       "step": 4,
-      "default": 0,
+      "default": 24,
       "unit": "px"
     }
   ],
@@ -128,48 +128,6 @@
       ]
     }
   ],
-  "max_blocks": 16,
-  "presets": [
-    {
-      "name": "ED FAQ",
-      "blocks": [
-        {
-          "type": "qa",
-          "settings": {
-            "question": "Do you offer GST invoices?",
-            "answer": "<p>Yes \u2014 every order ships with a GST-compliant invoice. Enter your GSTIN at checkout for it to appear on the invoice.</p>"
-          }
-        },
-        {
-          "type": "qa",
-          "settings": {
-            "question": "What's the minimum order?",
-            "answer": "<p>1 case for most catalog SKUs. For custom-print orders, the MOQ is 5,000 units.</p>"
-          }
-        },
-        {
-          "type": "qa",
-          "settings": {
-            "question": "Do you ship pan-India?",
-            "answer": "<p>Yes. Three DCs \u2014 Mumbai, Bengaluru, Delhi \u2014 give us 1\u20133 day delivery to most metros, 3\u20135 day to tier-2/3 cities.</p>"
-          }
-        },
-        {
-          "type": "qa",
-          "settings": {
-            "question": "Can I get a sample?",
-            "answer": "<p>Free samples for orders \u2265 5 cases. Request via the sample-pack page; ships in 2 business days.</p>"
-          }
-        },
-        {
-          "type": "qa",
-          "settings": {
-            "question": "Do you offer NET-30 credit?",
-            "answer": "<p>Yes, for verified businesses. Request via the quote page; we evaluate KYC and approve within 3 business days.</p>"
-          }
-        }
-      ]
-    }
-  ]
+  "max_blocks": 16
 }
 {% endschema %}
