@@ -66,18 +66,24 @@
           <div style="display: grid; grid-template-columns: repeat({{ cols_desktop }}, 1fr); gap: var(--sp-5);" class="ed-coll-grid" data-cols-mobile="{{ cols_mobile }}" data-ed-grid>
             {%- for product in collection.products -%}
               {%- comment -%}
-                Parse W×H from product title. Pattern matches "WxH" / "W×H" / "W*H".
-                Compute area + price-per-label using metafield custom.labels_per_roll
-                (falls back to title pattern "NNN Labels" if no metafield).
+                Read area + pack from product tags.
+                Tags: "area-NNNN" (e.g. area-7500) and "pack-NNN" (e.g. pack-500).
+                Per-label price = variant.price (paise) / pack.
               {%- endcomment -%}
-              {%- assign labels_per = product.metafields.custom.labels_per_roll | default: product.metafields.specs.pack_qty.value | default: 1 -%}
+              {%- assign area_val = 0 -%}
+              {%- assign pack_val = 1 -%}
+              {%- for t in product.tags -%}
+                {%- assign tl = t | downcase -%}
+                {%- if tl contains 'area-' -%}
+                  {%- assign area_val = tl | remove: 'area-' | plus: 0 -%}
+                {%- elsif tl contains 'pack-' -%}
+                  {%- assign pack_val = tl | remove: 'pack-' | plus: 0 -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if pack_val < 1 -%}{%- assign pack_val = 1 -%}{%- endif -%}
               {%- assign price_paise = product.selected_or_first_available_variant.price | default: product.price_min -%}
-              {%- if labels_per != blank and labels_per > 0 -%}
-                {%- assign ppl_paise = price_paise | divided_by: labels_per -%}
-              {%- else -%}
-                {%- assign ppl_paise = price_paise -%}
-              {%- endif -%}
-              <div class="ed-coll-grid__cell" data-ed-card data-title="{{ product.title | downcase | escape }}" data-price="{{ price_paise }}" data-ppl="{{ ppl_paise }}">
+              {%- assign ppl_paise = price_paise | divided_by: pack_val -%}
+              <div class="ed-coll-grid__cell" data-ed-card data-area="{{ area_val }}" data-ppl="{{ ppl_paise }}" data-price="{{ price_paise }}">
                 {%- render 'ed-product-card', product: product -%}
               </div>
             {%- endfor -%}
@@ -87,18 +93,6 @@
               const grid = document.querySelector('[data-ed-grid]');
               const select = document.querySelector('[data-ed-sort]');
               if (!grid || !select) return;
-
-              // Parse "WxH" / "W×H" / "W*H" from a string -> area (W*H) or 0 if not found.
-              const parseArea = function(s) {
-                const m = String(s || '').match(/(\d+)\s*[x×\*]\s*(\d+)/i);
-                if (!m) return 0;
-                return parseInt(m[1], 10) * parseInt(m[2], 10);
-              };
-
-              // Tag each card with its area (computed from title)
-              grid.querySelectorAll('[data-ed-card]').forEach(function(card) {
-                card.dataset.area = String(parseArea(card.dataset.title));
-              });
 
               const reorder = function(mode) {
                 const cards = Array.from(grid.querySelectorAll('[data-ed-card]'));
@@ -116,7 +110,6 @@
                 cards.forEach(function(c) { grid.appendChild(c); });
               };
 
-              // Initial: restore last selection from URL hash
               const url = new URL(window.location.href);
               const initial = url.searchParams.get('sort') || 'size-asc';
               if ([...select.options].some(function(o) { return o.value === initial; })) {
@@ -126,7 +119,6 @@
 
               select.addEventListener('change', function() {
                 reorder(select.value);
-                // Persist via query string (no reload — we use replaceState)
                 const u = new URL(window.location.href);
                 u.searchParams.set('sort', select.value);
                 window.history.replaceState({}, '', u.toString());
