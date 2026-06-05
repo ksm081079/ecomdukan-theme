@@ -48,27 +48,91 @@
 
     <div class="ed-coll-layout" style="display: block;">
       <div>
-        {%- comment -%} Sort bar — size + price only {%- endcomment -%}
-        {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+        {%- comment -%} Sort bar — client-side custom sort by area or price-per-label {%- endcomment -%}
         <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-5); padding-bottom: var(--sp-3); border-bottom: 1.5px solid var(--ed-ink); flex-wrap: wrap;">
           <p class="ed-mono" style="color: var(--ed-text-mute); margin: 0; font-size: 12px;">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
           <div style="display: flex; align-items: center; gap: 8px;">
             <label for="ed-sort" class="ed-caption" style="color: var(--ed-text-mute);">Sort by</label>
-            <select id="ed-sort" name="sort_by" class="ed-select" style="width: auto; padding: 8px 24px 8px 12px; font-size: 13px;" onchange="window.location.search = (new URLSearchParams(Object.assign(Object.fromEntries(new URLSearchParams(window.location.search)), { sort_by: this.value }))).toString();">
-              <option value="price-ascending"  {% if current_sort == 'price-ascending'  %}selected{% endif %}>Price: low to high</option>
-              <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>Price: high to low</option>
-              <option value="title-ascending"  {% if current_sort == 'title-ascending'  %}selected{% endif %}>Size: A to Z</option>
-              <option value="title-descending" {% if current_sort == 'title-descending' %}selected{% endif %}>Size: Z to A</option>
+            <select id="ed-sort" class="ed-select" data-ed-sort style="width: auto; padding: 8px 24px 8px 12px; font-size: 13px;">
+              <option value="size-asc">Size: Small → Large</option>
+              <option value="size-desc">Size: Large → Small</option>
+              <option value="price-asc">Price: Low → High</option>
+              <option value="price-desc">Price: High → Low</option>
             </select>
           </div>
         </div>
 
         {%- if collection.products.size > 0 -%}
-          <div style="display: grid; grid-template-columns: repeat({{ cols_desktop }}, 1fr); gap: var(--sp-5);" class="ed-coll-grid" data-cols-mobile="{{ cols_mobile }}">
+          <div style="display: grid; grid-template-columns: repeat({{ cols_desktop }}, 1fr); gap: var(--sp-5);" class="ed-coll-grid" data-cols-mobile="{{ cols_mobile }}" data-ed-grid>
             {%- for product in collection.products -%}
-              {%- render 'ed-product-card', product: product -%}
+              {%- comment -%}
+                Parse W×H from product title. Pattern matches "WxH" / "W×H" / "W*H".
+                Compute area + price-per-label using metafield custom.labels_per_roll
+                (falls back to title pattern "NNN Labels" if no metafield).
+              {%- endcomment -%}
+              {%- assign labels_per = product.metafields.custom.labels_per_roll | default: product.metafields.specs.pack_qty.value | default: 1 -%}
+              {%- assign price_paise = product.selected_or_first_available_variant.price | default: product.price_min -%}
+              {%- if labels_per != blank and labels_per > 0 -%}
+                {%- assign ppl_paise = price_paise | divided_by: labels_per -%}
+              {%- else -%}
+                {%- assign ppl_paise = price_paise -%}
+              {%- endif -%}
+              <div class="ed-coll-grid__cell" data-ed-card data-title="{{ product.title | downcase | escape }}" data-price="{{ price_paise }}" data-ppl="{{ ppl_paise }}">
+                {%- render 'ed-product-card', product: product -%}
+              </div>
             {%- endfor -%}
           </div>
+          <script>
+            (function() {
+              const grid = document.querySelector('[data-ed-grid]');
+              const select = document.querySelector('[data-ed-sort]');
+              if (!grid || !select) return;
+
+              // Parse "WxH" / "W×H" / "W*H" from a string -> area (W*H) or 0 if not found.
+              const parseArea = function(s) {
+                const m = String(s || '').match(/(\d+)\s*[x×\*]\s*(\d+)/i);
+                if (!m) return 0;
+                return parseInt(m[1], 10) * parseInt(m[2], 10);
+              };
+
+              // Tag each card with its area (computed from title)
+              grid.querySelectorAll('[data-ed-card]').forEach(function(card) {
+                card.dataset.area = String(parseArea(card.dataset.title));
+              });
+
+              const reorder = function(mode) {
+                const cards = Array.from(grid.querySelectorAll('[data-ed-card]'));
+                let key, dir;
+                if (mode === 'size-asc')        { key = 'area'; dir = 1; }
+                else if (mode === 'size-desc')  { key = 'area'; dir = -1; }
+                else if (mode === 'price-asc')  { key = 'ppl';  dir = 1; }
+                else if (mode === 'price-desc') { key = 'ppl';  dir = -1; }
+                else return;
+                cards.sort(function(a, b) {
+                  const va = parseFloat(a.dataset[key]) || 0;
+                  const vb = parseFloat(b.dataset[key]) || 0;
+                  return (va - vb) * dir;
+                });
+                cards.forEach(function(c) { grid.appendChild(c); });
+              };
+
+              // Initial: restore last selection from URL hash
+              const url = new URL(window.location.href);
+              const initial = url.searchParams.get('sort') || 'size-asc';
+              if ([...select.options].some(function(o) { return o.value === initial; })) {
+                select.value = initial;
+                reorder(initial);
+              }
+
+              select.addEventListener('change', function() {
+                reorder(select.value);
+                // Persist via query string (no reload — we use replaceState)
+                const u = new URL(window.location.href);
+                u.searchParams.set('sort', select.value);
+                window.history.replaceState({}, '', u.toString());
+              });
+            })();
+          </script>
 
           {%- if paginate.pages > 1 -%}
             <div style="text-align: center; margin-top: var(--sp-7);">

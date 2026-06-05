@@ -201,6 +201,16 @@
     align-items: center !important;
   }
 
+  /* Mega menu / dropdown — force solid bg (rgb(var(--color-background)) was transparent when menu_color_scheme blank) */
+  .mega-menu__content,
+  .header__submenu {
+    background: #FBFAF6 !important;
+    border: 1px solid #E0DBCF !important;
+    box-shadow: 0 12px 32px rgba(10, 11, 14, 0.08) !important;
+  }
+  .mega-menu__content { padding: 20px 24px !important; }
+  .header__submenu { padding: 12px 8px !important; border-radius: 10px !important; }
+
   /* Mega menu typography */
   .mega-menu__list .mega-menu__link {
     font-family: "Inter", sans-serif !important;
