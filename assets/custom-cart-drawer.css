@@ -101,10 +101,17 @@ cart-drawer-items {
 .cart-drawer .drawer__close:hover { background: var(--ed-paper, #F4F0E8); color: var(--ed-ink, #0A0B0E); }
 /* removed dead ::after that referenced non-existent data-count attr */
 
-/* Drawer body */
+/* Drawer body — solid bg, no transparency leak */
 .cart-drawer .drawer__inner {
   width: 420px;
   font-family: "Inter", sans-serif;
+  background: #FBFAF6 !important;
+  color: #0A0B0E !important;
+}
+.cart-drawer cart-drawer-items,
+.cart-drawer .cart-drawer__footer,
+.cart-drawer .drawer__footer {
+  background: #FBFAF6;
 }
 
 /* Cart items — tabular dense layout */
@@ -154,6 +161,13 @@ cart-drawer-items {
   display: flex; flex-direction: column;
   gap: 3px;
 }
+/* Hide the unit-price duplicate inside .cart-item__details — line total in __totals is enough */
+.cart-drawer .cart-item__details > .cart-item__discounted-prices,
+.cart-drawer .cart-item__details > .product-option:has(> :only-child),
+.cart-drawer .cart-item__details > div.product-option { display: none; }
+/* Hide inline price-rendering when it's the lone price string (Rs xxx) inside details */
+.cart-drawer .cart-item__details .cart-item__final-price,
+.cart-drawer .cart-item__details .cart-item__old-price { display: none; }
 .cart-drawer .cart-item__name {
   font-family: "Inter", sans-serif;
   font-size: 13px; font-weight: 600;

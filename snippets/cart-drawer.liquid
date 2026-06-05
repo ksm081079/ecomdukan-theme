@@ -61,27 +61,6 @@
         </div>
       {%- else -%}
 
-      {%- if settings.show_shipping_bar and settings.minimum_free_shipping > 0 and cart.item_count > 0 -%}
-        {%- assign min_free_cents = settings.minimum_free_shipping | times: 100 -%}
-        {%- assign progress_pct = cart.total_price | times: 100 | divided_by: min_free_cents -%}
-        {%- if progress_pct > 100 -%}{%- assign progress_pct = 100 -%}{%- endif -%}
-        {%- assign remaining = min_free_cents | minus: cart.total_price -%}
-        <div class="ed-ship-progress" data-ed-ship-progress data-threshold="{{ min_free_cents }}">
-          <div class="ed-ship-progress__msg">
-            {%- if cart.total_price >= min_free_cents -%}
-              <span class="ed-ship-progress__icon" aria-hidden="true">🚚</span>
-              <span class="ed-ship-progress__text">Free shipping unlocked!</span>
-            {%- else -%}
-              <span class="ed-ship-progress__icon" aria-hidden="true">🚚</span>
-              <span class="ed-ship-progress__text">Add <strong data-ed-ship-remaining>{{ remaining | money }}</strong> more for free shipping</span>
-            {%- endif -%}
-          </div>
-          <div class="ed-ship-progress__bar">
-            <div class="ed-ship-progress__fill" data-ed-ship-fill style="width: {{ progress_pct }}%;"></div>
-          </div>
-        </div>
-      {%- endif -%}
-
       <cart-drawer-items
         {% if cart == empty %}
           class=" is-empty"
