@@ -1,1 +1,57 @@
-{"sections":{"banner":{"type":"ed-collection-banner","settings":{"show_breadcrumb":true,"sub_nav":"","circle_size":96,"show_quote_cta":false,"quote_url":"","color_scheme":"scheme-2","padding_top":24,"padding_bottom":24}},"ed_collection_grid_nKGaUm":{"type":"ed-collection-grid","name":"ED Collection grid","settings":{"products_per_page":24,"in_stock_default":true,"columns_desktop":4,"columns_mobile":"2","color_scheme":"scheme-1","padding_top":24,"padding_bottom":24}},"cta":{"type":"ed-custom-print-cta","settings":{"eyebrow":"Custom Order","heading":"Need a different size or printed label?","body":"Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.","cta_label":"Submit a custom order","cta_link":"https:\/\/forms.gle\/jMogoAxGePUPgYfm6","color_scheme":"scheme-4","padding_top":24,"padding_bottom":24}}},"order":["banner","ed_collection_grid_nKGaUm","cta"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "ed-collection-banner",
+      "settings": {
+        "show_breadcrumb": true,
+        "sub_nav": "",
+        "circle_size": 96,
+        "show_quote_cta": false,
+        "quote_url": "",
+        "color_scheme": "scheme-2",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "ed_collection_grid_nKGaUm": {
+      "type": "ed-collection-grid",
+      "name": "ED Collection grid",
+      "settings": {
+        "products_per_page": 24,
+        "in_stock_default": true,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "cta": {
+      "type": "ed-custom-print-cta",
+      "settings": {
+        "eyebrow": "Custom Order",
+        "heading": "Need a different size or printed label?",
+        "body": "Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.",
+        "cta_label": "Submit a custom order",
+        "cta_link": "https://forms.gle/jMogoAxGePUPgYfm6",
+        "color_scheme": "scheme-4",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "ed_collection_grid_nKGaUm",
+    "cta"
+  ]
+}

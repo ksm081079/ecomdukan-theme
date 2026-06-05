@@ -1,1 +1,71 @@
-{"sections":{"form":{"type":"contact-form","disabled":true,"settings":{"heading":"Contact form","heading_size":"h1","color_scheme":"","padding_top":36,"padding_bottom":36}},"rich_text_QBgCjD":{"type":"rich-text","blocks":{"heading_8R8DxD":{"type":"heading","settings":{"heading":"Get in touch","heading_size":"h1"}},"text_xpLeXf":{"type":"text","settings":{"text":"<p>WhatsApp: <a href=\"https:\/\/wa.me\/917993179681\">+91 79931 79681<\/a><\/p><p>Email: <a href=\"mailto:aniket@thelascaxu.com\">aniket@thelascaxu.com<\/a><\/p><p>Mon–Sat · 9 AM – 6 PM IST<\/p><p><strong>For custom sizes or printed label requirements, use our Custom Order form.<\/strong><\/p>"}},"button_9tgkVb":{"type":"button","settings":{"button_label":"Submit a custom order","button_link":"https:\/\/forms.gle\/BRnNSUSHsv3apyRt7","button_style_secondary":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}}},"block_order":["heading_8R8DxD","text_xpLeXf","button_9tgkVb"],"name":"t:sections.rich-text.presets.name","settings":{"desktop_content_position":"center","content_alignment":"center","color_scheme":"","full_width":true,"padding_top":40,"padding_bottom":52}}},"order":["form","rich_text_QBgCjD"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "form": {
+      "type": "contact-form",
+      "disabled": true,
+      "settings": {
+        "heading": "Contact form",
+        "heading_size": "h1",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "rich_text_QBgCjD": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_8R8DxD": {
+          "type": "heading",
+          "settings": {
+            "heading": "Get in touch",
+            "heading_size": "h1"
+          }
+        },
+        "text_xpLeXf": {
+          "type": "text",
+          "settings": {
+            "text": "<p>WhatsApp: <a href=\"https://wa.me/917993179681\">+91 79931 79681</a></p><p>Email: <a href=\"mailto:aniket@thelascaxu.com\">aniket@thelascaxu.com</a></p><p>Mon–Sat · 9 AM – 6 PM IST</p><p><strong>For custom sizes or printed label requirements, use our Custom Order form.</strong></p>"
+          }
+        },
+        "button_9tgkVb": {
+          "type": "button",
+          "settings": {
+            "button_label": "Submit a custom order",
+            "button_link": "https://forms.gle/BRnNSUSHsv3apyRt7",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_8R8DxD",
+        "text_xpLeXf",
+        "button_9tgkVb"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "form",
+    "rich_text_QBgCjD"
+  ]
+}

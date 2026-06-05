@@ -1,1 +1,38 @@
-{"sections":{"main":{"type":"main-page","settings":{"padding_top":36,"padding_bottom":36}},"ed_custom_print_cta_VqmryE":{"type":"ed-custom-print-cta","name":"ED Custom-print CTA","settings":{"eyebrow":"Custom Order","heading":"Need a different size or printed label?","body":"Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.","cta_label":"Submit a custom order","cta_link":"https:\/\/forms.gle\/jMogoAxGePUPgYfm6","color_scheme":"scheme-4","padding_top":24,"padding_bottom":24}}},"order":["main","ed_custom_print_cta_VqmryE"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "ed_custom_print_cta_VqmryE": {
+      "type": "ed-custom-print-cta",
+      "name": "ED Custom-print CTA",
+      "settings": {
+        "eyebrow": "Custom Order",
+        "heading": "Need a different size or printed label?",
+        "body": "Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.",
+        "cta_label": "Submit a custom order",
+        "cta_link": "https://forms.gle/jMogoAxGePUPgYfm6",
+        "color_scheme": "scheme-4",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    }
+  },
+  "order": [
+    "main",
+    "ed_custom_print_cta_VqmryE"
+  ]
+}

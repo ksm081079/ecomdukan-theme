@@ -1,1 +1,121 @@
-{"sections":{"hero":{"type":"ed-hero","blocks":{"slide_ddHKTw":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/HP_Banner_Desktop_a705f5c8-ad57-48e8-b517-a86350863c24.webp","image_mobile":"shopify:\/\/shop_images\/HP_Banner_Mobile_26adc08b-36da-45d9-af69-2cdc5fcfe26b.webp","link":"shopify:\/\/collections\/all","overlay_opacity":0,"subheading":"","heading":"","description":"","cta_label":"","cta_link":"shopify:\/\/collections","content_position":"bottom-left"}}},"block_order":["slide_ddHKTw"],"settings":{"desktop_height":720,"slide_effect":"slide","mobile_height":480,"autoplay":true,"autoplay_speed":6,"show_arrows":true,"show_dots":true,"color_scheme":"scheme-1","padding_top":0,"padding_bottom":0}},"collection_list_99Upkw":{"type":"collection-list","blocks":{"featured_collection_BcTkB4":{"type":"featured_collection","settings":{"collection":"thermal-labels"}},"featured_collection_nqkWzj":{"type":"featured_collection","settings":{"collection":"packaging-tapes"}}},"block_order":["featured_collection_BcTkB4","featured_collection_nqkWzj"],"name":"t:sections.collection-list.presets.name","settings":{"title":"Collections","heading_size":"h1","image_ratio":"adapt","columns_desktop":2,"color_scheme":"","show_view_all":false,"columns_mobile":"2","swipe_on_mobile":false,"padding_top":36,"padding_bottom":36}},"ed_bestsellers_AFCmxA":{"type":"ed-bestsellers","name":"ED Best-sellers","settings":{"eyebrow":"Best-sellers","heading":"Moving fast this week","collection":"","product_count":6,"show_view_all":true,"show_view_all_bottom":true,"view_all_label":"View all","layout":"carousel","columns_desktop":4,"columns_mobile":"2","color_scheme":"scheme-1","padding_top":24,"padding_bottom":24}},"ed_custom_print_cta_HDAxTn":{"type":"ed-custom-print-cta","name":"ED Custom-print CTA","settings":{"eyebrow":"Custom Order","heading":"Need a different size or printed label?","body":"Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.","cta_label":"Submit a custom order","cta_link":"https:\/\/forms.gle\/jMogoAxGePUPgYfm6","color_scheme":"scheme-4","padding_top":24,"padding_bottom":24}}},"order":["hero","collection_list_99Upkw","ed_bestsellers_AFCmxA","ed_custom_print_cta_HDAxTn"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "ed-hero",
+      "blocks": {
+        "slide_ddHKTw": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/HP_Banner_Desktop_a705f5c8-ad57-48e8-b517-a86350863c24.webp",
+            "image_mobile": "shopify://shop_images/HP_Banner_Mobile_26adc08b-36da-45d9-af69-2cdc5fcfe26b.webp",
+            "link": "shopify://collections/all",
+            "overlay_opacity": 0,
+            "subheading": "",
+            "heading": "",
+            "description": "",
+            "cta_label": "",
+            "cta_link": "shopify://collections",
+            "content_position": "bottom-left"
+          }
+        }
+      },
+      "block_order": [
+        "slide_ddHKTw"
+      ],
+      "settings": {
+        "desktop_height": 720,
+        "slide_effect": "slide",
+        "mobile_height": 480,
+        "autoplay": true,
+        "autoplay_speed": 6,
+        "show_arrows": true,
+        "show_dots": true,
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "collection_list_99Upkw": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_BcTkB4": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "thermal-labels"
+          }
+        },
+        "featured_collection_nqkWzj": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "packaging-tapes"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_BcTkB4",
+        "featured_collection_nqkWzj"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "Collections",
+        "heading_size": "h1",
+        "image_ratio": "adapt",
+        "columns_desktop": 2,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "ed_bestsellers_AFCmxA": {
+      "type": "ed-bestsellers",
+      "name": "ED Best-sellers",
+      "settings": {
+        "eyebrow": "Best-sellers",
+        "heading": "Moving fast this week",
+        "collection": "",
+        "product_count": 6,
+        "show_view_all": true,
+        "show_view_all_bottom": true,
+        "view_all_label": "View all",
+        "layout": "carousel",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "ed_custom_print_cta_HDAxTn": {
+      "type": "ed-custom-print-cta",
+      "name": "ED Custom-print CTA",
+      "settings": {
+        "eyebrow": "Custom Order",
+        "heading": "Need a different size or printed label?",
+        "body": "Can't find your size, need a printed design, or looking for a packaging product not listed? Send us your requirement and we'll get back to you within next 24 hours.",
+        "cta_label": "Submit a custom order",
+        "cta_link": "https://forms.gle/jMogoAxGePUPgYfm6",
+        "color_scheme": "scheme-4",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "collection_list_99Upkw",
+    "ed_bestsellers_AFCmxA",
+    "ed_custom_print_cta_HDAxTn"
+  ]
+}

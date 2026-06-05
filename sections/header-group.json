@@ -1,1 +1,83 @@
-{"name":"t:sections.header.name","type":"header","sections":{"header":{"type":"header","settings":{"logo_position":"middle-left","mobile_logo_position":"left","menu":"main-menu","menu_type_desktop":"dropdown","sticky_header_type":"on-scroll-up","show_line_separator":true,"color_scheme":"scheme-1","menu_color_scheme":"scheme-1","enable_country_selector":false,"enable_language_selector":false,"enable_customer_avatar":true,"show_quote_cta":true,"quote_label":"Contact Us","quote_link":"\/pages\/contact","margin_bottom":0,"padding_top":12,"padding_bottom":12}},"announcement-bar":{"type":"announcement-bar","blocks":{"announcement_dixnAq":{"type":"announcement","settings":{"text":"Custom label sizes & printed designs available. Submit a custom order →","link":"https:\/\/forms.gle\/7Xa94q6rissmBcov5"}},"msg_3":{"type":"announcement","settings":{"text":"Lowest bulk prices — No hidden charges · GST excluded","link":"shopify:\/\/collections"}},"announcement_TygRpf":{"type":"announcement","settings":{"text":"Welcome to our store","link":"shopify:\/\/collections"}}},"block_order":["announcement_dixnAq","msg_3","announcement_TygRpf"],"settings":{"auto_rotate":true,"enable_scrolling_ticker":false,"ticker_speed":9,"change_slides_speed":6,"color_scheme":"scheme-4","show_line_separator":true,"show_social":false,"enable_country_selector":false,"enable_language_selector":false}}},"order":["header","announcement-bar"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "middle-left",
+        "mobile_logo_position": "left",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "enable_customer_avatar": true,
+        "show_quote_cta": true,
+        "quote_label": "Contact Us",
+        "quote_link": "https://forms.gle/jvbDg3US8Yd5zsjH8",
+        "margin_bottom": 0,
+        "padding_top": 12,
+        "padding_bottom": 12
+      }
+    },
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_dixnAq": {
+          "type": "announcement",
+          "settings": {
+            "text": "Custom label sizes & printed designs available. Submit a custom order →",
+            "link": "https://forms.gle/7Xa94q6rissmBcov5"
+          }
+        },
+        "msg_3": {
+          "type": "announcement",
+          "settings": {
+            "text": "Lowest bulk prices — No hidden charges · GST excluded",
+            "link": "shopify://collections"
+          }
+        },
+        "announcement_TygRpf": {
+          "type": "announcement",
+          "settings": {
+            "text": "Welcome to our store",
+            "link": "shopify://collections"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_dixnAq",
+        "msg_3",
+        "announcement_TygRpf"
+      ],
+      "settings": {
+        "auto_rotate": true,
+        "enable_scrolling_ticker": false,
+        "ticker_speed": 9,
+        "change_slides_speed": 6,
+        "color_scheme": "scheme-4",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    }
+  },
+  "order": [
+    "header",
+    "announcement-bar"
+  ]
+}

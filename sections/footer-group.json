@@ -1,1 +1,56 @@
-{"name":"t:sections.footer.name","type":"footer","sections":{"ed_footer_di3CX7":{"type":"ed-footer","blocks":{"menu_kRmVxT":{"type":"menu","settings":{"heading":"Shop","menu":"footer"}}},"block_order":["menu_kRmVxT"],"name":"ED Footer","settings":{"color_scheme":"scheme-2","brand_tagline":"Lowest bulk prices on thermal labels and packaging tapes. Ships from Hyderabad across India.","support_email":"aniket@thelascaux.com","support_phone":"917993179681","support_hours":"Mon–Sat · 9 AM – 6 PM IST","show_newsletter":true,"newsletter_eyebrow":"Stay updated","newsletter_heading":"New sizes & price updates","newsletter_body":"Get notified when we add new products or update prices. No spam.","placeholder":"you@company.in","cta_label":"Subscribe","disclaimer":"We never share your email. Unsubscribe anytime.","trust_text":"GST invoicing on every order · Lowest bulk prices · Ships from Hyderabad","show_payment":true,"show_social":true,"show_policies":false,"show_made_in_india":false,"show_back_to_top":true,"padding_top":24,"padding_bottom":24}}},"order":["ed_footer_di3CX7"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "ed_footer_di3CX7": {
+      "type": "ed-footer",
+      "blocks": {
+        "menu_kRmVxT": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer"
+          }
+        }
+      },
+      "block_order": [
+        "menu_kRmVxT"
+      ],
+      "name": "ED Footer",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "brand_tagline": "Lowest bulk prices on thermal labels and packaging tapes. Ships from Hyderabad across India.",
+        "support_email": "aniket@thelascaux.com",
+        "support_phone": "917993179681",
+        "support_hours": "Mon–Sat · 9 AM – 6 PM IST",
+        "show_newsletter": true,
+        "newsletter_eyebrow": "Stay updated",
+        "newsletter_heading": "New sizes & price updates",
+        "newsletter_body": "Get notified when we add new products or update prices. No spam.",
+        "placeholder": "you@company.in",
+        "cta_label": "Subscribe",
+        "disclaimer": "We never share your email. Unsubscribe anytime.",
+        "trust_text": "GST invoicing on every order · Lowest bulk prices · Ships from Hyderabad",
+        "show_payment": true,
+        "show_social": true,
+        "show_policies": false,
+        "show_made_in_india": false,
+        "show_back_to_top": true,
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    }
+  },
+  "order": [
+    "ed_footer_di3CX7"
+  ]
+}
