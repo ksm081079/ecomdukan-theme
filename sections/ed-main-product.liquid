@@ -666,7 +666,7 @@
         // Mock: estimate EDD = today + 3 business days
         const d = new Date(); d.setDate(d.getDate() + 3);
         const opts = { weekday: 'short', day: '2-digit', month: 'short' };
-        result.textContent = '✓ Delivers to ' + v + ' by ' + d.toLocaleDateString('en-IN', opts) + ' · free shipping above ₹2,500';
+        result.textContent = '✓ Delivers to ' + v + ' by ' + d.toLocaleDateString('en-IN', opts);
         result.classList.remove('is-err');
         ph('pincode_check', Object.assign({}, meta, { pincode: v }));
       };
