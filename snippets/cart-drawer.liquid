@@ -11,7 +11,9 @@
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
 
-
+<style>
+  cart-drawer.drawer:not(.active){position:fixed;top:0;left:0;width:100vw;height:100%;visibility:hidden;opacity:0;pointer-events:none;z-index:1000;}
+</style>
 
 <cart-drawer class="drawer{% if cart == empty %} is-empty{% endif %}">
   <div id="CartDrawer" class="cart-drawer">
