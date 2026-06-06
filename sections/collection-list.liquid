@@ -4,6 +4,17 @@
   if cols_m == 0
     assign cols_m = 2
   endif
+  assign ratio_setting = section.settings.card_aspect_ratio | default: 'square'
+  case ratio_setting
+    when 'landscape'
+      assign ratio_css = '4 / 3'
+    when 'wide'
+      assign ratio_css = '16 / 9'
+    when 'portrait'
+      assign ratio_css = '3 / 4'
+    else
+      assign ratio_css = '1 / 1'
+  endcase
 -%}
 
 {%- style -%}
@@ -22,9 +33,12 @@
     }
   }
   .ed-cl-{{ section.id }} .ed-cl__grid {
-    grid-template-columns: repeat(auto-fit, 220px);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     justify-content: start;
-    max-width: calc({{ cols_d }} * 220px + {{ cols_d | minus: 1 }} * 16px);
+    max-width: calc({{ cols_d }} * 280px + {{ cols_d | minus: 1 }} * 16px);
+  }
+  .ed-cl-{{ section.id }} .ed-cl__media {
+    aspect-ratio: {{ ratio_css }};
   }
   @media (max-width: 749px) {
     .ed-cl-{{ section.id }} .ed-cl__grid {
@@ -118,7 +132,6 @@
   .ed-cl__media {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
     background: var(--ed-snow, #FBFAF6);
     overflow: hidden;
   }
@@ -193,6 +206,19 @@
       ],
       "default": "2",
       "label": "Columns on mobile"
+    },
+    {
+      "type": "select",
+      "id": "card_aspect_ratio",
+      "label": "Card shape",
+      "info": "Use Landscape or Wide when you only have 2–3 collections so cards fill the row.",
+      "default": "square",
+      "options": [
+        { "value": "square",    "label": "Square (1:1)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide",      "label": "Wide (16:9)" },
+        { "value": "portrait",  "label": "Portrait (3:4)" }
+      ]
     },
     {
       "type": "header",
