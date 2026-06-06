@@ -30,6 +30,7 @@
         "color_scheme": "scheme-1",
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#fff",
+        "brand_logo": "shopify://shop_images/mark-electric-512.png",
         "brand_tagline": "Lowest bulk prices on thermal labels and packaging tapes. Ships from Hyderabad across India.",
         "support_email": "aniket@thelascaux.com",
         "support_phone": "917993179681",
