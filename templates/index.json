@@ -69,7 +69,7 @@
       "name": "t:sections.collection-list.presets.name",
       "settings": {
         "title": "Collections",
-        "columns_desktop": 4,
+        "columns_desktop": 2,
         "columns_mobile": "2",
         "card_aspect_ratio": "wide",
         "padding_top": 48,
