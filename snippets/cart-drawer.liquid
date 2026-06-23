@@ -594,15 +594,34 @@
 
         <!-- CTAs -->
 
-        <div class="cart__ctas" {{ block.shopify_attributes }}>
-          <!-- Buy Now Button with Dynamic Checkout -->
-          <div class="cart__buy-now-wrapper">
-            <form action="{{ routes.cart_url }}" method="post" id="CartDrawer-BuyNow-Form" class="cart__buy-now-form">
-              <input type="hidden" name="return_to" value="/checkout">
-              <input type="hidden" value="true" id="fastrrCollectionPage" />
-              {{ form | payment_button }}
-            </form>
-          </div>
+        {%- liquid
+          assign min_weight_enabled = settings.cart_min_weight_enabled
+          assign min_weight_kg = settings.cart_min_weight_kg | default: 5
+          assign min_weight_g = min_weight_kg | times: 1000
+          assign below_min = false
+          if min_weight_enabled and cart != empty and cart.total_weight < min_weight_g
+            assign below_min = true
+          endif
+        -%}
+
+        {%- if below_min -%}
+          <p class="ed-cart-min-weight" role="status">
+            {{ settings.cart_min_weight_message | default: 'Minimum cart weight for checkout is 5 kg.' }}
+            <span class="ed-cart-min-weight__current">Current: {{ cart.total_weight | divided_by: 1000.0 | round: 2 }} kg.</span>
+          </p>
+        {%- endif -%}
+
+        <div class="cart__ctas{% if below_min %} is-below-min{% endif %}" {{ block.shopify_attributes }}>
+          {%- unless below_min -%}
+            <!-- Buy Now Button with Dynamic Checkout -->
+            <div class="cart__buy-now-wrapper">
+              <form action="{{ routes.cart_url }}" method="post" id="CartDrawer-BuyNow-Form" class="cart__buy-now-form">
+                <input type="hidden" name="return_to" value="/checkout">
+                <input type="hidden" value="true" id="fastrrCollectionPage" />
+                {{ form | payment_button }}
+              </form>
+            </div>
+          {%- endunless -%}
 
           <div class="ed-cart-cta-row">
             <a href="{{ routes.cart_url }}" class="ed-cart-cta-row__viewcart">View cart</a>
@@ -612,7 +631,7 @@
               class="cart__checkout-button button ed-cart-cta-row__checkout"
               name="checkout"
               form="CartDrawer-Form"
-              {% if cart == empty %}
+              {% if cart == empty or below_min %}
                 disabled
               {% endif %}
             >
@@ -620,6 +639,31 @@
             </button>
           </div>
         </div>
+
+        <style>
+          .ed-cart-min-weight {
+            margin: 0 0 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: #FDECEA;
+            border: 1px solid #F5C2BC;
+            color: #B00020;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.4;
+          }
+          .ed-cart-min-weight__current {
+            display: block;
+            margin-top: 2px;
+            font-weight: 500;
+            opacity: 0.85;
+          }
+          .cart__ctas.is-below-min .ed-cart-cta-row__checkout[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        </style>
       </div>
       {%- endif -%}
     </div>

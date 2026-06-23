@@ -1418,6 +1418,29 @@
         "id": "show_delivery_day",
         "label": "t:settings_schema.cart.settings.shipping_rate_calculator.show_delivery_day.label",
         "default": true
+      },
+      {
+        "type": "header",
+        "content": "Minimum cart weight",
+        "info": "Block checkout when the cart weighs less than the threshold. Uses each variant's weight from the product admin."
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_min_weight_enabled",
+        "label": "Enable minimum cart weight",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "cart_min_weight_kg",
+        "label": "Minimum cart weight (kg)",
+        "default": 5
+      },
+      {
+        "type": "text",
+        "id": "cart_min_weight_message",
+        "label": "Message shown below threshold",
+        "default": "Minimum cart weight for checkout is 5 kg."
       }
     ]
   },
