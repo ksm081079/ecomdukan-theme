@@ -17,7 +17,11 @@
   assign cols_desktop = section.settings.columns_desktop | default: 4
   assign cols_mobile = section.settings.columns_mobile | default: 2
 -%}
-<div class="color-{{ scheme }} ed-section ed-bs" style="background: rgb(var(--color-background));">
+<div
+  class="color-{{ scheme }} ed-section ed-bs"
+  data-family-order="{{ section.settings.first_family }},{{ section.settings.second_family }},{{ section.settings.third_family }}"
+  style="background: rgb(var(--color-background)); --ed-family-image-width: {{ section.settings.image_width }}%; --ed-family-row-gap: {{ section.settings.row_gap }}px; --ed-family-card-radius: {{ section.settings.card_radius }}px;"
+>
   <div class="ed-container">
     <div class="ed-bs__header">
       <div class="ed-bs__head-text">
@@ -133,6 +137,143 @@
   @media (max-width: 989px) { .ed-product-grid { grid-template-columns: repeat({{ cols_mobile }}, 1fr) !important; gap: 12px !important; } }
   @media (max-width: 599px) { .ed-product-grid { grid-template-columns: repeat({{ cols_mobile }}, 1fr) !important; gap: 10px !important; } }
 
+  /* Full-width product-family rows: image | details / controls / CTA */
+  .ed-bs .ed-product-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--ed-family-row-gap, 20px) !important;
+  }
+  .ed-bs .ed-pc {
+    display: grid;
+    grid-template-columns: minmax(300px, var(--ed-family-image-width, 38%)) minmax(0, 1fr) minmax(210px, 270px);
+    grid-template-rows: auto auto minmax(20px, 1fr) auto;
+    grid-template-areas:
+      "media details details"
+      "media sizes quantity"
+      "media spacer spacer"
+      "media add add";
+    min-height: 340px;
+    height: auto;
+    border-radius: var(--ed-family-card-radius, 14px);
+    box-shadow: 0 8px 26px rgba(10, 11, 14, .055);
+  }
+  .ed-bs .ed-pc:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 34px rgba(10, 11, 14, .09);
+  }
+  .ed-bs .ed-pc__link { display: contents; }
+  .ed-bs .ed-pc__media {
+    grid-area: media;
+    width: 100%;
+    height: 100%;
+    min-height: 340px;
+    aspect-ratio: auto;
+    border-right: 1px solid var(--ed-border, #E0DBCF);
+    background: #fff;
+  }
+  .ed-bs .ed-pc__img {
+    object-fit: contain;
+    padding: 14px;
+    box-sizing: border-box;
+  }
+  .ed-bs .ed-pc__body-top {
+    grid-area: details;
+    padding: 28px 28px 18px;
+    gap: 10px;
+    border-bottom: 1px solid rgba(224, 219, 207, .72);
+  }
+  .ed-bs .ed-pc__title {
+    max-width: 52ch;
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(18px, 1.55vw, 24px);
+    line-height: 1.28;
+    letter-spacing: -.02em;
+    -webkit-line-clamp: 3;
+  }
+  .ed-bs .ed-pc__price-now { font-size: clamp(21px, 1.8vw, 28px); }
+  .ed-bs .ed-pc__price-was { font-size: 14px; }
+  .ed-bs .ed-pc__sizes {
+    grid-area: sizes;
+    align-self: start;
+    padding: 18px 12px 16px 28px;
+    border: 0;
+  }
+  .ed-bs .ed-pc__sizes-label,
+  .ed-bs .ed-pc__chips::before {
+    display: block;
+    margin: 0 0 8px;
+    color: var(--ed-text-mute, #5C6068);
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .ed-bs .ed-pc__sizes-list { gap: 6px; }
+  .ed-bs .ed-pc__size {
+    min-height: 32px;
+    padding: 6px 9px;
+    border-radius: 6px;
+    font-size: 10px;
+  }
+  .ed-bs .ed-pc__form { display: contents; }
+  .ed-bs .ed-pc__chips {
+    grid-area: quantity;
+    align-self: start;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(42px, 1fr));
+    gap: 6px;
+    padding: 18px 28px 16px 12px;
+  }
+  .ed-bs .ed-pc__chips::before {
+    content: "Quantity";
+    grid-column: 1 / -1;
+  }
+  .ed-bs .ed-pc__chip { width: 100%; height: 34px; border-radius: 6px; }
+  .ed-bs .ed-pc__add,
+  .ed-bs .ed-pc__form .ed-pc__add {
+    grid-area: add;
+    min-height: 48px;
+    margin: 0 28px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 749px) {
+    .ed-bs .ed-product-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .ed-bs .ed-pc {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      border-radius: 10px;
+    }
+    .ed-bs .ed-pc__link { display: flex; }
+    .ed-bs .ed-pc__media {
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      aspect-ratio: 1 / 1;
+      border-right: 0;
+      border-bottom: 1px solid var(--ed-border, #E0DBCF);
+    }
+    .ed-bs .ed-pc__body-top { padding: 14px 14px 10px; }
+    .ed-bs .ed-pc__title { font-size: 15px; }
+    .ed-bs .ed-pc__price-now { font-size: 18px; }
+    .ed-bs .ed-pc__sizes { padding: 10px 12px 8px; }
+    .ed-bs .ed-pc__form { display: flex; }
+    .ed-bs .ed-pc__chips {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 8px 12px;
+    }
+    .ed-bs .ed-pc__add,
+    .ed-bs .ed-pc__form .ed-pc__add {
+      min-height: 40px;
+      margin: 0 12px 12px;
+      font-size: 12px;
+    }
+  }
+
   /* Carousel mode */
   .ed-bs-carousel-wrap { position: relative; }
   .ed-bs-strip {
@@ -179,6 +320,172 @@
 </style>
 
 <script>
+  (function initProductFamilies() {
+    const section = document.currentScript.closest('.shopify-section') || document;
+    const cards = Array.from(section.querySelectorAll('.ed-pc'));
+    if (cards.length < 2) return;
+
+    const sizePattern = /(\d+(?:\/\d+)?(?:\.\d+)?\s*(?:["”]|in(?:ch)?)?\s*[x×*]\s*\d+(?:\/\d+)?(?:\.\d+)?\s*(?:mm|cm|mtr|meter|metre|meters|metres|["”]|in(?:ch)?)?)/i;
+
+    function readData(card) {
+      const node = card.querySelector('[data-ed-product-data]');
+      if (!node) return null;
+      try { return JSON.parse(node.textContent); } catch (error) { return null; }
+    }
+
+    function fractionToNumber(value) {
+      const text = String(value || '').trim();
+      if (text.includes('/')) {
+        const parts = text.split('/').map(Number);
+        return parts[1] ? parts[0] / parts[1] : parts[0];
+      }
+      return parseFloat(text) || 0;
+    }
+
+    function optionFromTitle(title) {
+      const match = String(title || '').match(sizePattern);
+      if (!match) return null;
+      const display = match[1]
+        .replace(/\s*[x*]\s*/i, ' × ')
+        .replace(/\s*×\s*/g, ' × ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      const numbers = display.match(/\d+(?:\/\d+)?(?:\.\d+)?/g) || [];
+      return {
+        display: display,
+        sortA: fractionToNumber(numbers[0]),
+        sortB: fractionToNumber(numbers[1])
+      };
+    }
+
+    function familyFromTitle(title) {
+      return String(title || '')
+        .replace(sizePattern, ' ')
+        .replace(/(?:₹|Rs\.?)[^|]*/gi, ' ')
+        .replace(/\b\d[\d,]*\s*labels?\s*\/\s*roll\b/gi, ' ')
+        .replace(/\b\d[\d,]*\s*labels?\b/gi, ' ')
+        .replace(/\b(?:single|double)\s*roll\b/gi, ' ')
+        .replace(/[|·]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+    }
+
+    const groups = new Map();
+    cards.forEach(function(card) {
+      const data = readData(card);
+      if (!data) return;
+      const option = optionFromTitle(data.title);
+      const family = familyFromTitle(data.title);
+      if (!option || !family) return;
+      const entry = { card: card, data: data, option: option };
+      if (!groups.has(family)) groups.set(family, []);
+      groups.get(family).push(entry);
+    });
+
+    function updateCard(card, entry) {
+      const data = entry.data;
+      card.dataset.productId = data.productId;
+      card.dataset.productHandle = data.handle;
+      card.dataset.productTitle = data.title;
+
+      card.querySelectorAll('.ed-pc__link').forEach(function(link) { link.href = data.url; });
+      const image = card.querySelector('.ed-pc__img');
+      if (image && data.image) {
+        image.src = data.image;
+        if (data.imageSrcset) image.srcset = data.imageSrcset;
+        image.alt = data.imageAlt || data.title;
+      }
+      const title = card.querySelector('.ed-pc__title');
+      if (title) title.textContent = data.title;
+      const price = card.querySelector('.ed-pc__price-now');
+      if (price) price.textContent = data.price;
+      let compare = card.querySelector('.ed-pc__price-was');
+      if (data.compareAt) {
+        if (!compare) {
+          compare = document.createElement('s');
+          compare.className = 'ed-pc__price-was';
+          card.querySelector('.ed-pc__price')?.appendChild(compare);
+        }
+        compare.textContent = data.compareAt;
+      } else if (compare) {
+        compare.remove();
+      }
+      const variantInput = card.querySelector('.ed-pc__form input[name="id"]');
+      if (variantInput) variantInput.value = data.variantId;
+    }
+
+    groups.forEach(function(entries) {
+      if (entries.length < 2) return;
+      entries.sort(function(a, b) {
+        return a.option.sortA - b.option.sortA || a.option.sortB - b.option.sortB;
+      });
+
+      const keeper = entries[0].card;
+      const sizeWrap = keeper.querySelector('[data-ed-pc-sizes]');
+      const sizeList = keeper.querySelector('[data-ed-pc-sizes-list]');
+      if (!sizeWrap || !sizeList) return;
+      sizeWrap.hidden = false;
+
+      entries.forEach(function(entry, index) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'ed-pc__size' + (index === 0 ? ' is-active' : '');
+        button.textContent = entry.option.display;
+        button.disabled = !entry.data.available;
+        button.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+        button.addEventListener('click', function() {
+          if (button.disabled) return;
+          updateCard(keeper, entry);
+          sizeList.querySelectorAll('.ed-pc__size').forEach(function(item) {
+            const active = item === button;
+            item.classList.toggle('is-active', active);
+            item.setAttribute('aria-pressed', active ? 'true' : 'false');
+          });
+        });
+        sizeList.appendChild(button);
+      });
+
+      updateCard(keeper, entries[0]);
+      entries.slice(1).forEach(function(entry) {
+        const cell = entry.card.closest('.ed-bs-cell');
+        (cell || entry.card).remove();
+      });
+    });
+
+    /* Reorder the visible product families using the Theme Editor sidebar settings. */
+    const sectionRoot = section.querySelector('.ed-bs');
+    const requestedOrder = String(sectionRoot?.dataset.familyOrder || 'thermal_labels,brown_tape,transparent_tape').split(',');
+    function visibleFamily(card) {
+      const title = card.dataset.productTitle || '';
+      if (/thermal\s+label/i.test(title)) return 'thermal_labels';
+      if (/brown.*packaging\s+tape/i.test(title)) return 'brown_tape';
+      if (/transparent.*packaging\s+tape/i.test(title)) return 'transparent_tape';
+      return 'other';
+    }
+    const remainingItems = Array.from(section.querySelectorAll('.ed-pc')).map(function(card, originalIndex) {
+      return {
+        card: card,
+        item: card.closest('.ed-bs-cell') || card,
+        originalIndex: originalIndex,
+        family: visibleFamily(card)
+      };
+    });
+    if (remainingItems.length) {
+      const productContainer = remainingItems[0].item.parentElement;
+      remainingItems.sort(function(a, b) {
+        const aIndex = requestedOrder.indexOf(a.family);
+        const bIndex = requestedOrder.indexOf(b.family);
+        const aRank = aIndex === -1 ? 999 : aIndex;
+        const bRank = bIndex === -1 ? 999 : bIndex;
+        return aRank - bRank || a.originalIndex - b.originalIndex;
+      });
+      remainingItems.forEach(function(entry) {
+        if (productContainer) productContainer.appendChild(entry.item);
+      });
+    }
+  })();
+
   document.querySelectorAll('[data-bs-nav]').forEach(function(btn) {
     btn.addEventListener('click', function() {
       const strip = btn.parentElement.querySelector('[data-bs-strip]');
@@ -269,6 +576,73 @@
       "max": 6,
       "step": 1,
       "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Product-family card layout"
+    },
+    {
+      "type": "select",
+      "id": "first_family",
+      "label": "First card",
+      "default": "thermal_labels",
+      "options": [
+        { "value": "thermal_labels", "label": "Thermal Labels" },
+        { "value": "brown_tape", "label": "Brown Packaging Tape" },
+        { "value": "transparent_tape", "label": "Transparent Packaging Tape" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "second_family",
+      "label": "Second card",
+      "default": "brown_tape",
+      "options": [
+        { "value": "thermal_labels", "label": "Thermal Labels" },
+        { "value": "brown_tape", "label": "Brown Packaging Tape" },
+        { "value": "transparent_tape", "label": "Transparent Packaging Tape" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "third_family",
+      "label": "Third card",
+      "default": "transparent_tape",
+      "options": [
+        { "value": "thermal_labels", "label": "Thermal Labels" },
+        { "value": "brown_tape", "label": "Brown Packaging Tape" },
+        { "value": "transparent_tape", "label": "Transparent Packaging Tape" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Product image width",
+      "min": 30,
+      "max": 48,
+      "step": 1,
+      "default": 38,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "Space between cards",
+      "min": 8,
+      "max": 36,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 14,
+      "unit": "px"
     },
     {
       "type": "select",

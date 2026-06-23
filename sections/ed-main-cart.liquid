@@ -104,8 +104,6 @@
 
             <p class="ed-help" style="margin: 0 0 var(--sp-4);">GST will be calculated and added at checkout. Enter your GSTIN on the billing step for a GST-compliant invoice.</p>
 
-            <div class="shiprocket-headless" data-type="cart"></div>
-
             <button type="submit" form="ed-cart-form" name="checkout" class="ed-btn ed-btn--primary ed-btn--block ed-btn--lg">Checkout — {{ cart.total_price | money }}</button>
 
             <a href="{{ section.settings.quote_url | default: '/pages/request-quote' }}?cart={{ cart.item_count }}" class="ed-btn--link" style="display: block; text-align: center; margin-top: var(--sp-4); font-family: var(--font-ed-body); font-weight: 600; font-size: 13px;">Request a quote on this cart →</a>

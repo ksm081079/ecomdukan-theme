@@ -15,6 +15,16 @@
   if product.variants.size > 1
     assign has_options = true
   endif
+  capture image_srcset
+    if product.featured_image
+      echo product.featured_image | image_url: width: 300
+      echo ' 300w, '
+      echo product.featured_image | image_url: width: 600
+      echo ' 600w, '
+      echo product.featured_image | image_url: width: 900
+      echo ' 900w'
+    endif
+  endcapture
 -%}
 
 <div class="ed-pc" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" data-product-title="{{ product.title | escape }}">
@@ -56,6 +66,11 @@
     </div>
   </a>
 
+  <div class="ed-pc__sizes" data-ed-pc-sizes hidden>
+    <span class="ed-pc__sizes-label">Size</span>
+    <div class="ed-pc__sizes-list" data-ed-pc-sizes-list></div>
+  </div>
+
   {%- if product.available -%}
     {%- if has_options -%}
       <a href="{{ product.url }}" class="ed-pc__add ed-pc__add--ghost">Choose options</a>
@@ -75,6 +90,23 @@
   {%- else -%}
     <a href="{{ product.url }}" class="ed-pc__add ed-pc__add--ghost">Notify me</a>
   {%- endif -%}
+
+  <script type="application/json" data-ed-product-data>
+    {
+      "productId": {{ product.id | json }},
+      "handle": {{ product.handle | json }},
+      "title": {{ product.title | json }},
+      "url": {{ product.url | json }},
+      "variantId": {{ variant.id | json }},
+      "price": {{ price | money | json }},
+      "compareAt": {% if on_sale %}{{ compare_at | money | json }}{% else %}null{% endif %},
+      "image": {% if product.featured_image %}{{ product.featured_image | image_url: width: 600 | json }}{% else %}null{% endif %},
+      "imageSrcset": {{ image_srcset | strip | json }},
+      "imageAlt": {{ product.featured_image.alt | default: product.title | json }},
+      "available": {{ product.available | json }},
+      "hasOptions": {{ has_options | json }}
+    }
+  </script>
 </div>
 
 <style>
@@ -157,7 +189,41 @@
     color: var(--ed-text-mute, #5C6068);
     text-decoration: line-through;
   }
-
+  .ed-pc__sizes {
+    padding: 5px 10px 7px;
+    border-top: 1px solid rgba(224, 219, 207, .7);
+  }
+  .ed-pc__sizes-label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--ed-text-mute, #5C6068);
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .ed-pc__sizes-list { display: flex; flex-wrap: wrap; gap: 4px; }
+  .ed-pc__size {
+    min-height: 28px;
+    padding: 4px 7px;
+    border: 1px solid var(--ed-border, #E0DBCF);
+    border-radius: 5px;
+    background: #fff;
+    color: var(--ed-ink, #0A0B0E);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .ed-pc__size:hover { border-color: var(--ed-ink, #0A0B0E); }
+  .ed-pc__size.is-active {
+    background: var(--ed-ink, #0A0B0E);
+    border-color: var(--ed-ink, #0A0B0E);
+    color: #fff;
+  }
+  .ed-pc__size:disabled { opacity: .45; cursor: not-allowed; }
   /* Chip quantity picker + Add-to-cart */
   .ed-pc__form { padding: 4px 10px 10px; display: flex; flex-direction: column; gap: 6px; }
   .ed-pc__chips { display: flex; gap: 4px; }
@@ -213,6 +279,8 @@
     .ed-pc__form { padding: 4px 8px 8px; gap: 5px; }
     .ed-pc__chip { height: 26px; font-size: 10px; }
     .ed-pc__add { height: 30px; font-size: 11px; margin: 4px 8px 8px; }
+    .ed-pc__sizes { padding: 4px 8px 6px; }
+    .ed-pc__size { min-height: 25px; padding: 3px 6px; font-size: 9px; }
   }
 </style>
 
