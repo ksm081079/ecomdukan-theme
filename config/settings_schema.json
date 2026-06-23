@@ -1441,6 +1441,79 @@
         "id": "cart_min_weight_message",
         "label": "Message shown below threshold",
         "default": "Minimum cart weight for checkout is 5 kg."
+      },
+      {
+        "type": "header",
+        "content": "Bulk order (high cart weight)",
+        "info": "Show a freight notice + WhatsApp CTA when the cart weight reaches the threshold. Make sure the top slab in Shipping is open-ended so checkout still succeeds."
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_freight_enabled",
+        "label": "Enable bulk-order notice",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "cart_freight_threshold_kg",
+        "label": "Show notice when cart weight ≥ (kg)",
+        "default": 30
+      },
+      {
+        "type": "textarea",
+        "id": "cart_freight_message",
+        "label": "Bulk order message",
+        "default": "Additional shipping charges may apply for orders above 30 kg based on delivery location. Our team will contact you to confirm final freight charges."
+      },
+      {
+        "type": "text",
+        "id": "cart_freight_wa_button",
+        "label": "WhatsApp button label",
+        "default": "Chat on WhatsApp for bulk orders"
+      },
+      {
+        "type": "text",
+        "id": "cart_freight_wa_message",
+        "label": "WhatsApp pre-filled message",
+        "default": "Hi, I need assistance with a bulk order over 30 kg."
+      }
+    ]
+  },
+  {
+    "name": "WhatsApp",
+    "settings": [
+      {
+        "type": "text",
+        "id": "whatsapp_number",
+        "label": "WhatsApp number",
+        "info": "Country code + number, no '+' or spaces. Example: 919876543210 for +91 9876543210. Used by the floating button and the bulk-order CTA.",
+        "default": "919876543210"
+      },
+      {
+        "type": "header",
+        "content": "Floating WhatsApp button"
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_floating_enabled",
+        "label": "Show floating WhatsApp button",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_floating_message",
+        "label": "Floating button pre-filled message",
+        "default": "Hi, I need help with my order."
+      },
+      {
+        "type": "select",
+        "id": "whatsapp_floating_position",
+        "label": "Position",
+        "default": "bottom_right",
+        "options": [
+          { "value": "bottom_right", "label": "Bottom right" },
+          { "value": "bottom_left",  "label": "Bottom left" }
+        ]
       }
     ]
   },
