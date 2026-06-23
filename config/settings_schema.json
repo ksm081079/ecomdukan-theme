@@ -8,7 +8,7 @@
     "theme_support_url": "https://support.nextsky.co"
   },
   {
-    "name": "t:settings_schema.purchase_code.name",
+    "name": "Purchase code",
     "settings": [
       {
         "type": "paragraph",
@@ -46,7 +46,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.logo_favicon.name",
+    "name": "Logo & favicon",
     "settings": [
       {
         "type": "header",
@@ -158,7 +158,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.section.name",
+    "name": "Section spacing",
     "settings": [
       {
         "type": "range",
@@ -584,7 +584,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.browser_tab_notifications.name",
+    "name": "Browser tab notifications",
     "settings": [
       {
         "type": "paragraph",
@@ -829,7 +829,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.product_card.name",
+    "name": "Product card",
     "settings": [
       {
         "type": "select",
@@ -1089,7 +1089,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.color_swatches.name",
+    "name": "Color swatches",
     "settings": [
       {
         "type": "checkbox",
@@ -1158,7 +1158,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.search_behavior.name",
+    "name": "Search behavior",
     "settings": [
       {
         "type": "select",
@@ -1225,7 +1225,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.wishlist.name",
+    "name": "Wishlist",
     "settings": [
       {
         "type": "checkbox",
@@ -1518,7 +1518,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.social_media.name",
+    "name": "Social media",
     "settings": [
       {
         "type": "text",
@@ -1589,7 +1589,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.preload_page.name",
+    "name": "Page preload",
     "settings": [
       {
         "type": "checkbox",
@@ -1620,7 +1620,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.animation.name",
+    "name": "Animation",
     "settings": [
       {
         "type": "paragraph",
@@ -1680,7 +1680,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.store_information.name",
+    "name": "Store information",
     "settings": [
       {
         "type": "text",
@@ -1721,7 +1721,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.cookies.name",
+    "name": "Cookies",
     "settings": [
       {
         "type": "paragraph",
@@ -1762,7 +1762,7 @@
     ]
   },
   {
-    "name": "t:settings_schema.terms_conditions.name",
+    "name": "Terms & conditions",
     "settings": [
       {
         "type": "checkbox",
