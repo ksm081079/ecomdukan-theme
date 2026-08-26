@@ -275,7 +275,7 @@
                               class="menu-list"
                               style="--row-gap: 40px; --col-desktop:{{ block_st.collection_menu_column }};"
                             >
-                              {%- render 'submenu-list' | link: link -%}
+                              {%- render 'submenu-list', link: link -%}
                             </div>
                           {% endif %}
                           {%- if collection_count > 0 -%}
@@ -350,7 +350,7 @@
                               class="menu-list"
                               style="--row-gap: 40px; --col-desktop:{{ block_st.product_menu_column }};"
                             >
-                              {%- render 'submenu-list' | link: link -%}
+                              {%- render 'submenu-list', link: link -%}
                             </div>
                           {% endif %}
                           {%- if product_count > 0 -%}
@@ -446,7 +446,7 @@
                       </svg>
                     </close-menu>
                   </div>
-                  {%- render 'submenu-list' | link: link | menu_type: 'dropdown' -%}
+                  {%- render 'submenu-list', link: link, menu_type: 'dropdown' -%}
                 </div>
               {%- endif -%}
             </li>
@@ -826,7 +826,7 @@
                               class="menu-list"
                               style="--row-gap: 40px; --col-desktop:{{ block_st.collection_menu_column }};"
                             >
-                              {%- render 'submenu-list' | link: link -%}
+                              {%- render 'submenu-list', link: link -%}
                             </div>
                           {% endif %}
                           {%- if collection_count > 0 -%}
@@ -901,7 +901,7 @@
                               class="menu-list"
                               style="--row-gap: 40px; --col-desktop:{{ block_st.product_menu_column }};"
                             >
-                              {%- render 'submenu-list' | link: link -%}
+                              {%- render 'submenu-list', link: link -%}
                             </div>
                           {% endif %}
                           {%- if product_count > 0 -%}
@@ -997,7 +997,7 @@
                       </svg>
                     </close-menu>
                   </div>
-                  {%- render 'submenu-list' | link: link | menu_type: 'dropdown' -%}
+                  {%- render 'submenu-list', link: link, menu_type: 'dropdown' -%}
                 </div>
               {%- endif -%}
             </li>
@@ -1085,7 +1085,7 @@
         {%- endif -%}
       </ul>
       {% if menu_mobile_tab == 'custom-collections' and collection_list != blank %}
-        {%- render 'categories-menu-mobile' | section_st: section_st -%}
+        {%- render 'categories-menu-mobile', section_st: section_st -%}
       {% endif %}
     </div>
     <div class="lang__currency-on-nav mt-30 flex flex-wrap  hidden-1025 border-top">
@@ -1096,3 +1096,31 @@
 
 
 {%- endif  -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- render 'submenu-list' | link: link -%}"
+  to: "{%- render 'submenu-list', link: link -%}"
+  position: 15614..15655
+- from: "{%- render 'submenu-list' | link: link -%}"
+  to: "{%- render 'submenu-list', link: link -%}"
+  position: 20285..20326
+- from: "{%- render 'submenu-list' | link: link | menu_type: 'dropdown' -%}"
+  to: "{%- render 'submenu-list', link: link, menu_type: 'dropdown' -%}"
+  position: 25745..25809
+- from: "{%- render 'submenu-list' | link: link -%}"
+  to: "{%- render 'submenu-list', link: link -%}"
+  position: 45613..45654
+- from: "{%- render 'submenu-list' | link: link -%}"
+  to: "{%- render 'submenu-list', link: link -%}"
+  position: 50284..50325
+- from: "{%- render 'submenu-list' | link: link | menu_type: 'dropdown' -%}"
+  to: "{%- render 'submenu-list', link: link, menu_type: 'dropdown' -%}"
+  position: 55743..55807
+- from: "{%- render 'categories-menu-mobile' | section_st: section_st -%}"
+  to: "{%- render 'categories-menu-mobile', section_st: section_st -%}"
+  position: 59567..59630
+{% endcomment %}

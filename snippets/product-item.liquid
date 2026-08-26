@@ -515,7 +515,7 @@
         {% comment %} Product item color swatches {% endcomment %}
         {% if template_enable_color_swatches == true %}
           {%- if show_variant -%}
-            {%- render 'color-swatches' | product: card_product | type: "item" -%}
+            {%- render 'color-swatches', product: card_product, type: "item" -%}
           {%- endif -%}
         {% endif %}
         {% comment %} Product item short description {% endcomment %}
@@ -911,9 +911,23 @@
           class="product-item__price mt-5 justify-content-{{ settings.product_alignment }} fs-custom flex"
           style="--font-size: {{ settings.price_size }}"
         >
-          {%- render 'price' | scope: 'item', show_badges: false, class: priceclass -%}
+          {%- render 'price', scope: 'item', show_badges: false, class: priceclass -%}
         </div>
       </div>
     </motion-element>
   </div>
 {% endif %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: '{%- render ''color-swatches'' | product: card_product | type: "item" -%}'
+  to: '{%- render ''color-swatches'', product: card_product, type: "item" -%}'
+  position: 28914..28982
+- from: "{%- render 'price' | scope: 'item', show_badges: false, class: priceclass
+    -%}"
+  to: "{%- render 'price', scope: 'item', show_badges: false, class: priceclass -%}"
+  position: 49903..49979
+{% endcomment %}

@@ -164,7 +164,7 @@
         </div>
         <div class="header__menu border-top-1025 flex justify-center" style="--section-pt: 0; --section-pb: 0;">
           {%- liquid
-            render 'horizontal-menu' | show_language : show_language
+            render 'horizontal-menu', show_language: show_language
           -%}
         </div>
       </header-inner>
@@ -936,3 +936,13 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: 'render ''horizontal-menu'' | show_language : show_language'
+  to: 'render ''horizontal-menu'', show_language: show_language'
+  position: 13811..13865
+{% endcomment %}

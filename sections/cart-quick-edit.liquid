@@ -80,7 +80,7 @@
             </h3>
             {% if hidden_price == false %}
               <div class="product__price price mb-15">
-                {%- render 'price' | scope: 'item' | product: product,  class: 'flex gap-5 mt-5' -%}
+                {%- render 'price', scope: 'item', product: product, class: 'flex gap-5 mt-5' -%}
               </div>
             {% endif %}
             <div
@@ -255,4 +255,15 @@
       {% endif %}
     {%- endform -%}
   </product-form-quick-edit>
-</div>
+</div>{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- render 'price' | scope: 'item' | product: product,  class: 'flex gap-5
+    mt-5' -%}"
+  to: "{%- render 'price', scope: 'item', product: product, class: 'flex gap-5 mt-5'
+    -%}"
+  position: 3492..3573
+{%- endcomment -%}
